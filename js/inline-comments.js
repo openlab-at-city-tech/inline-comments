@@ -289,7 +289,20 @@
             $bubble.hide();
         } else {
             handleHover(source, $bubble);
-            handleClickBubble(source, $bubble);
+
+						$bubble.on(
+							'click',
+							function (e) {
+								e.preventDefault();
+								handleClickBubble(source, $bubble);
+
+								// If the click event was triggered by a keyboard event, set focus to the first input field.
+								if ( e.detail === 0 ) {
+									console.log(idCommentsAndFormHash + ' textarea');
+									$( idCommentsAndFormHash + ' textarea' ).first().focus();
+								}
+							}
+						);
         }
     };
 
@@ -408,32 +421,29 @@
      * This event will be triggered when user clicks on bubble
      */
     var handleClickBubble = function (source, bubble) {
-        bubble.on('click', function (e) {
-            e.preventDefault();
-            var $that = $(this);
+			var $that = $(this);
 
-            // When the wrapper is already visible (and the bubble is active), then remove the wrapper and the bubble's class
-            if ($that.hasClass(classBubbleActive)) {
-                removeCommentsWrapper(true);
-                $that.removeClass(classBubbleActive);
-            }
+			// When the wrapper is already visible (and the bubble is active), then remove the wrapper and the bubble's class
+			if ($that.hasClass(classBubbleActive)) {
+					removeCommentsWrapper(true);
+					$that.removeClass(classBubbleActive);
+			}
 
-            // Else ...
-            else {
-                // Remove classActive before classActive will be added to another element (source)
-                removeExistingClasses(classActive);
+			// Else ...
+			else {
+					// Remove classActive before classActive will be added to another element (source)
+					removeExistingClasses(classActive);
 
-                // Add classActive to active elements (paragraphs, divs, etc.)
-                source.addClass(classActive);
+					// Add classActive to active elements (paragraphs, divs, etc.)
+					source.addClass(classActive);
 
-                // Before creating a new comments wrapper: remove the previously created wrapper, if any
-                removeCommentsWrapper();
+					// Before creating a new comments wrapper: remove the previously created wrapper, if any
+					removeCommentsWrapper();
 
-                bubble.addClass(classBubbleActive);
-                loadCommentsWrapper(bubble);
-            }
+					bubble.addClass(classBubbleActive);
+					loadCommentsWrapper(bubble);
+			}
 
-        });
     };
 
     /*
