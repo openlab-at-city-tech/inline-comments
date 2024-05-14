@@ -134,17 +134,37 @@
      * Setup elements and bubbles that depend on selectors
      */
     var initElementsAndBubblesFromSelectors = function () {
-        var elementsBySelectors,
-            i,
-            l;
+				const $contentArea = findContentArea();
+				const elementsBySelectors = $contentArea.find( o.selectors );
 
-        elementsBySelectors = $( o.selectors );
-        for (i = 0, l = elementsBySelectors.length; i < l; i += 1) {
-            var $that = $(elementsBySelectors[i]);
-            addAttToElement($that);
-            bubble.createFromElement($that);
-        }
+				const l = elementsBySelectors.length;
+
+				for (let i = 0; i < l; i += 1) {
+					var $that = $(elementsBySelectors[i]);
+					addAttToElement($that);
+					bubble.createFromElement($that);
+				}
     };
+
+		/**
+		 * Uses heuristics to identify the post content area.
+		 *
+		 * @return {jQuery} The content area.
+		 */
+		const findContentArea = function() {
+			const $content = $( '.entry-content' );
+
+			if ( $content.length ) {
+				return $content;
+			}
+
+			const $main = $( 'main' );
+			if ( $main.length && 1 === $main.length ) {
+				return $main;
+			}
+
+			return $( 'body' );
+		}
 
     /*
      * Add attribute attDataIncom to element; increase counter per element type (instead of using one counter for all elements independent of their types).
