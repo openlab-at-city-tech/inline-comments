@@ -48,6 +48,10 @@ $vcard-image-size: 15px;
   }
 }
 
+#incom_wrapper.show-bubbles .incom-bubble {
+  display: block !important;
+}
+
 .incom-bubble-style {
   background: $black;
   @include vendor-prefix( border-radius, $bubble-radius );

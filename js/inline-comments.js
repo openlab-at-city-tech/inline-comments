@@ -757,6 +757,7 @@
     var handleEvents = {
         init: function () {
             this.permalinksHandler();
+						this.tabHandler();
         },
 
         permalinksHandler: function () {
@@ -773,7 +774,19 @@
                     return false;
                 }
             });
-        }
+        },
+
+				/**
+				 * Adds show-bubbles class to #incom_wrapper when tab is used.
+				 */
+				tabHandler: function () {
+					$(document).on( 'keydown', function( e ) {
+						if ( 9 === e.keyCode ) {
+							forceShowBubbles();
+							addSkipLink();
+						}
+					});
+				}
     };
 
 
@@ -893,7 +906,80 @@
         }, 1200, 'quart');
     };
 
+		/**
+		 * Show bubbles.
+		 *
+		 * This is currently done by adding a 'show-bubbles' class to the #incom_wrapper element.
+		 */
+		const forceShowBubbles = function() {
+			document.getElementById( idWrapper ).classList.add( 'show-bubbles' );
 
+			// We also have to loop through and show using jQuery, which adds inline styles.
+			$( classBubbleDot ).show();
+		}
+
+		/**
+		 * Add a 'skip to comments' link.
+		 */
+		const addSkipLink = function() {
+			// Don't add the skip link if it already exists.
+			if ( document.getElementById( 'incom-skip-to-comments' ) ) {
+				return;
+			}
+
+			const newSkipLink = document.createElement( 'a' );
+			newSkipLink.classList.add( 'skip-link' );
+			newSkipLink.classList.add( 'screen-reader-text' );
+			newSkipLink.href = idWrapperHash;
+			newSkipLink.textContent = 'Skip to comments';
+			newSkipLink.id = 'incom-skip-to-comments';
+
+			const focusFirstBubble = function() {
+				// Set focus (and tab navigation) to the first bubble.
+				const firstBubble = document.querySelector( classBubbleDot );
+				if ( firstBubble ) {
+					// Temporarily set tabindex to -1 so we can focus it.
+					firstBubble.setAttribute( 'tabindex', '-1' );
+					firstBubble.focus();
+
+					// Remove tabindex so it can be tabbed to.
+					firstBubble.addEventListener( 'blur', function() {
+						firstBubble.removeAttribute( 'tabindex' );
+					} )
+				}
+
+				const contentArea = findContentArea();
+				if ( contentArea ) {
+					// Calculate 100px offset above the content area.
+					const offset = contentArea.offset().top - 100;
+
+					window.scrollTo( {
+						top: offset,
+						behavior: 'smooth'
+					} );
+				}
+			}
+
+			// On enter, we should not scroll, but should set focus to the first incom bubble.
+			newSkipLink.addEventListener( 'keydown', function( event ) {
+				if ( event.key === 'Enter' || event.key === ' ') {
+					focusFirstBubble();
+					event.preventDefault();
+				}
+			} )
+
+			newSkipLink.addEventListener( 'click', focusFirstBubble );
+
+			const wpSkipLink = document.querySelector( 'a.skip-link' );
+			if ( wpSkipLink ) {
+				// Insert after the first skip link, if it exists.
+				wpSkipLink.parentNode.insertBefore( newSkipLink, wpSkipLink.nextSibling );
+			} else {
+				// Otherwise insert at the top of the page.
+				document.body.insertBefore( newSkipLink, document.body.firstChild );
+			}
+
+		}
 
     /*
      * Public methods
@@ -914,6 +1000,11 @@
         });
 
         handleEvents.init();
+
+				// If we detect that we're running on a mobile device (no hover), show bubbles by default.
+				if ( 'ontouchstart' in window ) {
+					forceShowBubbles();
+				}
     };
 
 }(window.incom = window.incom || {}, jQuery));
