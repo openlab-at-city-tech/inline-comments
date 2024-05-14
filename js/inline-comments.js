@@ -328,7 +328,7 @@
         // Get attribute value from source's attribute attDataIncom
         var attFromSource = source.attr(attDataIncom);
         // Define selector that identifies elements that shell be counted
-        var selectByAtt = '[' + attDataIncomComment + '=' + attFromSource + ']';
+        var selectByAtt = '[' + attDataIncomComment + '="' + attFromSource + '"]';
         // Count elements
         var $count = $(selectByAtt).length;
         // Increase count for each inline reply, too
@@ -1046,6 +1046,30 @@
 
 		}
 
+		/**
+		 * Adds data-incom-comment attributes to comments.
+		 */
+		const addIncomKeysToComments = function() {
+			const { commentKeys } = window.incom
+
+			// Index is the comment ID.
+			for ( const commentId in commentKeys ) {
+				const comment = document.getElementById( `comment-${commentId}` );
+
+				if ( ! comment ) {
+					continue;
+				}
+
+				// Bail if the comment already has a data-incom-comment attribute.
+				if ( comment.dataset.incomComment ) {
+					continue;
+				}
+
+				comment.dataset.incomComment = commentKeys[ commentId ];
+			}
+			console.log('added comment keys')
+		}
+
     /*
      * Public methods
      */
@@ -1054,6 +1078,9 @@
 
     incom.init = function (options) {
         setOptions(options);
+
+				addIncomKeysToComments();
+
         initIncomWrapper();
 
         createPluginInfo();

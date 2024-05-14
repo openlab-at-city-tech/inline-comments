@@ -65,6 +65,15 @@ class INCOM_WordPress extends INCOM_Frontend {
 		} else {
 			wp_enqueue_script( 'incom-js', plugins_url( 'js/min/inline-comments.min.js' , plugin_dir_path( __FILE__ ) ), array( 'jquery' ), INCOM_VERSION );	// In case 'wp_localize_script' is used: wp_enqueue_script must be enqueued before wp_localize_script
 		}
+
+		$comment_incom_keys = $this->get_comment_incom_keys();
+
+		wp_add_inline_script(
+			'incom-js',
+			'var incom = incom || {};
+			incom.commentKeys = ' . json_encode( $comment_incom_keys ) . ';',
+			'before'
+		);
 	}
 
 	/**
@@ -96,5 +105,23 @@ class INCOM_WordPress extends INCOM_Frontend {
 		}
 
 		echo '</style>';
+	}
+
+	public function get_comment_incom_keys() {
+		$comment_incom_keys = [];
+
+		if ( is_singular() ) {
+			$comments = get_comments(
+				[
+					'post_id' => get_the_ID(),
+					'status' => 'approve',
+				]
+			);
+
+			foreach ( $comments as $comment ) {
+				$comment_incom_keys[ $comment->comment_ID ] = get_comment_meta( $comment->comment_ID, 'data_incom', true );
+			}
+		}
+		return $comment_incom_keys;
 	}
 }
