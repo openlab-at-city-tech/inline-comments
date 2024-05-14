@@ -396,30 +396,47 @@
     var handleHover = function (element, bubble) {
         if (!bubble.hasClass(classBubbleStatic) && o.canComment) {
             // Handle hover (for both, "elements" and $bubble)
-            element.add(bubble).hover(function () {
-                // First hide all non-static bubbles
-                $(classBubbleDot + ':not(' + classBubbleStaticDot + ')').hide();
+						element.add(bubble);
 
-                if (o.bubbleAnimationIn === 'fadein') {
-                    bubble.stop(true, true).fadeIn();
-                } else {
-                    bubble.stop(true, true).show();
-                }
+						element.on( 'mouseenter', function() {
+							mouseEnterCallback( bubble );
+						} );
 
-                if (!isInWindow(bubble)) {
-                    bubble.hide();
-                }
-            }, function () {
-                if (o.bubbleAnimationOut === 'fadeout') {
-                    bubble.stop(true, true).fadeOut();
-                } else {
-                    // Delay hiding to make it possible to hover the bubble before it disappears
-                    bubble.stop(true, true).delay(700).hide(0);
-                }
-            });
+						element.on( 'mouseleave', function() {
+							mouseLeaveCallback( bubble );
+						} );
         }
     };
 
+		/**
+		 * mouseenter callback.
+		 */
+		const mouseEnterCallback = function( bubble ) {
+			// First hide all non-static bubbles
+			$(classBubbleDot + ':not(' + classBubbleStaticDot + ')').hide();
+
+			if (o.bubbleAnimationIn === 'fadein') {
+					bubble.stop(true, true).fadeIn();
+			} else {
+					bubble.stop(true, true).show();
+			}
+
+			if (!isInWindow(bubble)) {
+					bubble.hide();
+			}
+		}
+
+		/**
+		 * mouseleave callback.
+		 */
+		const mouseLeaveCallback = function( bubble ) {
+			if (o.bubbleAnimationOut === 'fadeout') {
+				bubble.stop(true, true).fadeOut();
+			} else {
+				// Delay hiding to make it possible to hover the bubble before it disappears
+				bubble.stop(true, true).delay(700).hide(0);
+			}
+		}
 
     /*
      * This event will be triggered when user clicks on bubble
