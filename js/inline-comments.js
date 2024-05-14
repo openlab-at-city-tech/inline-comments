@@ -599,7 +599,7 @@
      * Remove comments wrapper when user clicks anywhere but the idWrapperHash
      */
     var handleClickElsewhere = function () {
-        $('html').click(function (e) {
+        $('html').on( 'click', function (e) {
             if ($(e.target).parents(idWrapperHash).length === 0) {
                 removeCommentsWrapper(true);
             }
@@ -610,7 +610,7 @@
      * Remove comments wrapper when user clicks on a cancel element
      */
     var handleClickCancel = function () {
-        $(classCancelDot).click(function (e) {
+        $(classCancelDot).on( 'click', function (e) {
             e.preventDefault();
             removeCommentsWrapper(true);
 
@@ -869,7 +869,7 @@
      * @todo When page scrolls to element, automatically open wrapper
      */
     var loadScrollScript = function (source, target) {
-        $('[' + source + ']').click(function () {
+        $('[' + source + ']').on( 'click', function () {
 
             var targetValue = $(this).attr(source); // Get value from source element
             var $target = $('[' + target + '="' + targetValue + '"]');
