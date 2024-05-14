@@ -298,7 +298,6 @@
 
 								// If the click event was triggered by a keyboard event, set focus to the first input field.
 								if ( e.detail === 0 ) {
-									console.log(idCommentsAndFormHash + ' textarea');
 									$( idCommentsAndFormHash + ' textarea' ).first().focus();
 								}
 							}
