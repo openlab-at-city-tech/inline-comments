@@ -51,6 +51,7 @@
         selectComment = idCommentsAndFormHash + ' .comment',
         dataIncomKey = 'data_incom', // Should be the same as $DataIncomKey in class-comments.php
         slideWidth = 0, // Shift page content o.moveSiteSelector to the left
+				lastFocusedBubble = null,
         $viewportW = $(window).width(),
         $elementW,
         $offsetL,
@@ -591,6 +592,11 @@
         $(classCancelDot).click(function (e) {
             e.preventDefault();
             removeCommentsWrapper(true);
+
+						// If the last focused element is still in the DOM, set focus to it.
+						if ( lastFocusedBubble ) {
+							focusOnElement( lastFocusedBubble );
+						}
         });
     };
 
@@ -620,8 +626,25 @@
             }
             moveSite('out');
         }
-
     };
+
+		/**
+		 * Focus on an element.
+		 *
+		 * This is a wrapper for focus() that also juggles the tabindex attribute.
+		 *
+		 * @param {HTMLElement} element The element to focus on.
+		 */
+		const focusOnElement = function( element ) {
+			// Temporarily set tabindex to -1 so we can focus it.
+			element.setAttribute( 'tabindex', '-1' );
+			element.focus();
+
+			// Remove tabindex so it can be tabbed to.
+			element.addEventListener( 'blur', function() {
+				element.removeAttribute( 'tabindex' );
+			} )
+		}
 
     var moveSite = function (way) {
         var $move = $(o.moveSiteSelector);
@@ -765,9 +788,28 @@
      */
     var handleEvents = {
         init: function () {
+						this.focusHandler();
             this.permalinksHandler();
 						this.tabHandler();
         },
+
+				/**
+				 * Focus handler.
+				 *
+				 * This is used to track the last focused element, so we can return focus to it
+				 * when the user closes the comments.
+				 */
+				focusHandler: function() {
+					const commentWrapper = document.getElementById( idWrapper );
+
+					if ( commentWrapper ) {
+						commentWrapper.addEventListener( 'focusin', function( e ) {
+							if ( e.target.classList.contains( classBubbleLink ) ) {
+								lastFocusedBubble = e.target;
+							}
+						} )
+					}
+				},
 
         permalinksHandler: function () {
             $(idCommentsAndFormHash).on('click', 'a.incom-permalink', function () {
@@ -947,14 +989,7 @@
 				// Set focus (and tab navigation) to the first bubble.
 				const firstBubble = document.querySelector( classBubbleDot );
 				if ( firstBubble ) {
-					// Temporarily set tabindex to -1 so we can focus it.
-					firstBubble.setAttribute( 'tabindex', '-1' );
-					firstBubble.focus();
-
-					// Remove tabindex so it can be tabbed to.
-					firstBubble.addEventListener( 'blur', function() {
-						firstBubble.removeAttribute( 'tabindex' );
-					} )
+					focusOnElement( firstBubble );
 				}
 
 				const contentArea = findContentArea();
