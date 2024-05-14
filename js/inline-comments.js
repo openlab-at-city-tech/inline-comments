@@ -377,7 +377,7 @@
      */
     var testIfCommentsCountLarger0 = function (source) {
         var count = countComments(source);
-        return ($.isNumeric(count) && count > 0) ? true : false;
+        return ( isNumeric( count ) && count > 0 ) ? true : false;
     };
 
     var setDisplayStatic = function (bubble) {
@@ -385,6 +385,10 @@
             bubble.css('display', 'block');
         }
     };
+
+		const isNumeric = ( value ) => {
+				return typeof value === 'number' && isFinite( value ) || !isNaN( Number( value ) );
+		}
 
     /*
      * This event will be triggered when user hovers a text element or bubble
