@@ -35,7 +35,14 @@ class INCOM_Comments extends INCOM_Frontend {
 
 			if ( $data_incom != '' ) {	// Only display reference when comment actually references on a paragraph/element
 				$jump_to_text = esc_html__( 'Reference', INCOM_TD );
-				$jump_to = "<span class='incom-ref-link' data-incom-ref='$data_incom'>$jump_to_text</span>";
+
+				$jump_to = sprintf(
+					'<a href="%s" class="incom-jump-to" data-incom-ref="%s">%s</a>',
+					esc_attr( '#incom-elemente-' . $data_incom ),
+					esc_attr( $data_incom ),
+					esc_html__( 'Reference', INCOM_TD )
+				);
+
 				$comment_text .= "<span class='incom-ref'>$jump_to</span>";
 			}
 		}

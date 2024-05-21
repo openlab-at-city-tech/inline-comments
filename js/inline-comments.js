@@ -185,6 +185,8 @@
             //@TODO: Add part that assigns comment to specific article/page/post (article-id); include fallback in cause a comment has no ID (yet)
 
             $element.attr(attDataIncom, attProp);
+
+						$element.attr( 'id', 'incom-element-' + attProp );
         }
     };
 
