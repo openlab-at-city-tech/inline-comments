@@ -565,11 +565,15 @@
 
 				const overflow = naiveLeftOffset + wrapperTotalWidth - window.innerWidth;
 
-				// If it would overflow, align with the source element instead.
+				// If it would overflow, align with the associated body element.
 				if ( overflow > 0 ) {
+					const incomId = source.closest( '.incom-bubble' ).attr( 'data-incom-bubble' );
+					const associatedElement = document.getElementById( 'incom-element-' + incomId );
+
 					// Ensure that the element doesn't overlap the bubble.
 					element.width( element.width() - 20 );
-					return element.offset().left;
+
+					return associatedElement.offsetLeft;
 				}
 
 				return naiveLeftOffset;
@@ -1146,7 +1150,6 @@
 
 				comment.dataset.incomComment = commentKeys[ commentId ];
 			}
-			console.log('added comment keys')
 		}
 
     /*
