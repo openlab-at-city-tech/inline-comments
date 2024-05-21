@@ -551,9 +551,15 @@
     var setPosition = function (source, element) {
         var $offset = source.offset();
 
+				/*
+				 * Right-aligned bubbles should be placed off of the right edge,
+				 * to allow room for scrollbars on mobile.
+				 */
+				const leftOffset = $offset.left + source.outerWidth() - 20;
+
         element.css({
             'top': $offset.top,
-            'left': testIfPositionRight() ? $offset.left + source.outerWidth() : $offset.left - element.outerWidth(),
+            'left': testIfPositionRight() ? leftOffset : $offset.left - element.outerWidth(),
         });
     };
 
