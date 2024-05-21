@@ -284,7 +284,7 @@
             .appendTo(idWrapperHash);
 
         setDisplayStatic($bubble);
-        setPosition(source, $bubble);
+        setBubblePosition(source, $bubble);
 
         if (!isInWindow($bubble)) {
             $bubble.hide();
@@ -494,7 +494,7 @@
 
         loadComments();
         loadCommentForm();
-        setPosition(source, $commentsWrapper);
+        setCommentsWrapperPosition(source, $commentsWrapper);
         testIfMoveSiteIsNecessary($commentsWrapper);
         handleClickElsewhere();
         ajaxStop();
@@ -545,22 +545,93 @@
         return $attDataIncomValue;
     };
 
+		/**
+		 * Set comment wrapper position.
+		 */
+		var setCommentsWrapperPosition = function (source, element) {
+			var $offset = source.offset();
+
+			const scrollbarWidth = 20;
+
+			/**
+			 * Right-positioned elements should not spill over the viewport.
+			 */
+			const wrapperTotalWidth = element.outerWidth() + parseInt( element.css( 'margin-left' ) ) + parseInt( element.css( 'margin-right' ) );
+
+			const calculateLeftOffset = () => {
+				const naiveLeftOffset = $offset.left + source.outerWidth();
+
+				const overflow = naiveLeftOffset + wrapperTotalWidth - window.innerWidth;
+
+				// If it would overflow, align with the source element instead.
+				if ( overflow > 0 ) {
+					// Ensure that the element doesn't overlap the bubble.
+					element.width( element.width() - 20 );
+					return element.offset().left;
+				}
+
+				return naiveLeftOffset;
+			}
+
+			const leftOffset = calculateLeftOffset();
+
+			element.css({
+				'top': $offset.top,
+				'left': testIfPositionRight() ? leftOffset : $offset.left - element.outerWidth(),
+			});
+		}
+
     /*
-     * Set position
+     * Set bubble position
      */
-    var setPosition = function (source, element) {
-        var $offset = source.offset();
+    var setBubblePosition = function (source, element) {
+			var $offset = source.offset();
 
-				/*
-				 * Right-aligned bubbles should be placed off of the right edge,
-				 * to allow room for scrollbars on mobile.
-				 */
-				const leftOffset = $offset.left + source.outerWidth() - 20;
+			const scrollbarWidth = 20;
 
-        element.css({
-            'top': $offset.top,
-            'left': testIfPositionRight() ? leftOffset : $offset.left - element.outerWidth(),
-        });
+			/**
+			 * If right-positioned elements will be too close to the edge of the viewport
+			 * (as on mobile devices), we should nudge them over to the left.
+			 */
+			const bubbleTotalWidth = element.outerWidth() + parseInt( element.css( 'margin-left' ) ) + parseInt( element.css( 'margin-right' ) );
+
+			const calculateScrollbarOffset = () => {
+				if ( ! testIfPositionRight() ) {
+					return 0;
+				}
+
+				const availableSpace = window.innerWidth - scrollbarWidth;
+
+				const overflow = $offset.left + source.outerWidth() + bubbleTotalWidth - availableSpace;
+
+				if ( overflow > 0 ) {
+					return overflow;
+				}
+
+				return 0;
+			}
+
+			const scrollbarOffset = calculateScrollbarOffset();
+
+			/*
+			 * Right-aligned bubbles should be placed off of the right edge,
+			 * to allow room for scrollbars on mobile.
+			 */
+			const leftOffset = scrollbarOffset > 0 ? $offset.left + source.outerWidth() - scrollbarOffset : $offset.left + source.outerWidth();
+
+			element.css({
+				'top': $offset.top,
+				'left': testIfPositionRight() ? leftOffset : $offset.left - element.outerWidth(),
+			});
+
+			/*
+			 * The scrollbarWidth offset means we will try to shrink the main content area
+		   * by the same amount, to prevent overlap.
+			 */
+			if ( scrollbarOffset > 0 ) {
+				const sourcePaddingRight = parseInt( source.css( 'padding-right' ) );
+				source.css( 'padding-right', sourcePaddingRight + scrollbarOffset );
+			}
     };
 
     /*
