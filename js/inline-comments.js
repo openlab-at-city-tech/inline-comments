@@ -140,7 +140,7 @@
 
 				const l = elementsBySelectors.length;
 
-				for (let i = 0; i < l; i += 1) {
+				for ( let i = 0; i < l; i++ ) {
 					var $that = $(elementsBySelectors[i]);
 					addAttToElement($that);
 					bubble.createFromElement($that);
@@ -297,10 +297,11 @@
 							'click',
 							function (e) {
 								e.preventDefault();
-								handleClickBubble(source, $bubble);
+								const isKeyboardEvent = e.detail === 0;
+								handleClickBubble(source, $bubble, isKeyboardEvent);
 
-								// If the click event was triggered by a keyboard event, set focus to the first input field.
-								if ( e.detail === 0 ) {
+								// If this was a keyboard event, focus the first input field.
+								if ( isKeyboardEvent ) {
 									$( idCommentsAndFormHash + ' textarea' ).first().focus();
 								}
 							}
@@ -443,8 +444,9 @@
     /*
      * This event will be triggered when user clicks on bubble
      */
-    var handleClickBubble = function (source, bubble) {
+    var handleClickBubble = function (source, bubble, isKeyboardEvent) {
 			var $that = $(this);
+
 
 			// When the wrapper is already visible (and the bubble is active), then remove the wrapper and the bubble's class
 			if ($that.hasClass(classBubbleActive)) {
@@ -466,7 +468,6 @@
 					bubble.addClass(classBubbleActive);
 					loadCommentsWrapper(bubble);
 			}
-
     };
 
     /*
@@ -952,8 +953,7 @@
      * @todo When page scrolls to element, automatically open wrapper
      */
     var loadScrollScript = function (source, target) {
-        $('[' + source + ']').on( 'click', function () {
-
+        $('[' + source + ']').on( 'click', function ( e ) {
             var targetValue = $(this).attr(source); // Get value from source element
             var $target = $('[' + target + '="' + targetValue + '"]');
 
@@ -964,6 +964,12 @@
                 removeExistingClasses(classScrolledTo);
                 $target.addClass(classScrolledTo);
             }
+
+						// If this was a keyboard event, focus the bubble.
+						if ( e.detail === 0 ) {
+							const $bubble = $( '.incom-bubble[data-incom-bubble="' + targetValue + '"]');
+							focusOnElement( $bubble[0] );
+						}
 
         });
     };
