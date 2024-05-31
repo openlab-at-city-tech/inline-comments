@@ -311,7 +311,10 @@
 				'click',
 				function (e) {
 					e.preventDefault();
-					handleClickBubble(source, $bubble, e.detail === 0);
+
+					const isKeyboardEvent = e.detail === 0;
+
+					handleClickBubble(source, $bubble, isKeyboardEvent);
 
 					// If this was a keyboard event, focus the first input field.
 					if ( isKeyboardEvent ) {
