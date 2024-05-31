@@ -611,6 +611,7 @@
 		const $offset = source.offset();
 
 		const scrollbarWidth = getScrollbarWidth();
+		const buttonHorizontalMargin = 10;
 
 		/**
 		 * If right-positioned elements will be too close to the edge of the viewport
@@ -625,7 +626,7 @@
 
 			const availableSpace = window.innerWidth - scrollbarWidth;
 
-			const overflow = $offset.left + source.outerWidth() + bubbleTotalWidth - availableSpace;
+			const overflow = $offset.left + source.outerWidth() + bubbleTotalWidth + buttonHorizontalMargin - availableSpace;
 
 			if ( overflow > 0 ) {
 				return overflow;
@@ -647,15 +648,56 @@
 			'left': testIfPositionRight() ? leftOffset : $offset.left - element.outerWidth(),
 		});
 
+		if ( testIfPositionRight() ) {
+			element.css( 'margin-right', buttonHorizontalMargin );
+		} else {
+			element.css( 'margin-left', buttonHorizontalMargin );
+		}
+
+
 		/*
 		 * The scrollbarWidth offset means we will try to shrink the main content area
 		 * by the same amount, to prevent overlap.
 		 */
-		if ( scrollbarOffset > 0 ) {
+		if ( scrollbarOffset > 0 && ! source.data( 'incom-scrollbar-offset' ) ) {
 			const sourcePaddingRight = parseInt( source.css( 'padding-right' ) );
 			source.css( 'padding-right', sourcePaddingRight + scrollbarOffset );
+			source.data( 'incom-scrollbar-offset', scrollbarOffset );
 		}
 	};
+
+	const debug = function( message ) {
+		const debugElement = document.getElementById( 'incom-debug' );
+		if ( debugElement ) {
+			debugElement.remove();
+		}
+
+		const newElement = document.createElement( 'div' );
+		newElement.id = 'incom-debug';
+
+		// If the message is an object, we'll stringify it.
+		const stringifiedMessage = typeof message === 'object' ? JSON.stringify( message ) : message;
+		newElement.textContent = stringifiedMessage;
+
+		// fixed positioning
+		newElement.style.position = 'fixed';
+
+		// top right corner
+		newElement.style.top = '0';
+		newElement.style.right = '0';
+
+		// z-index
+		newElement.style.zIndex = '999999999';
+
+		// padding
+		newElement.style.padding = '10px';
+
+		// background
+		newElement.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+
+		// append to body
+		document.body.appendChild( newElement );
+	}
 
 	/*
 	 * Set element properties (outerWidth, offset, ...)
