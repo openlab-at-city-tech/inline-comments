@@ -754,7 +754,32 @@
 	 * Remove comments wrapper when user clicks anywhere but the idWrapperHash
 	 */
 	const handleClickElsewhere = function () {
-		$('html').on( 'click', function (e) {
+		let touchStartX = 0;
+		let touchStartY = 0;
+		let touchMoved = false;
+
+		$('html').on('touchstart', function (e) {
+			touchStartX = e.originalEvent.touches[0].clientX;
+			touchStartY = e.originalEvent.touches[0].clientY;
+			touchMoved = false;
+		});
+
+		$('html').on('touchmove', function (e) {
+			const touchEndX = e.originalEvent.touches[0].clientX;
+			const touchEndY = e.originalEvent.touches[0].clientY;
+
+			// Detect significant movement
+			if (Math.abs(touchEndX - touchStartX) > 10 || Math.abs(touchEndY - touchStartY) > 10) {
+				touchMoved = true;
+			}
+		});
+
+		$('html').on('touchend click', function (e) {
+			// If the touch interaction involved movement, it's likely a scroll
+			if (touchMoved) {
+				return;
+			}
+
 			if ($(e.target).parents(idWrapperHash).length === 0) {
 				removeCommentsWrapper(true);
 			}
@@ -963,6 +988,7 @@
 			this.focusHandler();
 			this.permalinksHandler();
 			this.tabHandler();
+			this.resizeHandler();
 		},
 
 		/**
@@ -1008,6 +1034,43 @@
 					addSkipLink();
 				}
 			});
+		},
+
+		/**
+		 * Resize handler.
+		 *
+		 * Certain scroll events on mobile devices can improperly trigger the 'resize'
+		 * event, so we use a width check to ensure that the resize is legitimate.
+		 */
+		resizeHandler () {
+			let lastWindowWidth = window.innerWidth;
+
+			const debounce = (func, wait) => {
+				let timeout;
+				return (...args) => {
+					clearTimeout(timeout);
+					timeout = setTimeout(() => func.apply(this, args), wait);
+				};
+			};
+
+			const handleResize = () => {
+				// Scrolling on mobile can trigger false positives.
+				const currentWindowWidth = window.innerWidth;
+
+				// Check if the dimensions have actually changed
+				if ( currentWindowWidth !== lastWindowWidth ) {
+					lastWindowWidth = currentWindowWidth;
+
+					// This is a true resize, so we rebuild the comment bubbles.
+					incom.rebuild();
+				} else {
+					// This is not a true resize.
+				}
+			};
+
+			const debouncedResizeHandler = debounce(handleResize, 200);
+
+			window.addEventListener('resize', debouncedResizeHandler);
 		}
 	};
 
