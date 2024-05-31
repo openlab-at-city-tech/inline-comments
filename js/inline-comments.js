@@ -50,7 +50,6 @@
 		classScrolledTo = 'incom-scrolled-to',
 
 		// Other
-		selectComment = idCommentsAndFormHash + ' .comment',
 		dataIncomKey = 'data_incom', // Should be the same as $DataIncomKey in class-comments.php
 		attDataIncomArr = [] // Array that contains all attDataIncom values
 
