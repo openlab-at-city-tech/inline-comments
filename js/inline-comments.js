@@ -1,1190 +1,1183 @@
+/* global jQuery */
+
 /*
  * Inline Comments
  * by Kevin Weber
  */
 
 (function (incom, $) {
-    'use strict';
+	'use strict';
 
-    var o,
+	let o, attDataIncomArr
 
-        // IDs
-        idWrapper = 'incom_wrapper',
-        idWrapperHash = '#' + idWrapper,
-        idWrapperAppendTo = 'html',
-        idCommentsAndForm = 'comments-and-form',
-        idCommentsAndFormHash = '#' + idCommentsAndForm,
-        idCommentForm = 'incom-commentform',
+	// IDs
+	const
+		idWrapper = 'incom_wrapper',
+		idWrapperHash = '#' + idWrapper,
+		idWrapperAppendTo = 'html',
+		idCommentsAndForm = 'comments-and-form',
+		idCommentsAndFormHash = '#' + idCommentsAndForm,
+		idCommentForm = 'incom-commentform',
 
-        // Attributes
-        attDataIncom = 'data-incom',
-        attDataIncomComment = attDataIncom + '-comment',
-        attDataIncomArr = [], // This array will contain all attDataIncom values
-        attDataIncomBubble = attDataIncom + '-bubble',
-        attDataIncomRef = attDataIncom + '-ref',
+		// Attributes
+		attDataIncom = 'data-incom',
+		attDataIncomComment = attDataIncom + '-comment',
+		attDataIncomBubble = attDataIncom + '-bubble',
+		attDataIncomRef = attDataIncom + '-ref',
 
-        // Classes
-        classActive = 'incom-active',
-        classActiveDot = '.' + classActive,
-        classVisibleComment = 'incom-visible-comment',
-        classVisibleCommentDot = '.' + classVisibleComment,
-        classPosition = 'incom-position-', // Expects that o.position follows ('left' or 'right')
-        classBubble = 'incom-bubble',
-        classBubbleDot = '.' + classBubble,
-        classBubbleStyle = classBubble + '-style',
-        classBubbleStatic = classBubble + '-static',
-        classBubbleStaticDot = '.' + classBubbleStatic,
-        classBubbleDynamic = classBubble + '-dynamic',
-        classBubbleActive = classBubble + '-active', // Class for currently selected bubble
-        classBubbleLink = classBubble + '-link',
-        classCommentsWrapper = 'incom-comments-wrapper',
-        classCommentsWrapperDot = '.' + classCommentsWrapper,
-        classReply = 'incom-reply',
-        classReplyDot = '.' + classReply,
-        classCancel = 'incom-cancel', // When a user clicks on an element with this class, the comments wrapper will be removed
-        classCancelDot = '.' + classCancel,
-        classBranding = 'incom-info-icon',
-        classBrandingDot = '.' + classBranding,
-        classScrolledTo = 'incom-scrolled-to',
+		// Classes
+		classActive = 'incom-active',
+		classActiveDot = '.' + classActive,
+		classVisibleComment = 'incom-visible-comment',
+		classVisibleCommentDot = '.' + classVisibleComment,
+		classPosition = 'incom-position-', // Expects that o.position follows ('left' or 'right')
+		classBubble = 'incom-bubble',
+		classBubbleDot = '.' + classBubble,
+		classBubbleStyle = classBubble + '-style',
+		classBubbleStatic = classBubble + '-static',
+		classBubbleStaticDot = '.' + classBubbleStatic,
+		classBubbleDynamic = classBubble + '-dynamic',
+		classBubbleActive = classBubble + '-active', // Class for currently selected bubble
+		classBubbleLink = classBubble + '-link',
+		classCommentsWrapper = 'incom-comments-wrapper',
+		classCommentsWrapperDot = '.' + classCommentsWrapper,
+		classReply = 'incom-reply',
+		classReplyDot = '.' + classReply,
+		classCancel = 'incom-cancel', // When a user clicks on an element with this class, the comments wrapper will be removed
+		classCancelDot = '.' + classCancel,
+		classBranding = 'incom-info-icon',
+		classBrandingDot = '.' + classBranding,
+		classScrolledTo = 'incom-scrolled-to',
 
-        // Other
-        selectComment = idCommentsAndFormHash + ' .comment',
-        dataIncomKey = 'data_incom', // Should be the same as $DataIncomKey in class-comments.php
-        slideWidth = 0, // Shift page content o.moveSiteSelector to the left
-				lastFocusedBubble = null,
-        $viewportW = $(window).width(),
-        $elementW,
-        $offsetL,
-        $sumOffsetAndElementW;
+		// Other
+		selectComment = idCommentsAndFormHash + ' .comment',
+		dataIncomKey = 'data_incom' // Should be the same as $DataIncomKey in class-comments.php
 
+	let
+		slideWidth = 0, // Shift page content o.moveSiteSelector to the left
+		lastFocusedBubble = null,
+		$viewportW = $(window).width(),
+		$elementW,
+		$offsetL,
+		$sumOffsetAndElementW;
 
-    /**
-     * Rebuild bubbles and content data attributes
-     */
-    incom.rebuild = function () {
-        // Reset
-        $viewportW = $(window).width();
-        attDataIncomArr = [];
-        $('#incom_wrapper .incom-bubble').remove();
+	/**
+	 * Rebuild bubbles and content data attributes
+	 */
+	incom.rebuild = function () {
+		// Reset
+		$viewportW = $(window).width();
+		attDataIncomArr = [];
+		$('#incom_wrapper .incom-bubble').remove();
 
-        // Re-init bubbles
-        initElementsAndBubblesFromSelectors();
+		// Re-init bubbles
+		initElementsAndBubblesFromSelectors();
 
-        // Reset sidebar form if visible
-        var commentsForm = $(idCommentsAndFormHash + ':visible');
-        if (commentsForm.length) {
-            removeCommentsWrapper();
-            moveSite('out');
-        }
-    };
+		// Reset sidebar form if visible
+		const commentsForm = $(idCommentsAndFormHash + ':visible');
+		if (commentsForm.length) {
+			removeCommentsWrapper();
+			moveSite('out');
+		}
+	};
 
+	/*
+	 * Private methods
+	 */
+	const setOptions = function (options) {
+		// 'options' overrides these defaults
+		o = $.extend(
+			{
+				canComment: true,
+				selectors: 'p',
+				moveSiteSelector: idWrapperAppendTo,
+				countStatic: true,
+				alwaysStatic: false,
+				defaultBubbleText: '+',
+				bubbleStyle: 'bubble',
+				bubbleAnimationIn: 'default',
+				bubbleAnimationOut: 'default',
+				// highlighted: false,
+				position: 'left',
+				background: 'white',
+				backgroundOpacity: '1',
+				displayBranding: false,
+			},
+			options
+		);
+	};
 
+	/*
+	 * This wrapper contains comment bubbles
+	 */
+	const initIncomWrapper = function () {
+		let docFragment,
+			wrapper,
+			wrapperParent;
 
-    /*
-     * Private methods
-     */
+		if ($(idWrapperHash).length === 0) {
+			docFragment = document.createDocumentFragment();
+			wrapper = document.createElement("div");
+			wrapperParent = document.querySelector(idWrapperAppendTo);
 
+			wrapper.setAttribute("id", idWrapper);
+			wrapper.className = classPosition + o.position;
 
+			docFragment.appendChild(wrapper);
+			wrapperParent.appendChild(docFragment);
+		}
 
-    var setOptions = function (options) {
-        // 'options' overrides these defaults
-        o = $.extend({
-                canComment: true,
-                selectors: 'p',
-                moveSiteSelector: idWrapperAppendTo,
-                countStatic: true,
-                alwaysStatic: false,
-                defaultBubbleText: '+',
-                bubbleStyle: 'bubble',
-                bubbleAnimationIn: 'default',
-                bubbleAnimationOut: 'default',
-                // highlighted: false,
-                position: 'left',
-                background: 'white',
-                backgroundOpacity: '1',
-                displayBranding: false,
-            },
-            options);
-    };
+		initElementsAndBubblesFromSelectors();
+	};
 
+	/*
+	 * Setup elements and bubbles that depend on selectors
+	 */
+	const initElementsAndBubblesFromSelectors = function () {
+		const $contentArea = findContentArea();
+		const elementsBySelectors = $contentArea.find( o.selectors );
 
-    /*
-     * This wrapper contains comment bubbles
-     */
-    var initIncomWrapper = function () {
-        var docFragment,
-            wrapper,
-            wrapperParent;
+		const l = elementsBySelectors.length;
 
-        if ($(idWrapperHash).length === 0) {
-            docFragment = document.createDocumentFragment();
-            wrapper = document.createElement("div");
-            wrapperParent = document.querySelector(idWrapperAppendTo);
+		for ( let i = 0; i < l; i++ ) {
+			const $that = $(elementsBySelectors[i]);
+			addAttToElement($that);
+			bubble.createFromElement($that);
+		}
+	};
 
-            wrapper.setAttribute("id", idWrapper);
-            wrapper.className = classPosition + o.position;
+	/**
+	 * Uses heuristics to identify the post content area.
+	 *
+	 * @return {jQuery} The content area.
+	 */
+	const findContentArea = function() {
+		const $content = $( '.entry-content' );
 
-            docFragment.appendChild(wrapper);
-            wrapperParent.appendChild(docFragment);
-        }
+		if ( $content.length ) {
+			return $content;
+		}
 
-        initElementsAndBubblesFromSelectors();
-    };
+		const $main = $( 'main' );
+		if ( $main.length && 1 === $main.length ) {
+			return $main;
+		}
 
-    /*
-     * Setup elements and bubbles that depend on selectors
-     */
-    var initElementsAndBubblesFromSelectors = function () {
-				const $contentArea = findContentArea();
-				const elementsBySelectors = $contentArea.find( o.selectors );
+		return $( 'body' );
+	}
 
-				const l = elementsBySelectors.length;
+	/**
+	 * Add attribute attDataIncom to element; increase counter per element type (instead of using one counter for all elements independent of their types).
+	 *
+	 * @param {jQuery} $element The element to add the attribute to.
+	 * @param {number} i        The counter.
+	 */
+	const addAttToElement = function ($element, i) {
+		i = i || 0;
 
-				for ( let i = 0; i < l; i++ ) {
-					var $that = $(elementsBySelectors[i]);
-					addAttToElement($that);
-					bubble.createFromElement($that);
+		// Only proceed if element has no attribute attDataIncom yet
+		if (!$element.attr(attDataIncom)) {
+			const identifier = getIdentifier($element);
+
+			// Increase i when specific attProp (value of attDataIncom) already exists
+			i = increaseIdentifierNumberIfAttPropExists(i, identifier);
+
+			const attProp = identifier + i; // WOULD BE BETTER: var attProp = identifier + '-' + i; // BUT THAT WOULD CONFLICT WITH ALREADY STORED COMMENTS
+
+			//@TODO: Add part that assigns comment to specific article/page/post (article-id); include fallback in cause a comment has no ID (yet)
+
+			$element.attr(attDataIncom, attProp);
+
+			$element.attr( 'id', 'incom-element-' + attProp );
+		}
+	};
+
+	const bubble = {
+		/*
+		 * Set bubble position and visibility
+		 */
+		//@TODO
+		/*
+		set (options) {
+			const opt = $.extend(
+				{
+					posX: undefined,
+					posY: undefined,
+					id: undefined,
+					visible: false,
+				},
+				options
+			);
+
+			if (!exists … && id !== undefined ) {
+				createBubble + addAtt
+			} else if ( ( posX && posY ) !== undefined && ( changedPosX || changedPosY ) ) {
+				recalculatePos
+			}
+
+			if ( opt.visible ) {
+				displayBubble
+			}
+		},
+		*/
+
+		/*
+		 * Add bubble depending on an element
+		 */
+		createFromElement ($element) {
+			//@TODO
+			addBubble($element);
+		}
+	};
+
+	/*
+	 * Example: Getter and Setter
+	 */
+	// function Selectors( val ) {
+	//    var selectors = val;
+
+	//    this.getValue = function(){
+	//        return selectors;
+	//    };
+
+	//    this.setValue = function( val ){
+	//        selectors = splitSelectors( val );
+	//    };
+	// }
+
+	/*
+	 * Use the first five letters of the element's name as identifier
+	 * @return string
+	 */
+	const getIdentifier = function (element) {
+		const identifier = element.prop('tagName').substr(0, 5);
+		return identifier;
+	};
+
+	/*
+	 * Increase identifier number (i) if that specific attProp was already used. attProp must be unique
+	 * @return int
+	 */
+	const increaseIdentifierNumberIfAttPropExists = function (i, identifier) {
+		let attProp = identifier + i;
+
+		if ($.inArray(attProp, attDataIncomArr) !== -1) {
+			while ($.inArray(attProp, attDataIncomArr) !== -1) {
+				i++;
+				attProp = identifier + i;
+			}
+		}
+		attDataIncomArr.push(attProp);
+
+		return i;
+	};
+
+	/*
+	 * Add bubbles to each element
+	 */
+	const addBubble = function (source) {
+		const bubbleText = addBubbleText(source);
+		const bubbleContainer = loadBubbleContainer(source);
+		const $bubble = $(
+			'<a/>',
+			{
+				href: '',
+				'class': classBubbleLink,
+			}
+		)
+			.text(bubbleText)
+			.wrap(bubbleContainer)
+			.parent()
+			.appendTo(idWrapperHash);
+
+		setDisplayStatic($bubble);
+		setBubblePosition(source, $bubble);
+
+		if (!isInWindow($bubble)) {
+			$bubble.hide();
+		} else {
+			handleHover(source, $bubble);
+
+			$bubble.on(
+				'click',
+				function (e) {
+					e.preventDefault();
+					const isKeyboardEvent = e.detail === 0;
+					handleClickBubble(source, $bubble, isKeyboardEvent);
+
+					// If this was a keyboard event, focus the first input field.
+					if ( isKeyboardEvent ) {
+						$( idCommentsAndFormHash + ' textarea' ).first().focus();
+					}
 				}
-    };
+			);
+		}
+	};
+
+	/*
+	 * Get text/number that should be displayed in a bubble
+	 */
+	const addBubbleText = function (source) {
+		let bubbleText;
+
+		if (testIfCommentsCountLarger0(source)) {
+			bubbleText = countComments(source);
+		} else {
+			bubbleText = o.defaultBubbleText;
+		}
+
+		return bubbleText;
+	};
+
+	/*
+	 * Count the number of comments that are assigned to a specific paragraph
+	 */
+	const countComments = function (source) {
+		// Get attribute value from source's attribute attDataIncom
+		const attFromSource = source.attr(attDataIncom);
+		// Define selector that identifies elements that shell be counted
+		const selectByAtt = '[' + attDataIncomComment + '="' + attFromSource + '"]';
+		// Count elements
+		let $count = $(selectByAtt).length;
+		// Increase count for each inline reply, too
+		$count += $(selectByAtt + ' .children li').length;
+
+		return $count;
+	};
+
+	/*
+	 * Get container that contains the bubble link
+	 */
+	const loadBubbleContainer = function (source) {
+		const bubbleValue = source.attr(attDataIncom);
+		const text = '<div class="' + loadBubbleContainerClass(source) + '" ' + attDataIncomBubble + '="' + bubbleValue + '" />';
+		return text;
+	};
+
+	/*
+	 * Generate class for bubbleContainer
+	 */
+	const loadBubbleContainerClass = function (source) {
+		let containerClass = classBubble;
+		const space = ' ';
+
+		if (
+			(o.alwaysStatic) ||
+			(testIfCommentsCountLarger0(source) && o.countStatic)
+		) {
+			containerClass += space + classBubbleStatic;
+		}
+
+		if (
+			testIfCommentsCountLarger0(source) ||
+			(!testIfCommentsCountLarger0(source) && (o.bubbleStyle === 'bubble'))
+		) {
+			containerClass += space + classBubbleStyle;
+		} else {
+			containerClass += space + classBubbleDynamic;
+		}
+
+		return containerClass;
+	};
+
+	/*
+	 * Test if comments count is larger than 0
+	 */
+	const testIfCommentsCountLarger0 = function (source) {
+		const count = countComments(source);
+		return ( isNumeric( count ) && count > 0 ) ? true : false;
+	};
+
+	const setDisplayStatic = function ( theBubble ) {
+		if ( theBubble.hasClass( classBubbleStatic ) ) {
+			theBubble.css( 'display', 'block' );
+		}
+	};
+
+	const isNumeric = ( value ) => {
+		return typeof value === 'number' && isFinite( value ) || !isNaN( Number( value ) );
+	}
+
+	/*
+	 * This event will be triggered when user hovers a text element or bubble
+	 */
+	const handleHover = function ( element, theBubble ) {
+		if ( ! theBubble.hasClass( classBubbleStatic ) && o.canComment ) {
+			// Handle hover (for both, "elements" and $bubble)
+			element.add( theBubble );
+
+			element.on( 'mouseenter', function() {
+				mouseEnterCallback( bubble );
+			} );
+
+			element.on( 'mouseleave', function() {
+				mouseLeaveCallback( bubble );
+			} );
+		}
+	};
+
+	/**
+	 * mouseenter callback.
+	 *
+	 * @param {jQuery} theBubble The bubble that is being hovered.
+	 */
+	const mouseEnterCallback = function( theBubble ) {
+		// First hide all non-static bubbles
+		$(classBubbleDot + ':not(' + classBubbleStaticDot + ')').hide();
+
+		if (o.bubbleAnimationIn === 'fadein') {
+				theBubble.stop(true, true).fadeIn();
+		} else {
+				theBubble.stop(true, true).show();
+		}
+
+		if (!isInWindow(bubble)) {
+				theBubble.hide();
+		}
+	}
+
+	/**
+	 * mouseleave callback.
+	 *
+	 * @param {jQuery} theBubble The bubble that is being hovered.
+	 */
+	const mouseLeaveCallback = function( theBubble ) {
+		if (o.bubbleAnimationOut === 'fadeout') {
+			theBubble.stop(true, true).fadeOut();
+		} else {
+			// Delay hiding to make it possible to hover the bubble before it disappears
+			theBubble.stop(true, true).delay(700).hide(0);
+		}
+	}
+
+	/*
+	 * This event will be triggered when user clicks on bubble
+	 */
+	const handleClickBubble = function (source, theBubble, isKeyboardEvent) {
+		const $that = $(this);
+
+
+		// When the wrapper is already visible (and the bubble is active), then remove the wrapper and the bubble's class
+		if ($that.hasClass(classBubbleActive)) {
+			removeCommentsWrapper(true);
+			$that.removeClass(classBubbleActive);
+		} else {
+			// Remove classActive before classActive will be added to another element (source)
+			removeExistingClasses(classActive);
+
+			// Add classActive to active elements (paragraphs, divs, etc.)
+			source.addClass(classActive);
+
+			// Before creating a new comments wrapper: remove the previously created wrapper, if any
+			removeCommentsWrapper();
+
+			bubble.addClass(classBubbleActive);
+			loadCommentsWrapper(bubble);
+		}
+	};
+
+	/*
+	 * Create comments wrapper
+	 */
+	const createCommentsWrapper = function () {
+		let $commentsWrapper;
+
+		if ($(classCommentsWrapperDot).length === 0) {
+			$commentsWrapper = $(
+				'<div/>',
+				{ 'class': classCommentsWrapper }
+			)
+				.appendTo(idWrapperHash)
+				.css('background-color', 'rgba(' + convertHexToRgb(o.background) + ',' + o.backgroundOpacity + ')');
+		} else {
+			$commentsWrapper = $(classCommentsWrapperDot);
+		}
+
+		return $commentsWrapper;
+	};
+
+	/*
+	 * Load comments wrapper
+	 */
+	const loadCommentsWrapper = function (source) {
+			const $commentsWrapper = createCommentsWrapper();
+
+			loadComments();
+			loadCommentForm();
+			setCommentsWrapperPosition(source, $commentsWrapper);
+			testIfMoveSiteIsNecessary($commentsWrapper);
+			handleClickElsewhere();
+			ajaxStop();
+	};
+
+	/*
+	 * Use ajaxStop function to prevent plugin from breaking when another plugin uses Ajax
+	 */
+	const ajaxStop = function () {
+		$(document).ready(handleClickCancel()).ajaxStop(function () {
+			handleClickCancel();
+		});
+	};
+
+	/*
+	 * Insert comments and comment form into wrapper
+	 */
+	const loadCommentForm = function () {
+		$(idCommentsAndFormHash).appendTo(classCommentsWrapperDot).show();
+		loadHiddenInputField();
+	};
+
+	/*
+	 * Add a hidden input field dynamically
+	 */
+	const loadHiddenInputField = function () {
+			const input = $('<input>')
+				.attr('type', 'hidden')
+				.attr('name', dataIncomKey).val(getAttDataIncomValue);
+			$(idCommentsAndFormHash + ' .form-submit').append($(input));
+	};
+
+	/*
+	 * Insert comments that have a specific value (getAttDataIncomValue) for attDataIncomComment
+	 */
+	const loadComments = function () {
+		const selectByAtt = '[' + attDataIncomComment + '=' + getAttDataIncomValue() + ']';
+		$(selectComment).hide();
+		$(selectComment + selectByAtt).addClass(classVisibleComment).show();
+		$(classVisibleCommentDot + ' .children li').show();
+	};
+
+	/*
+	 * Get (current) value for AttDataIncom
+	 */
+	const getAttDataIncomValue = function () {
+		const $attDataIncomValue = $(classActiveDot).attr(attDataIncom);
+		return $attDataIncomValue;
+	};
+
+	/**
+	 * Set comment wrapper position.
+	 *
+	 * @param {jQuery} source  The source element.
+	 * @param {jQuery} element The element to position.
+	 */
+	const setCommentsWrapperPosition = function (source, element) {
+		const $offset = source.offset();
+
+		const scrollbarWidth = 20;
 
 		/**
-		 * Uses heuristics to identify the post content area.
-		 *
-		 * @return {jQuery} The content area.
+		 * Right-positioned elements should not spill over the viewport.
 		 */
-		const findContentArea = function() {
-			const $content = $( '.entry-content' );
+		const wrapperTotalWidth = element.outerWidth() + parseInt( element.css( 'margin-left' ) ) + parseInt( element.css( 'margin-right' ) );
 
-			if ( $content.length ) {
-				return $content;
+		const calculateLeftOffset = () => {
+			const naiveLeftOffset = $offset.left + source.outerWidth();
+
+			const overflow = naiveLeftOffset + wrapperTotalWidth - window.innerWidth;
+
+			// If it would overflow, align with the associated body element.
+			if ( overflow > 0 ) {
+				const incomId = source.closest( '.incom-bubble' ).attr( 'data-incom-bubble' );
+				const associatedElement = document.getElementById( 'incom-element-' + incomId );
+
+				// Ensure that the element doesn't overlap the bubble.
+				element.width( element.width() - 20 );
+
+				return associatedElement.offsetLeft;
 			}
 
-			const $main = $( 'main' );
-			if ( $main.length && 1 === $main.length ) {
-				return $main;
-			}
-
-			return $( 'body' );
+			return naiveLeftOffset;
 		}
 
-    /*
-     * Add attribute attDataIncom to element; increase counter per element type (instead of using one counter for all elements independent of their types).
-     */
-    var addAttToElement = function ($element, i) {
-        i = i || 0;
+		const leftOffset = calculateLeftOffset();
 
-        // Only proceed if element has no attribute attDataIncom yet
-        if (!$element.attr(attDataIncom)) {
-            var identifier = getIdentifier($element);
+		element.css({
+			'top': $offset.top,
+			'left': testIfPositionRight() ? leftOffset : $offset.left - element.outerWidth(),
+		});
+	}
 
-            // Increase i when specific attProp (value of attDataIncom) already exists
-            i = increaseIdentifierNumberIfAttPropExists(i, identifier);
+	/*
+	 * Set bubble position
+	 */
+	const setBubblePosition = function (source, element) {
+		const $offset = source.offset();
 
-            var attProp = identifier + i; // WOULD BE BETTER: var attProp = identifier + '-' + i; // BUT THAT WOULD CONFLICT WITH ALREADY STORED COMMENTS
-
-            //@TODO: Add part that assigns comment to specific article/page/post (article-id); include fallback in cause a comment has no ID (yet)
-
-            $element.attr(attDataIncom, attProp);
-
-						$element.attr( 'id', 'incom-element-' + attProp );
-        }
-    };
-
-    var bubble = {
-        /*
-         * Set bubble position and visibility
-         */
-        set: function (options) {
-            var opt = $.extend({
-                    posX: undefined,
-                    posY: undefined,
-                    id: undefined,
-                    visible: false,
-                },
-                options);
-
-            //@TODO
-            /*
-            if (!exists … && id !== undefined ) {
-              createBubble + addAtt
-            }
-            else if ( ( posX && posY ) !== undefined && ( changedPosX || changedPosY ) ) {
-              recalculatePos
-            }
-
-            if ( opt.visible ) {
-              displayBubble
-            }
-            */
-        },
-
-        /*
-         * Add bubble depending on an element
-         */
-        createFromElement: function ($element) {
-            //@TODO
-            addBubble($element);
-        }
-
-    };
-
-    /*
-     * Example: Getter and Setter
-     */
-    // function Selectors( val ) {
-    //    var selectors = val;
-
-    //    this.getValue = function(){
-    //        return selectors;
-    //    };
-
-    //    this.setValue = function( val ){
-    //        selectors = splitSelectors( val );
-    //    };
-    // }
-
-    /*
-     * Use the first five letters of the element's name as identifier
-     * @return string
-     */
-    var getIdentifier = function (element) {
-        var identifier = element.prop('tagName').substr(0, 5);
-        return identifier;
-    };
-
-    /*
-     * Increase identifier number (i) if that specific attProp was already used. attProp must be unique
-     * @return int
-     */
-    var increaseIdentifierNumberIfAttPropExists = function (i, identifier) {
-        var attProp = identifier + i;
-
-        if ($.inArray(attProp, attDataIncomArr) !== -1) {
-            while ($.inArray(attProp, attDataIncomArr) !== -1) {
-                i++;
-                attProp = identifier + i;
-            }
-        }
-        attDataIncomArr.push(attProp);
-
-        return i;
-    };
-
-    /*
-     * Add bubbles to each element
-     */
-    var addBubble = function (source) {
-        var bubbleText = addBubbleText(source);
-        var bubbleContainer = loadBubbleContainer(source);
-        var $bubble = $('<a/>', {
-                href: '',
-                'class': classBubbleLink,
-            })
-            .text(bubbleText)
-            .wrap(bubbleContainer)
-            .parent()
-            .appendTo(idWrapperHash);
-
-        setDisplayStatic($bubble);
-        setBubblePosition(source, $bubble);
-
-        if (!isInWindow($bubble)) {
-            $bubble.hide();
-        } else {
-            handleHover(source, $bubble);
-
-						$bubble.on(
-							'click',
-							function (e) {
-								e.preventDefault();
-								const isKeyboardEvent = e.detail === 0;
-								handleClickBubble(source, $bubble, isKeyboardEvent);
-
-								// If this was a keyboard event, focus the first input field.
-								if ( isKeyboardEvent ) {
-									$( idCommentsAndFormHash + ' textarea' ).first().focus();
-								}
-							}
-						);
-        }
-    };
-
-    /*
-     * Get text/number that should be displayed in a bubble
-     */
-    var addBubbleText = function (source) {
-        var bubbleText;
-
-        if (testIfCommentsCountLarger0(source)) {
-            bubbleText = countComments(source);
-        } else {
-            bubbleText = o.defaultBubbleText;
-        }
-
-        return bubbleText;
-    };
-
-    /*
-     * Count the number of comments that are assigned to a specific paragraph
-     */
-    var countComments = function (source) {
-        // Get attribute value from source's attribute attDataIncom
-        var attFromSource = source.attr(attDataIncom);
-        // Define selector that identifies elements that shell be counted
-        var selectByAtt = '[' + attDataIncomComment + '="' + attFromSource + '"]';
-        // Count elements
-        var $count = $(selectByAtt).length;
-        // Increase count for each inline reply, too
-        $count += $(selectByAtt + ' .children li').length;
-
-        return $count;
-    };
-
-    /*
-     * Get container that contains the bubble link
-     */
-    var loadBubbleContainer = function (source) {
-        var bubbleValue = source.attr(attDataIncom);
-        var text = '<div class="' + loadBubbleContainerClass(source) + '" ' + attDataIncomBubble + '="' + bubbleValue + '" />';
-        return text;
-    };
-
-    /*
-     * Generate class for bubbleContainer
-     */
-    var loadBubbleContainerClass = function (source) {
-        var containerClass = classBubble;
-        var space = ' ';
-
-        if (
-            (o.alwaysStatic) ||
-            (testIfCommentsCountLarger0(source) && o.countStatic)
-        ) {
-            containerClass += space + classBubbleStatic;
-        }
-
-        if (
-            testIfCommentsCountLarger0(source) ||
-            (!testIfCommentsCountLarger0(source) && (o.bubbleStyle === 'bubble'))
-        ) {
-            containerClass += space + classBubbleStyle;
-        } else {
-            containerClass += space + classBubbleDynamic;
-        }
-
-        return containerClass;
-    };
-
-    /*
-     * Test if comments count is larger than 0
-     */
-    var testIfCommentsCountLarger0 = function (source) {
-        var count = countComments(source);
-        return ( isNumeric( count ) && count > 0 ) ? true : false;
-    };
-
-    var setDisplayStatic = function (bubble) {
-        if (bubble.hasClass(classBubbleStatic)) {
-            bubble.css('display', 'block');
-        }
-    };
-
-		const isNumeric = ( value ) => {
-				return typeof value === 'number' && isFinite( value ) || !isNaN( Number( value ) );
-		}
-
-    /*
-     * This event will be triggered when user hovers a text element or bubble
-     */
-    var handleHover = function (element, bubble) {
-        if (!bubble.hasClass(classBubbleStatic) && o.canComment) {
-            // Handle hover (for both, "elements" and $bubble)
-						element.add(bubble);
-
-						element.on( 'mouseenter', function() {
-							mouseEnterCallback( bubble );
-						} );
-
-						element.on( 'mouseleave', function() {
-							mouseLeaveCallback( bubble );
-						} );
-        }
-    };
+		const scrollbarWidth = 20;
 
 		/**
-		 * mouseenter callback.
+		 * If right-positioned elements will be too close to the edge of the viewport
+		 * (as on mobile devices), we should nudge them over to the left.
 		 */
-		const mouseEnterCallback = function( bubble ) {
-			// First hide all non-static bubbles
-			$(classBubbleDot + ':not(' + classBubbleStaticDot + ')').hide();
+		const bubbleTotalWidth = element.outerWidth() + parseInt( element.css( 'margin-left' ) ) + parseInt( element.css( 'margin-right' ) );
 
-			if (o.bubbleAnimationIn === 'fadein') {
-					bubble.stop(true, true).fadeIn();
-			} else {
-					bubble.stop(true, true).show();
-			}
-
-			if (!isInWindow(bubble)) {
-					bubble.hide();
-			}
-		}
-
-		/**
-		 * mouseleave callback.
-		 */
-		const mouseLeaveCallback = function( bubble ) {
-			if (o.bubbleAnimationOut === 'fadeout') {
-				bubble.stop(true, true).fadeOut();
-			} else {
-				// Delay hiding to make it possible to hover the bubble before it disappears
-				bubble.stop(true, true).delay(700).hide(0);
-			}
-		}
-
-    /*
-     * This event will be triggered when user clicks on bubble
-     */
-    var handleClickBubble = function (source, bubble, isKeyboardEvent) {
-			var $that = $(this);
-
-
-			// When the wrapper is already visible (and the bubble is active), then remove the wrapper and the bubble's class
-			if ($that.hasClass(classBubbleActive)) {
-					removeCommentsWrapper(true);
-					$that.removeClass(classBubbleActive);
-			}
-
-			// Else ...
-			else {
-					// Remove classActive before classActive will be added to another element (source)
-					removeExistingClasses(classActive);
-
-					// Add classActive to active elements (paragraphs, divs, etc.)
-					source.addClass(classActive);
-
-					// Before creating a new comments wrapper: remove the previously created wrapper, if any
-					removeCommentsWrapper();
-
-					bubble.addClass(classBubbleActive);
-					loadCommentsWrapper(bubble);
-			}
-    };
-
-    /*
-     * Create comments wrapper
-     */
-    var createCommentsWrapper = function () {
-        var $commentsWrapper;
-
-        if ($(classCommentsWrapperDot).length === 0) {
-            $commentsWrapper = $('<div/>', {
-                    'class': classCommentsWrapper,
-                })
-                .appendTo(idWrapperHash)
-                .css('background-color', 'rgba(' + convertHexToRgb(o.background) + ',' + o.backgroundOpacity + ')');
-        } else {
-            $commentsWrapper = $(classCommentsWrapperDot);
-        }
-
-        return $commentsWrapper;
-    };
-
-    /*
-     * Load comments wrapper
-     */
-    var loadCommentsWrapper = function (source) {
-        var $commentsWrapper = createCommentsWrapper();
-
-        loadComments();
-        loadCommentForm();
-        setCommentsWrapperPosition(source, $commentsWrapper);
-        testIfMoveSiteIsNecessary($commentsWrapper);
-        handleClickElsewhere();
-        ajaxStop();
-    };
-
-    /*
-     * Use ajaxStop function to prevent plugin from breaking when another plugin uses Ajax
-     */
-    var ajaxStop = function () {
-        $(document).ready(handleClickCancel()).ajaxStop(function () {
-            handleClickCancel();
-        });
-    };
-
-    /*
-     * Insert comments and comment form into wrapper
-     */
-    var loadCommentForm = function () {
-        $(idCommentsAndFormHash).appendTo(classCommentsWrapperDot).show();
-        loadHiddenInputField();
-    };
-
-    /*
-     * Add a hidden input field dynamically
-     */
-    var loadHiddenInputField = function () {
-        var input = $('<input>')
-            .attr('type', 'hidden')
-            .attr('name', dataIncomKey).val(getAttDataIncomValue);
-        $(idCommentsAndFormHash + ' .form-submit').append($(input));
-    };
-
-    /*
-     * Insert comments that have a specific value (getAttDataIncomValue) for attDataIncomComment
-     */
-    var loadComments = function () {
-        var selectByAtt = '[' + attDataIncomComment + '=' + getAttDataIncomValue() + ']';
-        $(selectComment).hide();
-        $(selectComment + selectByAtt).addClass(classVisibleComment).show();
-        $(classVisibleCommentDot + ' .children li').show();
-    };
-
-    /*
-     * Get (current) value for AttDataIncom
-     */
-    var getAttDataIncomValue = function () {
-        var $attDataIncomValue = $(classActiveDot).attr(attDataIncom);
-        return $attDataIncomValue;
-    };
-
-		/**
-		 * Set comment wrapper position.
-		 */
-		var setCommentsWrapperPosition = function (source, element) {
-			var $offset = source.offset();
-
-			const scrollbarWidth = 20;
-
-			/**
-			 * Right-positioned elements should not spill over the viewport.
-			 */
-			const wrapperTotalWidth = element.outerWidth() + parseInt( element.css( 'margin-left' ) ) + parseInt( element.css( 'margin-right' ) );
-
-			const calculateLeftOffset = () => {
-				const naiveLeftOffset = $offset.left + source.outerWidth();
-
-				const overflow = naiveLeftOffset + wrapperTotalWidth - window.innerWidth;
-
-				// If it would overflow, align with the associated body element.
-				if ( overflow > 0 ) {
-					const incomId = source.closest( '.incom-bubble' ).attr( 'data-incom-bubble' );
-					const associatedElement = document.getElementById( 'incom-element-' + incomId );
-
-					// Ensure that the element doesn't overlap the bubble.
-					element.width( element.width() - 20 );
-
-					return associatedElement.offsetLeft;
-				}
-
-				return naiveLeftOffset;
-			}
-
-			const leftOffset = calculateLeftOffset();
-
-			element.css({
-				'top': $offset.top,
-				'left': testIfPositionRight() ? leftOffset : $offset.left - element.outerWidth(),
-			});
-		}
-
-    /*
-     * Set bubble position
-     */
-    var setBubblePosition = function (source, element) {
-			var $offset = source.offset();
-
-			const scrollbarWidth = 20;
-
-			/**
-			 * If right-positioned elements will be too close to the edge of the viewport
-			 * (as on mobile devices), we should nudge them over to the left.
-			 */
-			const bubbleTotalWidth = element.outerWidth() + parseInt( element.css( 'margin-left' ) ) + parseInt( element.css( 'margin-right' ) );
-
-			const calculateScrollbarOffset = () => {
-				if ( ! testIfPositionRight() ) {
-					return 0;
-				}
-
-				const availableSpace = window.innerWidth - scrollbarWidth;
-
-				const overflow = $offset.left + source.outerWidth() + bubbleTotalWidth - availableSpace;
-
-				if ( overflow > 0 ) {
-					return overflow;
-				}
-
+		const calculateScrollbarOffset = () => {
+			if ( ! testIfPositionRight() ) {
 				return 0;
 			}
 
-			const scrollbarOffset = calculateScrollbarOffset();
+			const availableSpace = window.innerWidth - scrollbarWidth;
 
-			/*
-			 * Right-aligned bubbles should be placed off of the right edge,
-			 * to allow room for scrollbars on mobile.
-			 */
-			const leftOffset = scrollbarOffset > 0 ? $offset.left + source.outerWidth() - scrollbarOffset : $offset.left + source.outerWidth();
+			const overflow = $offset.left + source.outerWidth() + bubbleTotalWidth - availableSpace;
 
-			element.css({
-				'top': $offset.top,
-				'left': testIfPositionRight() ? leftOffset : $offset.left - element.outerWidth(),
-			});
-
-			/*
-			 * The scrollbarWidth offset means we will try to shrink the main content area
-		   * by the same amount, to prevent overlap.
-			 */
-			if ( scrollbarOffset > 0 ) {
-				const sourcePaddingRight = parseInt( source.css( 'padding-right' ) );
-				source.css( 'padding-right', sourcePaddingRight + scrollbarOffset );
+			if ( overflow > 0 ) {
+				return overflow;
 			}
-    };
 
-    /*
-     * Set element properties (outerWidth, offset, ...)
-     */
-    var setElementProperties = function (element) {
-        $elementW = element.outerWidth();
-        $offsetL = element.offset().left;
-        $sumOffsetAndElementW = $offsetL + $elementW;
-    };
-
-    /*
-     * Test if element (bubble or so) is in window completely
-     */
-    var isInWindow = function (element) {
-        setElementProperties(element);
-        return (($sumOffsetAndElementW > $viewportW) || ($offsetL < 0)) ? false : true;
-    };
-
-    var testIfMoveSiteIsNecessary = function (element) {
-        setElementProperties(element);
-
-        // If admin has selected position "right" and the comments wrapper's right side stands out of the screen -> setSlideWidth and moveSite
-        if (testIfPositionRight() && ($sumOffsetAndElementW > $viewportW)) {
-            setSlideWidth($sumOffsetAndElementW - $viewportW);
-            moveSite('in');
-        } else if (!testIfPositionRight() && ($offsetL < 0)) {
-            setSlideWidth(-$offsetL);
-            moveSite('in');
-        }
-    };
-
-    var setSlideWidth = function (width) {
-        slideWidth = width;
-    };
-
-    var getSlidewidth = function () {
-        return slideWidth;
-    };
-
-    /*
-     * Remove comments wrapper when user clicks anywhere but the idWrapperHash
-     */
-    var handleClickElsewhere = function () {
-        $('html').on( 'click', function (e) {
-            if ($(e.target).parents(idWrapperHash).length === 0) {
-                removeCommentsWrapper(true);
-            }
-        });
-    };
-
-    /*
-     * Remove comments wrapper when user clicks on a cancel element
-     */
-    var handleClickCancel = function () {
-        $(classCancelDot).on( 'click', function (e) {
-            e.preventDefault();
-            removeCommentsWrapper(true);
-
-						// If the last focused element is still in the DOM, set focus to it.
-						if ( lastFocusedBubble ) {
-							focusOnElement( lastFocusedBubble );
-						}
-        });
-    };
-
-    /*
-     * Remove comments wrapper
-     */
-    var removeCommentsWrapper = function (fadeout) {
-        var $classIncomBubble = $(classBubbleDot);
-        var $classCommentsWrapper = $(classCommentsWrapperDot);
-
-        // Comments and comment form must be detached (and hidden) before wrapper is deleted, so it can be used afterwards
-        $(idCommentsAndFormHash).appendTo(idWrapperHash).hide();
-
-        // Remove classVisibleComment from every element that has classVisibleComment
-        $(classVisibleCommentDot).removeClass(classVisibleComment);
-
-        // If any element with $classIncomBubble has classBubbleActive -> remove class and commentsWrapper
-        if ($classIncomBubble.hasClass(classBubbleActive)) {
-            $classIncomBubble.removeClass(classBubbleActive);
-            if (fadeout) {
-                $classCommentsWrapper.fadeOut('fast', function () {
-                    $(this).remove();
-                    removeExistingClasses(classActive);
-                });
-            } else {
-                $classCommentsWrapper.remove();
-            }
-            moveSite('out');
-        }
-    };
-
-		/**
-		 * Focus on an element.
-		 *
-		 * This is a wrapper for focus() that also juggles the tabindex attribute.
-		 *
-		 * @param {HTMLElement} element The element to focus on.
-		 */
-		const focusOnElement = function( element ) {
-			// Temporarily set tabindex to -1 so we can focus it.
-			element.setAttribute( 'tabindex', '-1' );
-			element.focus();
-
-			// Remove tabindex so it can be tabbed to.
-			element.addEventListener( 'blur', function() {
-				element.removeAttribute( 'tabindex' );
-			} )
+			return 0;
 		}
 
-    var moveSite = function (way) {
-        var $move = $(o.moveSiteSelector);
-        $move.css({
-            "position": "relative"
-        });
+		const scrollbarOffset = calculateScrollbarOffset();
 
-        handleWayInAndOut($move, way);
-
-        // Only move elements if o.moveSiteSelector is not the same as idWrapperAppendTo
-        if (o.moveSiteSelector !== idWrapperAppendTo) {
-            moveElement(way, classBubbleDot); // Move bubbles
-            moveElement(way, classCommentsWrapperDot); // Move wrapper
-        }
-    };
-
-    var handleWayInAndOut = function (element, way) {
-        var value;
-
-        if (way === 'in') {
-            value = getSlidewidth();
-        } else if (way === 'out') {
-            value = 'initial';
-
-        }
-        moveLeftOrRight(element, value);
-    };
-
-    var moveLeftOrRight = function (element, value) {
-        var direction = testIfPositionRight() ? 'right' : 'left';
-        var options = {};
-        options[direction] = value;
-
-        element.css(options);
-
-
-        // element.animate(options,{
-        //    duration: 500,
-        //           step:function(now, fn){
-        //             fn.start = 0;
-        //             fn.end = value;
-        //             $(element).css({
-        //                 '-webkit-transform':'translateX(-'+now+'px)',
-        //                 '-moz-transform':'translateX(-'+now+'px)',
-        //                 '-o-transform':'translateX(-'+now+'px)',
-        //                 'transform':'translateX(-'+now+'px)'
-        //             });
-        //           }
-        // });
-
-        // if ( testIfPositionRight() ) {
-        //   element.css( {
-        //     '-webkit-transform': translateX(-100%);
-        //     -moz-transform: translateX(-100%);
-        //     -ms-transform: translateX(-100%);
-        //     -o-transform: translateX(-100%);
-        //     transform: translateX(-100%)
-
-        //    } );
-        // } else {
-        //   element.css( { 'left' : value  } );
-        // }
-
-
-
-        // if ( testIfPositionRight() ) {
-        //   // element.css( { 'right' : value  } );
-
-        //   // element.animate({
-        //   //   width: "toggle",
-        //   //   height: "toggle"
-        //   // }, {
-        //   //   duration: 5000,
-        //   //   specialEasing: {
-        //   //     width: "linear",
-        //   //     height: "easeOutBounce"
-        //   //   },
-        //   //   complete: function() {
-        //   //     $( this ).after( "<div>Animation complete.</div>" );
-        //   //   }
-        //   // });
-        //   element.animate({
-        //       right: value,
-        //     }, "fast" );
-
-        // } else {
-        //   element.css( { 'left' : value  } );
-        // }
-    };
-
-    var moveElement = function (way, selector) {
-        var $element = $(selector);
-
-        if (way === 'in') {
-            $element.css({
-                left: testIfPositionRight() ? '-=' + getSlidewidth() : '+=' + getSlidewidth()
-            });
-        } else if (way === 'out') {
-            $element.css({
-                left: testIfPositionRight() ? '+=' + getSlidewidth() : '-=' + getSlidewidth()
-            });
-        }
-    };
-
-    var testIfPositionRight = function () {
-        return o.position === 'right' ? true : false;
-    };
-
-    /*
-     * Controle references
-     * @since 2.1
-     */
-    var references = function () {
-        var source = attDataIncomRef;
-        var target = attDataIncom;
-        removeOutdatedReferences(source, target);
-        loadScrollScript(source, target);
-    };
-
-    /*
-     * Remove outdated references that link to an element that doesn't exist
-     * @since 2.1
-     */
-    var removeOutdatedReferences = function (source, target) {
-        $('[' + source + ']').each(function () {
-
-            var $source = $(this);
-            var targetValue = $source.attr(source); // Get value from source element
-            var $target = $('[' + target + '="' + targetValue + '"]');
-
-            if (!$target.length) { // No length = linked element doesn't exist
-                $source.parent().remove();
-            }
-
-        });
-    };
-
-    /*
-     * Define all event handler functions here
-     * @since 2.1.1
-     */
-    var handleEvents = {
-        init: function () {
-						this.focusHandler();
-            this.permalinksHandler();
-						this.tabHandler();
-        },
-
-				/**
-				 * Focus handler.
-				 *
-				 * This is used to track the last focused element, so we can return focus to it
-				 * when the user closes the comments.
-				 */
-				focusHandler: function() {
-					const commentWrapper = document.getElementById( idWrapper );
-
-					if ( commentWrapper ) {
-						commentWrapper.addEventListener( 'focusin', function( e ) {
-							if ( e.target.classList.contains( classBubbleLink ) ) {
-								lastFocusedBubble = e.target;
-							}
-						} )
-					}
-				},
-
-        permalinksHandler: function () {
-            $(idCommentsAndFormHash).on('click', 'a.incom-permalink', function () {
-                var $target = $(this.hash);
-
-                if ($target.length) {
-
-                    animateScrolling($target);
-
-                    var href = $(this).attr("href");
-                    changeUrl(href);
-
-                    return false;
-                }
-            });
-        },
-
-				/**
-				 * Adds show-bubbles class to #incom_wrapper when tab is used.
-				 */
-				tabHandler: function () {
-					$(document).on( 'keydown', function( e ) {
-						if ( 9 === e.keyCode ) {
-							forceShowBubbles();
-							addSkipLink();
-						}
-					});
-				}
-    };
-
-
-    /*
-     * Load scroll script
-     * @since 2.1
-     *
-     * @todo When page scrolls to element, automatically open wrapper
-     */
-    var loadScrollScript = function (source, target) {
-        $('[' + source + ']').on( 'click', function ( e ) {
-            var targetValue = $(this).attr(source); // Get value from source element
-            var $target = $('[' + target + '="' + targetValue + '"]');
-
-            if ($target.length) {
-
-                animateScrolling($target);
-
-                removeExistingClasses(classScrolledTo);
-                $target.addClass(classScrolledTo);
-            }
-
-						// If this was a keyboard event, focus the bubble.
-						if ( e.detail === 0 ) {
-							const $bubble = $( '.incom-bubble[data-incom-bubble="' + targetValue + '"]');
-							focusOnElement( $bubble[0] );
-						}
-
-        });
-    };
-
-    /*
-     * Remove existing classes (expects parameter "className" - without "dot")
-     */
-    var removeExistingClasses = function (className) {
-        var $activeE = $('.' + className);
-        if ($activeE.length !== 0) {
-            $activeE.removeClass(className);
-            // If the attribute 'class' is empty -> remove it
-            if ($activeE.prop('class').length === 0) {
-                $activeE.removeAttr('class');
-            }
-        }
-    };
-
-
-
-    /*
-     * Create info element
-     */
-    var createPluginInfo = function () {
-        // source = Video
-        var anchorElement = $('.incom-cancel-x');
-        var element = $(loadPluginInfo());
-
-        if ((o.displayBranding === true || o.displayBranding === 1) && !$(classBrandingDot).length) {
-            anchorElement.after(element);
-        }
-    };
-
-    /*
-     * Load plugin info
-     */
-    var loadPluginInfo = function () {
-        return '<a class="' + classBranding + '" href="http://kevinw.de/inline-comments/" title="Inline Comments by Kevin Weber" target="_blank">i</a>';
-    };
-
-
-
-    /*
-     * Private Helpers
-     */
-
-    /*
-     * @return Hex colour value as RGB
-     */
-    var convertHexToRgb = function (h) {
-        var r = parseInt((removeHex(h)).substring(0, 2), 16);
-        var g = parseInt((removeHex(h)).substring(2, 4), 16);
-        var b = parseInt((removeHex(h)).substring(4, 6), 16);
-        return r + ',' + g + ',' + b;
-    };
-
-    /*
-     * Remove Hex ("#") from string
-     */
-    var removeHex = function (h) {
-        return (h.charAt(0) === "#") ? h.substring(1, 7) : h;
-    };
-
-    /*
-     * Set easing "quart"
-     */
-    $.easing.quart = function (x, t, b, c, d) {
-        return -c * ((t = t / d - 1) * t * t * t - 1) + b;
-    };
-
-    /*
-     * Change URL
-     * @param href = complete URL
-     */
-    var changeUrl = function (href) {
-        history.pushState(null, null, href);
-        if (history.pushState) {
-            history.pushState(null, null, href);
-        } else {
-            location.hash = href;
-        }
-    };
-
-    /*
-     * Animate scrolling
-     * @param $target (expects unique jQuery object)
-     */
-
-    var animateScrolling = function ($target) {
-        var $scrollingRoot = $('html, body');
-        var targetOffset = $target.offset().top - 30;
-
-        $scrollingRoot.animate({
-            scrollTop: targetOffset
-        }, 1200, 'quart');
-    };
-
-		/**
-		 * Show bubbles.
-		 *
-		 * This is currently done by adding a 'show-bubbles' class to the #incom_wrapper element.
+		/*
+		 * Right-aligned bubbles should be placed off of the right edge,
+		 * to allow room for scrollbars on mobile.
 		 */
-		const forceShowBubbles = function() {
-			document.getElementById( idWrapper ).classList.add( 'show-bubbles' );
+		const leftOffset = scrollbarOffset > 0 ? $offset.left + source.outerWidth() - scrollbarOffset : $offset.left + source.outerWidth();
 
-			// We also have to loop through and show using jQuery, which adds inline styles.
-			$( classBubbleDot ).show();
+		element.css({
+			'top': $offset.top,
+			'left': testIfPositionRight() ? leftOffset : $offset.left - element.outerWidth(),
+		});
+
+		/*
+		 * The scrollbarWidth offset means we will try to shrink the main content area
+		 * by the same amount, to prevent overlap.
+		 */
+		if ( scrollbarOffset > 0 ) {
+			const sourcePaddingRight = parseInt( source.css( 'padding-right' ) );
+			source.css( 'padding-right', sourcePaddingRight + scrollbarOffset );
 		}
+	};
 
-		/**
-		 * Add a 'skip to comments' link.
-		 */
-		const addSkipLink = function() {
-			// Don't add the skip link if it already exists.
-			if ( document.getElementById( 'incom-skip-to-comments' ) ) {
-				return;
+	/*
+	 * Set element properties (outerWidth, offset, ...)
+	 */
+	const setElementProperties = function (element) {
+		$elementW = element.outerWidth();
+		$offsetL = element.offset().left;
+		$sumOffsetAndElementW = $offsetL + $elementW;
+	};
+
+	/*
+	 * Test if element (bubble or so) is in window completely
+	 */
+	const isInWindow = function (element) {
+		setElementProperties(element);
+		return (($sumOffsetAndElementW > $viewportW) || ($offsetL < 0)) ? false : true;
+	};
+
+	const testIfMoveSiteIsNecessary = function (element) {
+		setElementProperties(element);
+
+		// If admin has selected position "right" and the comments wrapper's right side stands out of the screen -> setSlideWidth and moveSite
+		if (testIfPositionRight() && ($sumOffsetAndElementW > $viewportW)) {
+			setSlideWidth($sumOffsetAndElementW - $viewportW);
+			moveSite('in');
+		} else if (!testIfPositionRight() && ($offsetL < 0)) {
+			setSlideWidth(-$offsetL);
+			moveSite('in');
+		}
+	};
+
+	const setSlideWidth = function (width) {
+		slideWidth = width;
+	};
+
+	const getSlidewidth = function () {
+		return slideWidth;
+	};
+
+	/*
+	 * Remove comments wrapper when user clicks anywhere but the idWrapperHash
+	 */
+	const handleClickElsewhere = function () {
+		$('html').on( 'click', function (e) {
+			if ($(e.target).parents(idWrapperHash).length === 0) {
+				removeCommentsWrapper(true);
 			}
+		});
+	};
 
-			const newSkipLink = document.createElement( 'a' );
-			newSkipLink.classList.add( 'skip-link' );
-			newSkipLink.classList.add( 'screen-reader-text' );
-			newSkipLink.href = idWrapperHash;
-			newSkipLink.textContent = 'Skip to comments';
-			newSkipLink.id = 'incom-skip-to-comments';
+	/*
+	 * Remove comments wrapper when user clicks on a cancel element
+	 */
+	const handleClickCancel = function () {
+		$(classCancelDot).on( 'click', function (e) {
+			e.preventDefault();
+			removeCommentsWrapper(true);
 
-			const focusFirstBubble = function() {
-				// Set focus (and tab navigation) to the first bubble.
-				const firstBubble = document.querySelector( classBubbleDot );
-				if ( firstBubble ) {
-					focusOnElement( firstBubble );
-				}
-
-				const contentArea = findContentArea();
-				if ( contentArea ) {
-					// Calculate 100px offset above the content area.
-					const offset = contentArea.offset().top - 100;
-
-					window.scrollTo( {
-						top: offset,
-						behavior: 'smooth'
-					} );
-				}
+			// If the last focused element is still in the DOM, set focus to it.
+			if ( lastFocusedBubble ) {
+				focusOnElement( lastFocusedBubble );
 			}
+		});
+	};
 
-			// On enter, we should not scroll, but should set focus to the first incom bubble.
-			newSkipLink.addEventListener( 'keydown', function( event ) {
-				if ( event.key === 'Enter' || event.key === ' ') {
-					focusFirstBubble();
-					event.preventDefault();
-				}
-			} )
+	/*
+	 * Remove comments wrapper
+	 */
+	const removeCommentsWrapper = function (fadeout) {
+		const $classIncomBubble = $(classBubbleDot);
+		const $classCommentsWrapper = $(classCommentsWrapperDot);
 
-			newSkipLink.addEventListener( 'click', focusFirstBubble );
+		// Comments and comment form must be detached (and hidden) before wrapper is deleted, so it can be used afterwards
+		$(idCommentsAndFormHash).appendTo(idWrapperHash).hide();
 
-			const wpSkipLink = document.querySelector( 'a.skip-link' );
-			if ( wpSkipLink ) {
-				// Insert after the first skip link, if it exists.
-				wpSkipLink.parentNode.insertBefore( newSkipLink, wpSkipLink.nextSibling );
+		// Remove classVisibleComment from every element that has classVisibleComment
+		$(classVisibleCommentDot).removeClass(classVisibleComment);
+
+		// If any element with $classIncomBubble has classBubbleActive -> remove class and commentsWrapper
+		if ($classIncomBubble.hasClass(classBubbleActive)) {
+			$classIncomBubble.removeClass(classBubbleActive);
+			if (fadeout) {
+				$classCommentsWrapper.fadeOut('fast', function () {
+					$(this).remove();
+					removeExistingClasses(classActive);
+				});
 			} else {
-				// Otherwise insert at the top of the page.
-				document.body.insertBefore( newSkipLink, document.body.firstChild );
+				$classCommentsWrapper.remove();
 			}
-
+			moveSite('out');
 		}
+	};
+
+	/**
+	 * Focus on an element.
+	 *
+	 * This is a wrapper for focus() that also juggles the tabindex attribute.
+	 *
+	 * @param {HTMLElement} element The element to focus on.
+	 */
+	const focusOnElement = function( element ) {
+		// Temporarily set tabindex to -1 so we can focus it.
+		element.setAttribute( 'tabindex', '-1' );
+		element.focus();
+
+		// Remove tabindex so it can be tabbed to.
+		element.addEventListener( 'blur', function() {
+			element.removeAttribute( 'tabindex' );
+		} )
+	}
+
+	const moveSite = function (way) {
+		const $move = $(o.moveSiteSelector);
+		$move.css({
+			"position": "relative"
+		});
+
+		handleWayInAndOut($move, way);
+
+		// Only move elements if o.moveSiteSelector is not the same as idWrapperAppendTo
+		if (o.moveSiteSelector !== idWrapperAppendTo) {
+			moveElement(way, classBubbleDot); // Move bubbles
+			moveElement(way, classCommentsWrapperDot); // Move wrapper
+		}
+	};
+
+	const handleWayInAndOut = function (element, way) {
+		let value;
+
+		if (way === 'in') {
+			value = getSlidewidth();
+		} else if (way === 'out') {
+			value = 'initial';
+		}
+		moveLeftOrRight(element, value);
+	};
+
+	const moveLeftOrRight = function (element, value) {
+		const direction = testIfPositionRight() ? 'right' : 'left';
+		const options = {};
+		options[direction] = value;
+
+		element.css(options);
+
+		// element.animate(options,{
+		//    duration: 500,
+		//           step:function(now, fn){
+		//             fn.start = 0;
+		//             fn.end = value;
+		//             $(element).css({
+		//                 '-webkit-transform':'translateX(-'+now+'px)',
+		//                 '-moz-transform':'translateX(-'+now+'px)',
+		//                 '-o-transform':'translateX(-'+now+'px)',
+		//                 'transform':'translateX(-'+now+'px)'
+		//             });
+		//           }
+		// });
+
+		// if ( testIfPositionRight() ) {
+		//   element.css( {
+		//     '-webkit-transform': translateX(-100%);
+		//     -moz-transform: translateX(-100%);
+		//     -ms-transform: translateX(-100%);
+		//     -o-transform: translateX(-100%);
+		//     transform: translateX(-100%)
+
+		//    } );
+		// } else {
+		//   element.css( { 'left' : value  } );
+		// }
+
+
+
+		// if ( testIfPositionRight() ) {
+		//   // element.css( { 'right' : value  } );
+
+		//   // element.animate({
+		//   //   width: "toggle",
+		//   //   height: "toggle"
+		//   // }, {
+		//   //   duration: 5000,
+		//   //   specialEasing: {
+		//   //     width: "linear",
+		//   //     height: "easeOutBounce"
+		//   //   },
+		//   //   complete: function() {
+		//   //     $( this ).after( "<div>Animation complete.</div>" );
+		//   //   }
+		//   // });
+		//   element.animate({
+		//       right: value,
+		//     }, "fast" );
+
+		// } else {
+		//   element.css( { 'left' : value  } );
+		// }
+	};
+
+	const moveElement = function (way, selector) {
+		const $element = $(selector);
+
+		if (way === 'in') {
+			$element.css({
+				left: testIfPositionRight() ? '-=' + getSlidewidth() : '+=' + getSlidewidth()
+			});
+		} else if (way === 'out') {
+			$element.css({
+				left: testIfPositionRight() ? '+=' + getSlidewidth() : '-=' + getSlidewidth()
+			});
+		}
+	};
+
+	const testIfPositionRight = function () {
+		return o.position === 'right' ? true : false;
+	};
+
+	/*
+	 * Controle references
+	 * @since 2.1
+	 */
+	const references = function () {
+		const source = attDataIncomRef;
+		const target = attDataIncom;
+		removeOutdatedReferences(source, target);
+		loadScrollScript(source, target);
+	};
+
+	/*
+	 * Remove outdated references that link to an element that doesn't exist
+	 * @since 2.1
+	 */
+	const removeOutdatedReferences = function (source, target) {
+		$('[' + source + ']').each(function () {
+			const $source = $(this);
+			const targetValue = $source.attr(source); // Get value from source element
+			const $target = $('[' + target + '="' + targetValue + '"]');
+
+			if (!$target.length) { // No length = linked element doesn't exist
+				$source.parent().remove();
+			}
+		});
+	};
+
+	/*
+	 * Define all event handler functions here
+	 * @since 2.1.1
+	 */
+	const handleEvents = {
+		init () {
+			this.focusHandler();
+			this.permalinksHandler();
+			this.tabHandler();
+		},
 
 		/**
-		 * Adds data-incom-comment attributes to comments.
+		 * Focus handler.
+		 *
+		 * This is used to track the last focused element, so we can return focus to it
+		 * when the user closes the comments.
 		 */
-		const addIncomKeysToComments = function() {
-			const { commentKeys } = window.incom
+		focusHandler() {
+			const commentWrapper = document.getElementById( idWrapper );
 
-			// Index is the comment ID.
-			for ( const commentId in commentKeys ) {
-				const comment = document.getElementById( `comment-${commentId}` );
+			if ( commentWrapper ) {
+				commentWrapper.addEventListener( 'focusin', function( e ) {
+					if ( e.target.classList.contains( classBubbleLink ) ) {
+						lastFocusedBubble = e.target;
+					}
+				} )
+			}
+		},
 
-				if ( ! comment ) {
-					continue;
+		permalinksHandler () {
+			$(idCommentsAndFormHash).on('click', 'a.incom-permalink', function () {
+				const $target = $(this.hash);
+
+				if ($target.length) {
+					animateScrolling($target);
+
+					const href = $(this).attr("href");
+					changeUrl(href);
+
+					return false;
 				}
+			});
+		},
 
-				// Bail if the comment already has a data-incom-comment attribute.
-				if ( comment.dataset.incomComment ) {
-					continue;
+		/**
+		 * Adds show-bubbles class to #incom_wrapper when tab is used.
+		 */
+		tabHandler () {
+			$(document).on( 'keydown', function( e ) {
+				if ( 9 === e.keyCode ) {
+					forceShowBubbles();
+					addSkipLink();
 				}
+			});
+		}
+	};
 
-				comment.dataset.incomComment = commentKeys[ commentId ];
+	/*
+	 * Load scroll script
+	 * @since 2.1
+	 *
+	 * @todo When page scrolls to element, automatically open wrapper
+	 */
+	const loadScrollScript = function (source, target) {
+		$('[' + source + ']').on( 'click', function ( e ) {
+			const targetValue = $(this).attr(source); // Get value from source element
+			const $target = $('[' + target + '="' + targetValue + '"]');
+
+			if ($target.length) {
+				animateScrolling($target);
+				removeExistingClasses(classScrolledTo);
+				$target.addClass(classScrolledTo);
+			}
+
+			// If this was a keyboard event, focus the bubble.
+			if ( e.detail === 0 ) {
+				const $bubble = $( '.incom-bubble[data-incom-bubble="' + targetValue + '"]');
+				focusOnElement( $bubble[0] );
+			}
+		});
+	};
+
+	/*
+	 * Remove existing classes (expects parameter "className" - without "dot")
+	 */
+	const removeExistingClasses = function (className) {
+		const $activeE = $('.' + className);
+		if ($activeE.length !== 0) {
+			$activeE.removeClass(className);
+			// If the attribute 'class' is empty -> remove it
+			if ($activeE.prop('class').length === 0) {
+				$activeE.removeAttr('class');
+			}
+		}
+	};
+
+	/*
+	 * Create info element
+	 */
+	const createPluginInfo = function () {
+		// source = Video
+		const anchorElement = $('.incom-cancel-x');
+		const element = $(loadPluginInfo());
+
+		if ((o.displayBranding === true || o.displayBranding === 1) && !$(classBrandingDot).length) {
+			anchorElement.after(element);
+		}
+	};
+
+	/*
+	 * Load plugin info
+	 */
+	const loadPluginInfo = function () {
+		return '<a class="' + classBranding + '" href="http://kevinw.de/inline-comments/" title="Inline Comments by Kevin Weber" target="_blank">i</a>';
+	};
+
+	/*
+	 * Private Helpers
+	 */
+
+	/*
+	 * @return Hex colour value as RGB
+	 */
+	const convertHexToRgb = function (h) {
+		const r = parseInt((removeHex(h)).substring(0, 2), 16);
+		const g = parseInt((removeHex(h)).substring(2, 4), 16);
+		const b = parseInt((removeHex(h)).substring(4, 6), 16);
+		return r + ',' + g + ',' + b;
+	};
+
+	/*
+	 * Remove Hex ("#") from string
+	 */
+	const removeHex = function (h) {
+		return (h.charAt(0) === "#") ? h.substring(1, 7) : h;
+	};
+
+	/*
+	 * Set easing "quart"
+	 */
+	$.easing.quart = function (x, t, b, c, d) {
+		return -c * ((t = t / d - 1) * t * t * t - 1) + b;
+	};
+
+	/*
+	 * Change URL
+	 * @param href = complete URL
+	 */
+	const changeUrl = function (href) {
+		const history = window.history || window.location;
+
+		history.pushState(null, null, href);
+		if ( history.pushState ) {
+				history.pushState(null, null, href);
+		} else {
+				history.hash = href;
+		}
+	};
+
+	/*
+	 * Animate scrolling
+	 * @param $target (expects unique jQuery object)
+	 */
+	const animateScrolling = function ($target) {
+		const $scrollingRoot = $('html, body');
+		const targetOffset = $target.offset().top - 30;
+
+		$scrollingRoot.animate({
+			scrollTop: targetOffset
+		}, 1200, 'quart');
+	};
+
+	/**
+	 * Show bubbles.
+	 *
+	 * This is currently done by adding a 'show-bubbles' class to the #incom_wrapper element.
+	 */
+	const forceShowBubbles = function() {
+		document.getElementById( idWrapper ).classList.add( 'show-bubbles' );
+
+		// We also have to loop through and show using jQuery, which adds inline styles.
+		$( classBubbleDot ).show();
+	}
+
+	/**
+	 * Add a 'skip to comments' link.
+	 */
+	const addSkipLink = function() {
+		// Don't add the skip link if it already exists.
+		if ( document.getElementById( 'incom-skip-to-comments' ) ) {
+			return;
+		}
+
+		const newSkipLink = document.createElement( 'a' );
+		newSkipLink.classList.add( 'skip-link' );
+		newSkipLink.classList.add( 'screen-reader-text' );
+		newSkipLink.href = idWrapperHash;
+		newSkipLink.textContent = 'Skip to comments';
+		newSkipLink.id = 'incom-skip-to-comments';
+
+		const focusFirstBubble = function() {
+			// Set focus (and tab navigation) to the first bubble.
+			const firstBubble = document.querySelector( classBubbleDot );
+			if ( firstBubble ) {
+				focusOnElement( firstBubble );
+			}
+
+			const contentArea = findContentArea();
+			if ( contentArea ) {
+				// Calculate 100px offset above the content area.
+				const offset = contentArea.offset().top - 100;
+
+				window.scrollTo( {
+					top: offset,
+					behavior: 'smooth'
+				} );
 			}
 		}
 
-    /*
-     * Public methods
-     */
+		// On enter, we should not scroll, but should set focus to the first incom bubble.
+		newSkipLink.addEventListener( 'keydown', function( event ) {
+			if ( event.key === 'Enter' || event.key === ' ') {
+				focusFirstBubble();
+				event.preventDefault();
+			}
+		} )
 
+		newSkipLink.addEventListener( 'click', focusFirstBubble );
 
+		const wpSkipLink = document.querySelector( 'a.skip-link' );
+		if ( wpSkipLink ) {
+			// Insert after the first skip link, if it exists.
+			wpSkipLink.parentNode.insertBefore( newSkipLink, wpSkipLink.nextSibling );
+		} else {
+			// Otherwise insert at the top of the page.
+			document.body.insertBefore( newSkipLink, document.body.firstChild );
+		}
+	}
 
-    incom.init = function (options) {
-        setOptions(options);
+	/**
+	 * Adds data-incom-comment attributes to comments.
+	 */
+	const addIncomKeysToComments = function() {
+		const { commentKeys } = window.incom
 
-				addIncomKeysToComments();
+		// Index is the comment ID.
+		for ( const commentId in commentKeys ) {
+			const comment = document.getElementById( `comment-${commentId}` );
 
-        initIncomWrapper();
+			if ( ! comment ) {
+				continue;
+			}
 
-        createPluginInfo();
-        references();
+			// Bail if the comment already has a data-incom-comment attribute.
+			if ( comment.dataset.incomComment ) {
+				continue;
+			}
 
-        // This code is required to make Inline Comments work with Ajaxify
-        $(classReplyDot + " .comment-reply-link").on('click', function () {
-            $(idCommentsAndFormHash + ' #commentform').attr("id", idCommentForm);
-        });
+			comment.dataset.incomComment = commentKeys[ commentId ];
+		}
+	}
 
-        handleEvents.init();
+	/*
+	 * Public methods
+	 */
+	incom.init = function (options) {
+		setOptions(options);
 
-				// If we detect that we're running on a mobile device (no hover), show bubbles by default.
-				if ( 'ontouchstart' in window ) {
-					forceShowBubbles();
-				}
-    };
+		addIncomKeysToComments();
 
+		initIncomWrapper();
+
+		createPluginInfo();
+		references();
+
+		// This code is required to make Inline Comments work with Ajaxify
+		$(classReplyDot + " .comment-reply-link").on('click', function () {
+			$(idCommentsAndFormHash + ' #commentform').attr("id", idCommentForm);
+		});
+
+		handleEvents.init();
+
+		// If we detect that we're running on a mobile device (no hover), show bubbles by default.
+		if ( 'ontouchstart' in window ) {
+			forceShowBubbles();
+		}
+	};
 }(window.incom = window.incom || {}, jQuery));

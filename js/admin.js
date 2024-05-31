@@ -24,7 +24,7 @@
    */
   var handleTabs_URL = function() {
     $( "#tabs" ).on( "tabsactivate", function( event, ui ) {
-      var href = ui.newTab.children('li a').first().attr("href");
+      const href = ui.newTab.children('li a').first().attr("href");
       history.pushState(null, null, href);
       if(history.pushState) {
           history.pushState(null, null, href);
