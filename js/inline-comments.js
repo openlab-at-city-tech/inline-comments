@@ -689,7 +689,20 @@
 		newElement.id = 'incom-debug';
 
 		// If the message is an object, we'll stringify it.
-		const stringifiedMessage = typeof message === 'object' ? JSON.stringify( message ) : message;
+		const stringifyMessage = ( theMessage ) => {
+			if ( typeof theMessage === 'object' ) {
+				return JSON.stringify( theMessage );
+			}
+
+			// DOM element
+			if ( theMessage instanceof HTMLElement ) {
+				return theMessage.outerHTML;
+			}
+
+			return theMessage;
+		}
+
+		const stringifiedMessage = stringifyMessage( message );
 		newElement.textContent = stringifiedMessage;
 
 		// fixed positioning
@@ -705,11 +718,20 @@
 		// padding
 		newElement.style.padding = '10px';
 
+		// allow all lines to wrap
+		newElement.style.wordBreak = 'break-all';
+
 		// background
 		newElement.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
 
 		// append to body
-		document.body.appendChild( newElement );
+		setTimeout( function() {
+			document.body.appendChild( newElement );
+
+			setTimeout( function() {
+				newElement.remove();
+			}, 8000 );
+		}, 500 )
 	}
 
 	/*
