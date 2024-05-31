@@ -415,11 +415,11 @@
 			element.add( theBubble );
 
 			element.on( 'mouseenter', function() {
-				mouseEnterCallback( bubble );
+				mouseEnterCallback( theBubble );
 			} );
 
 			element.on( 'mouseleave', function() {
-				mouseLeaveCallback( bubble );
+				mouseLeaveCallback( theBubble );
 			} );
 		}
 	};
