@@ -346,8 +346,14 @@
 	const countComments = function (source) {
 		// Get attribute value from source's attribute attDataIncom
 		const attFromSource = source.attr(attDataIncom);
-		// Define selector that identifies elements that shell be counted
-		const selectByAtt = '[' + attDataIncomComment + '="' + attFromSource + '"]';
+
+		/*
+		 * Define selector that identifies elements that shall be counted.
+		 *
+		 * Only count those in the main comment thread, so we don't get double-counted.
+		 */
+		const selectByAtt = idCommentsAndFormHash + ' [' + attDataIncomComment + '="' + attFromSource + '"]';
+
 		// Count elements
 		let $count = $(selectByAtt).length;
 		// Increase count for each inline reply, too
@@ -464,7 +470,7 @@
 	/*
 	 * This event will be triggered when user clicks on bubble
 	 */
-	const handleClickBubble = function (source, theBubble, isKeyboardEvent) {
+	const handleClickBubble = function (source, theBubble) {
 		// When the wrapper is already visible (and the bubble is active), then remove the wrapper and the bubble's class
 		if (theBubble.hasClass(classBubbleActive)) {
 			removeCommentsWrapper(true);
@@ -508,14 +514,14 @@
 	 * Load comments wrapper
 	 */
 	const loadCommentsWrapper = function (source) {
-			const $commentsWrapper = createCommentsWrapper();
+		const $commentsWrapper = createCommentsWrapper();
 
-			loadComments();
-			loadCommentForm();
-			setCommentsWrapperPosition(source, $commentsWrapper);
-			testIfMoveSiteIsNecessary($commentsWrapper);
-			handleClickElsewhere();
-			ajaxStop();
+		loadCommentForm();
+		setCommentsWrapperPosition(source, $commentsWrapper);
+		loadComments();
+		testIfMoveSiteIsNecessary($commentsWrapper);
+		handleClickElsewhere();
+		ajaxStop();
 	};
 
 	/*
@@ -532,6 +538,7 @@
 	 */
 	const loadCommentForm = function () {
 		$(idCommentsAndFormHash).appendTo(classCommentsWrapperDot).show();
+		$(classCommentsWrapperDot).find('li.comment').show();
 		loadHiddenInputField();
 	};
 
@@ -549,9 +556,17 @@
 	 * Insert comments that have a specific value (getAttDataIncomValue) for attDataIncomComment
 	 */
 	const loadComments = function () {
-		const selectByAtt = '[' + attDataIncomComment + '=' + getAttDataIncomValue() + ']';
-		$(selectComment).hide();
-		$(selectComment + selectByAtt).addClass(classVisibleComment).show();
+		const flyoutComments = document.querySelectorAll( idWrapperHash + ' li.comment' );
+		const fcArray = Array.from( flyoutComments );
+
+		fcArray.forEach( function( comment ) {
+			if ( comment.getAttribute( attDataIncomComment ) !== getAttDataIncomValue() ) {
+				$(comment).hide();
+			} else {
+				$(comment).show();
+			}
+		} )
+
 		$(classVisibleCommentDot + ' .children li').show();
 	};
 
