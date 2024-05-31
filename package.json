@@ -10,6 +10,7 @@
     "watch:js": "nodemon -e js -w js/ -i ./js/min/ -i ./js/es5/ -x \"npm-run-all build:js:**\"",
     "build:scss:frontend": "sass ./css/style-wp.scss ./css/min/style-wp.css --no-source-map --style=compressed",
     "build:scss:admin": "sass ./css/admin.scss ./css/min/admin.css --no-source-map --style=compressed",
+    "lint:js": "eslint ./js/inline-comments.js ./js/admin.js",
     "watch:scss": "nodemon -e scss -w css/ -i ./css/min/ -x \"npm-run-all build:scss:**\"",
     "prebuild": "sh _build-tools/sass.sh",
     "prewatch": "sh _build-tools/sass.sh",
@@ -36,6 +37,7 @@
     "@babel/cli": "^7.24.6",
     "@babel/core": "^7.24.6",
     "@babel/preset-env": "^7.24.6",
+    "@wordpress/eslint-plugin": "^18.1.0",
     "sass": "^1.77.1"
   }
 }
