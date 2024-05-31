@@ -8,7 +8,7 @@
 (function (incom, $) {
 	'use strict';
 
-	let o, attDataIncomArr
+	let o
 
 	// IDs
 	const
@@ -51,7 +51,8 @@
 
 		// Other
 		selectComment = idCommentsAndFormHash + ' .comment',
-		dataIncomKey = 'data_incom' // Should be the same as $DataIncomKey in class-comments.php
+		dataIncomKey = 'data_incom', // Should be the same as $DataIncomKey in class-comments.php
+		attDataIncomArr = [] // Array that contains all attDataIncom values
 
 	let
 		slideWidth = 0, // Shift page content o.moveSiteSelector to the left
@@ -67,7 +68,12 @@
 	incom.rebuild = function () {
 		// Reset
 		$viewportW = $(window).width();
-		attDataIncomArr = [];
+
+		// Remove all items from attDataIncomArr
+		while (attDataIncomArr.length > 0) {
+			attDataIncomArr.pop();
+		}
+
 		$('#incom_wrapper .incom-bubble').remove();
 
 		// Re-init bubbles
@@ -139,8 +145,8 @@
 
 		const l = elementsBySelectors.length;
 
-		for ( let i = 0; i < l; i++ ) {
-			const $that = $(elementsBySelectors[i]);
+		for ( let j = 0; j < l; j++ ) {
+			const $that = $(elementsBySelectors[j]);
 			addAttToElement($that);
 			bubble.createFromElement($that);
 		}
@@ -170,26 +176,28 @@
 	 * Add attribute attDataIncom to element; increase counter per element type (instead of using one counter for all elements independent of their types).
 	 *
 	 * @param {jQuery} $element The element to add the attribute to.
-	 * @param {number} i        The counter.
 	 */
-	const addAttToElement = function ($element, i) {
-		i = i || 0;
+	const addAttToElement = function ($element) {
+		let i = 0;
 
 		// Only proceed if element has no attribute attDataIncom yet
-		if (!$element.attr(attDataIncom)) {
-			const identifier = getIdentifier($element);
-
-			// Increase i when specific attProp (value of attDataIncom) already exists
-			i = increaseIdentifierNumberIfAttPropExists(i, identifier);
-
-			const attProp = identifier + i; // WOULD BE BETTER: var attProp = identifier + '-' + i; // BUT THAT WOULD CONFLICT WITH ALREADY STORED COMMENTS
-
-			//@TODO: Add part that assigns comment to specific article/page/post (article-id); include fallback in cause a comment has no ID (yet)
-
-			$element.attr(attDataIncom, attProp);
-
-			$element.attr( 'id', 'incom-element-' + attProp );
+		const elementDataIncomAttr = $element.data( 'incom' );
+		if ( elementDataIncomAttr ) {
+			return;
 		}
+
+		const identifier = getIdentifier($element);
+
+		// Increase i when specific attProp (value of attDataIncom) already exists
+		i = increaseIdentifierNumberIfAttPropExists(i, identifier);
+
+		const attProp = identifier + i; // WOULD BE BETTER: var attProp = identifier + '-' + i; // BUT THAT WOULD CONFLICT WITH ALREADY STORED COMMENTS
+
+		//@TODO: Add part that assigns comment to specific article/page/post (article-id); include fallback in cause a comment has no ID (yet)
+
+		$element.attr(attDataIncom, attProp);
+
+		$element.attr( 'id', 'incom-element-' + attProp );
 	};
 
 	const bubble = {
@@ -267,6 +275,7 @@
 				attProp = identifier + i;
 			}
 		}
+
 		attDataIncomArr.push(attProp);
 
 		return i;
@@ -302,8 +311,7 @@
 				'click',
 				function (e) {
 					e.preventDefault();
-					const isKeyboardEvent = e.detail === 0;
-					handleClickBubble(source, $bubble, isKeyboardEvent);
+					handleClickBubble(source, $bubble, e.detail === 0);
 
 					// If this was a keyboard event, focus the first input field.
 					if ( isKeyboardEvent ) {
@@ -454,13 +462,10 @@
 	 * This event will be triggered when user clicks on bubble
 	 */
 	const handleClickBubble = function (source, theBubble, isKeyboardEvent) {
-		const $that = $(this);
-
-
 		// When the wrapper is already visible (and the bubble is active), then remove the wrapper and the bubble's class
-		if ($that.hasClass(classBubbleActive)) {
+		if (theBubble.hasClass(classBubbleActive)) {
 			removeCommentsWrapper(true);
-			$that.removeClass(classBubbleActive);
+			theBubble.removeClass(classBubbleActive);
 		} else {
 			// Remove classActive before classActive will be added to another element (source)
 			removeExistingClasses(classActive);
@@ -471,8 +476,8 @@
 			// Before creating a new comments wrapper: remove the previously created wrapper, if any
 			removeCommentsWrapper();
 
-			bubble.addClass(classBubbleActive);
-			loadCommentsWrapper(bubble);
+			theBubble.addClass(classBubbleActive);
+			loadCommentsWrapper(theBubble);
 		}
 	};
 
