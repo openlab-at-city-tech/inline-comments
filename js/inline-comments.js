@@ -601,8 +601,6 @@
 			if ( overflow > 0 ) {
 				const bubbleLeftOffset = $offset.left;
 
-				const incomId = source.closest( '.incom-bubble' ).attr( 'data-incom-bubble' );
-
 				// Ensure that the element doesn't overlap the bubble.
 				element.width( element.width() - 20 );
 
