@@ -597,15 +597,16 @@
 
 			const overflow = naiveLeftOffset + wrapperTotalWidth - window.innerWidth;
 
-			// If it would overflow, align with the associated body element.
+			// If it would overflow, put it to the left of the bubble.
 			if ( overflow > 0 ) {
+				const bubbleLeftOffset = $offset.left;
+
 				const incomId = source.closest( '.incom-bubble' ).attr( 'data-incom-bubble' );
-				const associatedElement = document.getElementById( 'incom-element-' + incomId );
 
 				// Ensure that the element doesn't overlap the bubble.
 				element.width( element.width() - 20 );
 
-				return associatedElement.offsetLeft;
+				return bubbleLeftOffset - element.outerWidth();
 			}
 
 			return naiveLeftOffset;
