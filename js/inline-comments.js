@@ -569,8 +569,6 @@
 	const setCommentsWrapperPosition = function (source, element) {
 		const $offset = source.offset();
 
-		const scrollbarWidth = 20;
-
 		/**
 		 * Right-positioned elements should not spill over the viewport.
 		 */
@@ -609,7 +607,7 @@
 	const setBubblePosition = function (source, element) {
 		const $offset = source.offset();
 
-		const scrollbarWidth = 20;
+		const scrollbarWidth = getScrollbarWidth();
 
 		/**
 		 * If right-positioned elements will be too close to the edge of the viewport
@@ -1158,6 +1156,35 @@
 
 			comment.dataset.incomComment = commentKeys[ commentId ];
 		}
+	}
+
+	/**
+	 * Get the width of the scrollbar.
+	 *
+	 * @return {number} The width of the scrollbar.
+	 */
+	const getScrollbarWidth = () => {
+		// Create a temporary div element
+		const div = document.createElement('div');
+
+		// Apply styles to the div to ensure it has a scrollbar
+		div.style.position = 'absolute';
+		div.style.top = '-9999px';
+		div.style.width = '100px';
+		div.style.height = '100px';
+		div.style.overflowY = 'scroll';
+
+		// Append the div to the document body
+		document.body.appendChild(div);
+
+		// Calculate the scrollbar width
+		const scrollbarWidth = div.offsetWidth - div.clientWidth;
+
+		// Remove the temporary div from the document
+		document.body.removeChild(div);
+
+		// Return the scrollbar width
+		return scrollbarWidth;
 	}
 
 	/*
