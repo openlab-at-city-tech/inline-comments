@@ -287,7 +287,12 @@ class INCOM_Comments extends INCOM_Frontend {
 	 */
 	private function loadCancelX() {
 		if ( get_option( 'cancel_x' ) !== '1' ) {
-			return '<a class="incom-cancel incom-cancel-x" href title="'. esc_html__($this->loadCancelLinkText, INCOM_TD ) . '">&#10006;</a>';
+			return sprintf(
+				'<a class="incom-cancel incom-cancel-x" href title="%s"><img src="%s" alt="%s" /></a>',
+				esc_attr__( 'Close', INCOM_TD ),
+				esc_attr( INCOM_URL . '/images/close.png' ),
+				esc_html__($this->loadCancelLinkText, INCOM_TD )
+			);
 		}
 	}
 

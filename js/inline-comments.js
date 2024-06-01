@@ -611,10 +611,22 @@
 
 		const leftOffset = calculateLeftOffset();
 
+		const verticalOffsetFromBubble = -16;
+
 		element.css({
-			'top': $offset.top,
+			'top': $offset.top + verticalOffsetFromBubble,
 			'left': testIfPositionRight() ? leftOffset : $offset.left - element.outerWidth(),
 		});
+
+		if ( testIfPositionRight() ) {
+			if ( leftOffset < source.offset().left ) {
+				element.addClass( 'incom-has-right-bubble' );
+				source.addClass( 'incom-is-right-bubble' );
+			} else {
+				element.removeClass( 'incom-has-right-bubble' );
+				source.removeClass( 'incom-is-right-bubble' );
+			}
+		}
 	}
 
 	/*
@@ -672,10 +684,12 @@
 		 * The scrollbarWidth offset means we will try to shrink the main content area
 		 * by the same amount, to prevent overlap.
 		 */
-		if ( scrollbarOffset > 0 && ! source.data( 'incom-scrollbar-offset' ) ) {
+		if ( ! source.data( 'incom-scrollbar-offset' ) ) {
 			const sourcePaddingRight = parseInt( source.css( 'padding-right' ) );
-			source.css( 'padding-right', sourcePaddingRight + scrollbarOffset );
-			source.data( 'incom-scrollbar-offset', scrollbarOffset );
+			if ( scrollbarOffset > 0 ) {
+				source.css( 'padding-right', sourcePaddingRight + scrollbarOffset );
+				source.data( 'incom-scrollbar-offset', scrollbarOffset );
+			}
 		}
 	};
 
