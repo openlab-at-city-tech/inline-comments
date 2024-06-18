@@ -49,7 +49,7 @@ $vcard-image-size: 15px;
 
   &.incom-bubble-active {
 	background: #366baf;
-	border-radius: 0 8px 8px 0;
+	border-radius: 4px 8px 8px 4px;
 	z-index: $z-index-base + 4;
 
 	&.incom-bubble-style:after {
@@ -57,7 +57,7 @@ $vcard-image-size: 15px;
 	}
 
 	a {
-		border-radius: 0 8px 8px 0;
+		border-radius: 4px 8px 8px 4px;
 		padding-right: 24px;
 	}
 
@@ -136,16 +136,29 @@ $vcard-image-size: 15px;
 	  text-decoration: none;
 	}
   }
+
   ul, li {
     list-style: none;
+	margin-left: 0;
   }
+
+  p {
+	font-size: 1em;
+  }
+
   cite {
+	font-size: .9em;
     font-style: normal;
     font-weight: bold;
     a {
       color: $black;
     }
   }
+
+  .portfolio-actions {
+    display: none;
+  }
+
   .comment {
     padding: 24px 0 24px 8px;
     border-top: 1px solid $grey_light;
@@ -154,10 +167,16 @@ $vcard-image-size: 15px;
 		margin-top: 0;
 	}
   }
+
   /* Zeroing out theme styles */
+  li.comment {
+    margin: 0;
+  }
+
   .comment-body {
 	padding: 0;
   }
+
   .comment-meta {
     display: inline;
     float: right;
@@ -191,6 +210,9 @@ $vcard-image-size: 15px;
   #respond form input[type="email"], #respond form input[type="text"], #respond form input[type="url"] {
     width: 100%;
     max-width: 100%;
+  }
+  input[type="submit"] {
+	margin-bottom: 12px;
   }
   #respond.comment-respond {
     margin-top: 0;
