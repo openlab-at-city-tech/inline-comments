@@ -117,12 +117,23 @@ class INCOM_Comments extends INCOM_Frontend {
 	 */
 	private function loadCommentsList() {
 		$args = array(
-			'post_id' => get_the_ID(),
-			'type' => 'comment',
-			'callback' => array( $this, 'loadComment' ),
+			'post_id'     => get_the_ID(),
+			'type'        => 'comment',
+			'callback'    => array( $this, 'loadComment' ),
 			'avatar_size' => parent::get_avatar_size(),
 		);
-		wp_list_comments( apply_filters( 'incom_comments_list_args', $args ) );
+
+		// Block themes won't load comments into the main $wp_query, so we must
+		// load them separately and pass them to wp_list_comments.
+		$comments = get_comments(
+			[
+				'post_id' => get_the_ID(),
+				'type'    => 'comment',
+				'status'  => 'approve',
+			]
+		);
+
+		wp_list_comments( apply_filters( 'incom_comments_list_args', $args ), $comments );
 	}
 
 	/**
