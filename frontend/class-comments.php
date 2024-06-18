@@ -56,10 +56,16 @@ class INCOM_Comments extends INCOM_Frontend {
 	private function setValueDataIncom() {
 		if ( isset( $_POST[ $this->DataIncomKeyPOST ] ) ) {
 			$value = sanitize_text_field( $_POST[ $this->DataIncomKeyPOST ] );
-		}
-		else {
+		} else {
 			$value = NULL;
 		}
+
+		// If this is a reply, the value is stored in the parent comment.
+		if ( isset( $_POST['comment_parent'] ) && (int) $_POST['comment_parent'] !== 0 ) {
+			$parent_comment = get_comment( $_POST['comment_parent'] );
+			$value          = get_comment_meta( $parent_comment->comment_ID, $this->DataIncomKey, true );
+		}
+
 		$this->DataIncomValue = $value;
 	}
 
