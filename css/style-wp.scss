@@ -214,6 +214,17 @@ $vcard-image-size: 15px;
   input[type="submit"] {
 	margin-bottom: 12px;
   }
+
+  /* Special case: ensure that block themes use submit buttons that look like buttons */
+  .wp-element-button, .wp-block-button__link {
+	border: 1px solid #ccc;
+	background: #f9f9f9;
+	color: #333;
+	&:hover {
+	  background: #f0f0f0;
+	}
+  }
+
   #respond.comment-respond {
     margin-top: 0;
     form {
