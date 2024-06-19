@@ -130,6 +130,7 @@ class INCOM_Comments extends INCOM_Frontend {
 				'post_id' => get_the_ID(),
 				'type'    => 'comment',
 				'status'  => 'approve',
+				'order'   => 'ASC',
 			]
 		);
 
