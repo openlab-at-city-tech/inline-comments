@@ -315,10 +315,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     var selectByAtt = idCommentsAndFormHash + ' [' + attDataIncomComment + '="' + attFromSource + '"]';
 
     // Count elements
-    var $count = $(selectByAtt).length;
-    // Increase count for each inline reply, too
-    $count += $(selectByAtt + ' .children li').length;
-    return $count;
+    return $(selectByAtt).length;
   };
 
   /*
