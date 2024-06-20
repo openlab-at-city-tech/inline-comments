@@ -354,11 +354,7 @@
 		const selectByAtt = idCommentsAndFormHash + ' [' + attDataIncomComment + '="' + attFromSource + '"]';
 
 		// Count elements
-		let $count = $(selectByAtt).length;
-		// Increase count for each inline reply, too
-		$count += $(selectByAtt + ' .children li').length;
-
-		return $count;
+		return $(selectByAtt).length;
 	};
 
 	/*
