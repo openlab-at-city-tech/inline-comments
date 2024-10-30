@@ -818,7 +818,10 @@
 				return;
 			}
 
-			if ($(e.target).parents(idWrapperHash).length === 0) {
+			const isClickInsideWrapper = $(e.target).closest(idWrapperHash).length > 0;
+			const isClickOnReference = $(e.target).closest('[' + attDataIncomRef + ']').length > 0;
+
+			if ( ! isClickInsideWrapper && ! isClickOnReference ) {
 				removeCommentsWrapper(true);
 			}
 		});
@@ -1129,10 +1132,15 @@
 				$target.addClass(classScrolledTo);
 			}
 
+			const $bubble = $( '.incom-bubble[data-incom-bubble="' + targetValue + '"]');
+
 			// If this was a keyboard event, focus the bubble.
 			if ( e.detail === 0 ) {
-				const $bubble = $( '.incom-bubble[data-incom-bubble="' + targetValue + '"]');
 				focusOnElement( $bubble[0] );
+			}
+
+			if ( ! $bubble.hasClass( classBubbleActive ) ) {
+				handleClickBubble( $target, $bubble );
 			}
 		});
 	};
