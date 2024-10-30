@@ -456,6 +456,10 @@
 	const mouseLeaveCallback = function(theBubble) {
 		// Set a debounce timer to hide the bubble after 2 seconds
 		hideBubbleTimer = setTimeout(function() {
+			if ( $( idCommentsAndFormHash ).is( ':visible' ) ) {
+				return
+			}
+
 			if (o.bubbleAnimationOut === 'fadeout') {
 				theBubble.stop(true, true).fadeOut();
 			} else {
