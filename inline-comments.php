@@ -64,6 +64,7 @@ function incom_admin_init() {
 }
 
 function incom_frontend_init() {
+	require_once( INCOM_PATH . 'admin/class-admin-options.php' );
 	require_once( INCOM_PATH . 'frontend/class-frontend.php' );
 }
 

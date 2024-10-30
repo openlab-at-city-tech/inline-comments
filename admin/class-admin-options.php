@@ -5,8 +5,39 @@
  */
 
 class INCOM_Admin_Options {
+	protected static $options = [
+		// Basics
+		'incom_status_default',
+		'multiselector',
+		'incom_support_for_ajaxify_comments',
+		'incom_reply',
+		'moveselector',
+		'incom_attribute',
+
+		// Styling
+		'custom_css',
+		'incom_select_align',
+		'incom_avatars_display',
+		'incom_avatars_size',
+		'select_bubble_style',
+		'set_bgcolour',
+		'incom_set_bgopacity',
+		'incom_bubble_static',
+
+		// Advanced
+		'incom_content_comments_before',
+		'select_bubble_fadein',
+		'select_bubble_fadeout',
+		'cancel_x',
+		'cancel_link',
+		'incom_field_url',
+		'incom_comment_permalink',
+		'incom_references',
+		'incom_bubble_static_always',
+	];
 
 	function __construct() {
+		$this->register_incom_settings();
 		add_action( 'admin_menu', array( $this, 'incom_create_menu' ));
 		add_action( 'admin_init', array( $this, 'admin_init_options' ) );
 	}
@@ -18,7 +49,6 @@ class INCOM_Admin_Options {
 		}
 		$plugin = plugin_basename( INCOM_FILE );
 		add_filter("plugin_action_links_$plugin", array( $this, 'incom_settings_link' ) );
-		$this->register_incom_settings();
 	}
 
 	/**
@@ -35,38 +65,16 @@ class INCOM_Admin_Options {
 	}
 
 	function register_incom_settings() {
-		$arr = array(
-			// Basics
-            INCOM_OPTION_KEY.'_status_default',
-			'multiselector',
-			INCOM_OPTION_KEY.'_support_for_ajaxify_comments',
-			INCOM_OPTION_KEY.'_reply',
-			'moveselector',
-			INCOM_OPTION_KEY.'_attribute',
+		foreach ( self::$options as $i ) {
+			$default = $this->get_default_option_value( $i );
 
-			// Styling
-			'custom_css',
-			INCOM_OPTION_KEY.'_select_align',
-			INCOM_OPTION_KEY.'_avatars_display',
-			INCOM_OPTION_KEY.'_avatars_size',
-			'select_bubble_style',
-			'set_bgcolour',
-			INCOM_OPTION_KEY.'_set_bgopacity',
-			INCOM_OPTION_KEY.'_bubble_static',
-
-			// Advanced
-			INCOM_OPTION_KEY.'_content_comments_before',
-			'select_bubble_fadein',
-			'select_bubble_fadeout',
-			'cancel_x',
-			'cancel_link',
-			INCOM_OPTION_KEY.'_field_url',
-			INCOM_OPTION_KEY.'_comment_permalink',
-			INCOM_OPTION_KEY.'_references',
-			INCOM_OPTION_KEY.'_bubble_static_always',
-		);
-		foreach ( $arr as $i ) {
-			register_setting( 'incom-settings-group', $i );
+			register_setting(
+				'incom-settings-group',
+				$i,
+				[
+					'default' => $default,
+				]
+			);
 		}
 		do_action( 'register_incom_settings_after' );
 	}
@@ -86,6 +94,34 @@ class INCOM_Admin_Options {
 	function incom_admin_css() {
 		wp_enqueue_style( 'incom_admin_css', plugins_url('../css/min/admin.css', __FILE__) );
 		wp_enqueue_style( 'wp-color-picker' );	// Required for colour picker
+	}
+
+	protected function get_default_option_value( $option ) {
+		switch ( $option ) {
+			case 'incom_reply' :
+				return '1';
+			break;
+
+			default :
+				return '';
+			break;
+		}
+	}
+
+	public static function get_option( $option ) {
+		if ( ! in_array( $option, self::$options ) ) {
+			return false;
+		}
+
+		switch ( $option ) {
+			case 'incom_reply' :
+				$value = get_option( $option );
+			break;
+
+			default :
+				return get_option( $option );
+			break;
+		}
 	}
 }
 
