@@ -109,7 +109,7 @@ class INCOM_Comments extends INCOM_Frontend {
 	 * Display invisible plugin info
 	 */
 	private function loadPluginInfoInvisible() {
-		echo '<!-- ## Inline Comments by Kevin Weber - kevinw.de/inline-comments ## -->';
+		echo '<!-- ## OpenLab Inline Comments by Kevin Weber - kevinw.de/inline-comments ## -->';
 	}
 
 	/**

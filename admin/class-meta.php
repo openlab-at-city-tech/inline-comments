@@ -24,7 +24,7 @@ class Incom_Meta {
 		foreach ( $screens as $screen ) {
 			add_meta_box(
 				'meta-box-incom',
-				__( 'Inline Comments', INCOM_TD ),
+				__( 'OpenLab Inline Comments', INCOM_TD ),
 				array( $this, 'meta_box' ),
 				$screen,
 				'side',	// Position
@@ -36,17 +36,17 @@ class Incom_Meta {
 	function meta_box( $post ) {
 		$post_id = $post->ID;
 		$values = get_post_custom( $post_id );
-		
+
 		$select_name = $this->select_name;
         $selected = isset( $values[$select_name] ) ? esc_attr( $values[$select_name][0] ) : '';
-        
+
 //		 wp_nonce_field( 'add_incom_meta_box_nonce', INCOM_OPTION_KEY.'_meta_box_nonce' );
 		?>
 
         <p>
             <label for="<?php echo $select_name; ?>">
                 <?php
-                        printf( __( 'Use Inline Comments on this %s?', INCOM_TD ),
+                        printf( __( 'Use OpenLab Inline Comments on this %s?', INCOM_TD ),
                             get_current_screen()->post_type
                         );
                     ?>
@@ -69,12 +69,12 @@ class Incom_Meta {
         <?php
         if (!comments_open($post_id)) {
             echo '<p>';
-            printf( __( 'ATTENTION! Looks like comments are not allowed for this %s. Make sure that comments are allowed if you want to use Inline Comments.', INCOM_TD ),
+            printf( __( 'ATTENTION! Looks like comments are not allowed for this %s. Make sure that comments are allowed if you want to use OpenLab Inline Comments.', INCOM_TD ),
                 get_current_screen()->post_type
             );
             echo '</p>';
         }
-        
+
         do_action( INCOM_OPTION_KEY.'_meta_box_after', $post_id );
     }
 
@@ -82,13 +82,13 @@ class Incom_Meta {
 
 		// Bail if we're doing an auto save
 		if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
-		
+
 		// // If our nonce isn't there, or we can't verify it, bail
-		// if ( 
+		// if (
 		// 	!empty( $_POST ) &&
 		// 	(
 		// 		!isset( $_POST[INCOM_OPTION_KEY.'_meta_box_nonce'] )
-		// 		|| !wp_verify_nonce( $_POST[INCOM_OPTION_KEY.'_meta_box_nonce'], 'add_incom_meta_box_nonce' ) 
+		// 		|| !wp_verify_nonce( $_POST[INCOM_OPTION_KEY.'_meta_box_nonce'], 'add_incom_meta_box_nonce' )
 		// 	)
 		// ) {
 		// 	print 'Sorry, your nonce did not verify.';

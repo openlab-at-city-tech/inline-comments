@@ -1,5 +1,5 @@
 <div id="tabs" class="ui-tabs">
-    <h2><?php esc_html_e( 'Inline Comments', INCOM_TD ); ?> <span class="subtitle"><?php esc_html__( 'by', INCOM_TD ); ?> <a href="http://kevinw.de/ic" target="_blank" title="<?php esc_html_e( 'Website by Kevin Weber', INCOM_TD ); ?>">Kevin Weber</a> (<?php esc_html_e( 'Version', INCOM_TD ); ?> <?php echo esc_html(INCOM_VERSION); ?>)</span>
+    <h2><?php esc_html_e( 'OpenLab Inline Comments', INCOM_TD ); ?> <span class="subtitle"><?php esc_html__( 'by', INCOM_TD ); ?> <a href="http://kevinw.de/ic" target="_blank" title="<?php esc_html_e( 'Website by Kevin Weber', INCOM_TD ); ?>">Kevin Weber</a> (<?php esc_html_e( 'Version', INCOM_TD ); ?> <?php echo esc_html(INCOM_VERSION); ?>)</span>
         <br><span class="claim" style="font-size:15px;font-style:italic;position:relative;top:-7px;"><?php esc_html_e( '&hellip; revolutionise the way we comment online!', INCOM_TD ); ?></span>
     </h2>
 
@@ -28,7 +28,7 @@
                                 <option value="logged_in"<?php if (get_option(INCOM_OPTION_KEY.'_status_default') === 'logged_in') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Logged-in users only', INCOM_TD ); ?></option>
                             </select>
                             <p>
-                                <?php esc_html_e( 'Define who can see Inline Comments.', INCOM_TD ); ?>
+                                <?php esc_html_e( 'Define who can see OpenLab Inline Comments.', INCOM_TD ); ?>
                             </p>
                         </td>
                     </tr>
@@ -44,7 +44,7 @@
                                 <option value="off"<?php if (get_option(INCOM_OPTION_KEY.'_status_default') === 'off') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Don&#39;t load', INCOM_TD ); ?></option>
                             </select>
                             <p>
-                                <?php printf( esc_html__( 'Define if Inline Comments should be loaded on posts and/or pages by default. You can override the default setting on every post and page individually. See also: %1$sFAQ%2$s.', INCOM_TD ),
+                                <?php printf( esc_html__( 'Define if OpenLab Inline Comments should be loaded on posts and/or pages by default. You can override the default setting on every post and page individually. See also: %1$sFAQ%2$s.', INCOM_TD ),
                                     '<a href="https://wordpress.org/plugins/inline-comments/faq/" title="Page with frequently asked questions" target="_blank">',
                                     '</a>'
                                 ); ?>
@@ -193,7 +193,7 @@
                             <input name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_support_for_ajaxify_comments" type="checkbox" value="1" <?php checked( '1', get_option( INCOM_OPTION_KEY.'_support_for_ajaxify_comments' ) ); ?> />
 
                             <span><?php
-                            printf( esc_html__( 'Empower %1$sWP-Ajaxify-Comments%2$s (version 0.24.0 or higher) to add Ajax functionality to Inline Comments and improve the user experience: Your page will not reload after a comment is submitted.', INCOM_TD ),
+                            printf( esc_html__( 'Empower %1$sWP-Ajaxify-Comments%2$s (version 0.24.0 or higher) to add Ajax functionality to OpenLab Inline Comments and improve the user experience: Your page will not reload after a comment is submitted.', INCOM_TD ),
                                 '<a href="http://wordpress.org/extend/plugins/wp-ajaxify-comments/" title="WP-Ajaxify-Comments" target="_blank">',
                                 '</a>'
                             ); ?> <b><?php esc_html_e( 'Recommended.', INCOM_TD ); ?></b></span>
@@ -249,7 +249,7 @@
                                 <option value="nowhere"<?php if (get_option( INCOM_OPTION_KEY.'_references') === 'nowhere') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Nowhere', INCOM_TD ); ?></option>
                             </select>
                             <span><br>
-                            <?php esc_html_e( 'References are links to referenced paragraphs. By default, they are visible in the regular comment section (below your article) next to a comment that has been submitted using Inline Comments.', INCOM_TD ); ?>
+                            <?php esc_html_e( 'References are links to referenced paragraphs. By default, they are visible in the regular comment section (below your article) next to a comment that has been submitted using OpenLab Inline Comments.', INCOM_TD ); ?>
                             </span>
                         </td>
                     </tr>
@@ -285,7 +285,7 @@
                     <?php printf( esc_html__( 'Support me with %1$sa delicious lunch%2$s or give this plugin a 5 star rating %3$son WordPress.org%4$s.', INCOM_TD ),
                         '<a href="http://kevinw.de/donate/InlineComments/" title="Pay me a delicious lunch" target="_blank">',
                         '</a>',
-                        '<a href="http://wordpress.org/support/view/plugin-reviews/inline-comments?filter=5" title="Vote for Inline Comments" target="_blank">',
+                        '<a href="http://wordpress.org/support/view/plugin-reviews/inline-comments?filter=5" title="Vote for OpenLab Inline Comments" target="_blank">',
                         '</a>'
                     ); ?>
                 </p>

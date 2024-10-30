@@ -20,18 +20,18 @@
 		//$wpacOptions['selectorRespondContainer'] = '#comments-and-form';
 		$wpacOptions['selectorCommentPagingLinks'] = '#incom-commentform [class^="nav-"] a';
 		$wpacOptions['selectorCommentLinks'] = '#incom-commentform a[href*="/comment-page-"]';
-	
+
 		// Filter Callbacks
-		
+
 		// @TODO//TESTING for Danny
 		// $wpacOptions['callbackOnBeforeSelectElements'] = "var e = jQuery('#comments, #comments ~ *',dom); if (e.length==0) e = jQuery('#comments-and-form', dom); e.wrapAll('<div id=\"comments-and-form\" />');";
 	//	$wpacOptions['callbackOnBeforeSelectElements'] = "var e = jQuery('#comments, #comments ~ *',dom); if (e.length==0) e = jQuery('#respond', dom); e.wrapAll('<div id=\"comments-and-form\" />');";
 
-		
+
 		$wpacOptions['callbackOnBeforeUpdateComments'] = 'var newCommentsContainer = jQuery("body").find("'.$wpacOptions['selectorCommentsContainer'].'");';
 		$wpacOptions['callbackOnAfterUpdateComments'] = '
 
-			// Variables from Inline Comments JS file
+			// Variables from OpenLab Inline Comments JS file
 			  var idCommentsAndForm = "comments-and-form";
 			    var idCommentsAndFormHash = "#"+idCommentsAndForm;
 			  var attDataIncom = "data-incom";
@@ -52,7 +52,7 @@
 			var attDataIncomComment = \'data-incom-comment\';
 			var attFromSource = idNewComment.attr( attDataIncomComment );
 
-			// Step 4: This test is needed to make replies to parent comments work 
+			// Step 4: This test is needed to make replies to parent comments work
 			if ( attFromSource === "" )  {
 				attFromSource = idNewComment.parents(".depth-1").attr( attDataIncomComment );
 			}

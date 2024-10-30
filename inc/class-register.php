@@ -30,7 +30,7 @@ function incom_plugin_activation() {
 
 	$notices = get_option( 'incom_deferred_admin_notices', array() );
 	$notices[] = $signup . '<br>'.esc_html__( 'Edit your plugin settings: ', INCOM_TD ).'<strong>
-					<a href="options-general.php?page=incom.php">'.esc_html__( 'Inline Comments', INCOM_TD ).'</a>
+					<a href="options-general.php?page=incom.php">'.esc_html__( 'OpenLab Inline Comments', INCOM_TD ).'</a>
 					</strong>';
 				;
 	update_option( 'incom_deferred_admin_notices', $notices );

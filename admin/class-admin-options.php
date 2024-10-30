@@ -7,7 +7,7 @@
 class INCOM_Admin_Options {
 
 	function __construct() {
-		add_action( 'admin_menu', array( $this, 'incom_create_menu' ));	
+		add_action( 'admin_menu', array( $this, 'incom_create_menu' ));
 		add_action( 'admin_init', array( $this, 'admin_init_options' ) );
 	}
 
@@ -16,7 +16,7 @@ class INCOM_Admin_Options {
 			add_action( 'admin_footer', array( $this, 'incom_admin_css' ) );
 			add_action( 'admin_footer', array( $this, 'incom_admin_js' ) );
 		}
-		$plugin = plugin_basename( INCOM_FILE ); 
+		$plugin = plugin_basename( INCOM_FILE );
 		add_filter("plugin_action_links_$plugin", array( $this, 'incom_settings_link' ) );
 		$this->register_incom_settings();
 	}
@@ -24,14 +24,14 @@ class INCOM_Admin_Options {
 	/**
 	 * Add settings link on plugin page
 	 */
-	function incom_settings_link($links) { 
-	  $settings_link = '<a href="options-general.php?page=incom.php">'.esc_html__( 'Settings', INCOM_TD ).'</a>'; 
-	  array_unshift($links, $settings_link); 
-	  return $links; 
+	function incom_settings_link($links) {
+	  $settings_link = '<a href="options-general.php?page=incom.php">'.esc_html__( 'Settings', INCOM_TD ).'</a>';
+	  array_unshift($links, $settings_link);
+	  return $links;
 	}
 
 	function incom_create_menu() {
-		add_options_page( esc_html__( 'Inline Comments', INCOM_TD ), esc_html__( 'Inline Comments', INCOM_TD ), 'manage_options', 'incom.php', array( $this, 'incom_settings_page'));
+		add_options_page( esc_html__( 'OpenLab Inline Comments', INCOM_TD ), esc_html__( 'OpenLab Inline Comments', INCOM_TD ), 'manage_options', 'incom.php', array( $this, 'incom_settings_page'));
 	}
 
 	function register_incom_settings() {
@@ -43,7 +43,7 @@ class INCOM_Admin_Options {
 			INCOM_OPTION_KEY.'_reply',
 			'moveselector',
 			INCOM_OPTION_KEY.'_attribute',
-			
+
 			// Styling
 			'custom_css',
 			INCOM_OPTION_KEY.'_select_align',
