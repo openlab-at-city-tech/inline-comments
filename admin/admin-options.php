@@ -21,18 +21,6 @@
             <table class="form-table">
                 <tbody>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Visibility', INCOM_TD ); ?> <span class="newred"><?php esc_html_e( 'New!', INCOM_TD ); ?></th>
-                        <td>
-                            <select class="select" typle="select" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_status_default">
-                                <option value="public"<?php if (get_option(INCOM_OPTION_KEY.'_status_default') === 'public') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Everyone', INCOM_TD ); ?></option>
-                                <option value="logged_in"<?php if (get_option(INCOM_OPTION_KEY.'_status_default') === 'logged_in') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Logged-in users only', INCOM_TD ); ?></option>
-                            </select>
-                            <p>
-                                <?php esc_html_e( 'Define who can see OpenLab Inline Comments.', INCOM_TD ); ?>
-                            </p>
-                        </td>
-                    </tr>
-                    <tr valign="top">
                         <th scope="row"><?php esc_html_e( 'Default Status', INCOM_TD ); ?></th>
                         <td>
                             <select class="select" typle="select" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_status_default">
