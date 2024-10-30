@@ -52,37 +52,6 @@
                             <input name="incom_reply" type="checkbox" value="1" <?php checked( '1', get_option( 'incom_reply' ) ); ?> /><span><?php esc_html_e( 'If checked, a reply link will be added below each inline comment and users can reply directly.', INCOM_TD ); ?></span>
                         </td>
                     </tr>
-                    <tr valign="top">
-                        <th scope="row"><?php esc_html_e( '"Slide Site" Selector', INCOM_TD ); ?></th>
-                        <td>
-                            <?php
-                                $arr_selectors = array( ".site-main", ".site-inner", ".site", "#page", "html" );
-                                $selectors = implode( '<br>' , $arr_selectors );
-                            ?>
-                            <input type="text" name="moveselector" placeholder="body" value="<?php echo sanitize_text_field(get_option('moveselector')); ?>" />
-                                <br>
-                                <span><?php esc_html_e( 'This selector defines which content should slide left/right when the user clicks on a bubble. This setting depends on your theme\'s structure.', INCOM_TD ); ?> <?php esc_html_e( 'Default is', INCOM_TD ); ?> <i>html</i>.
-                                    <br><br><?php esc_html_e( 'You might try one of these selectors:', INCOM_TD ); ?>
-                                    <br><span class="italic"><?php echo $selectors; /* XSS OK */ ?></span>
-                                </span>
-                        </td>
-                    </tr>
-                    <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Attribution', INCOM_TD ); ?><br><span class="description thin"><?php esc_html_e( 'give appropriate credit for my time-consuming efforts', INCOM_TD ); ?></span></th>
-                        <td>
-                            <?php $options = get_option( INCOM_OPTION_KEY.'_attribute' ); ?>
-                            <input class="radio" type="radio" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_attribute" value="none"<?php checked( 'none' == $options || empty($options) ); ?> /> <label for="none"><?php esc_html_e( 'No attribution: "I can not afford to give appropriate credit for this free plugin."', INCOM_TD ); ?></label><br><br>
-                            <input class="radio" type="radio" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_attribute" value="link"<?php checked( 'link' == $options ); ?> /> <label for="link"><?php esc_html_e( 'Link attribution: Display a subtle "i" (information link) that is placed in the top right of every comment wrapper and helps that the plugin gets spread.', INCOM_TD ); ?></label><br><br>
-                            <input class="radio" type="radio" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_attribute" value="donate"<?php checked( 'donate' == $options ); ?> />
-                            <label for="donate">
-                                <?php esc_html_e( 'Donation: "I have donated already or will do so soon."', INCOM_TD ); ?>
-                                <?php printf( esc_html__( 'Please %1$sdonate now%2$s so that I can keep up the development of this plugin.', INCOM_TD ),
-                                    '<a href="http://kevinw.de/donate/InlineComments/" target="_blank">',
-                                    '</a>'
-                                ); ?>
-                            </label><br>
-                        </td>
-                    </tr>
                 </tbody>
             </table>
 
