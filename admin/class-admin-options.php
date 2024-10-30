@@ -107,22 +107,6 @@ class INCOM_Admin_Options {
 			break;
 		}
 	}
-
-	public static function get_option( $option ) {
-		if ( ! in_array( $option, self::$options ) ) {
-			return false;
-		}
-
-		switch ( $option ) {
-			case 'incom_reply' :
-				$value = get_option( $option );
-			break;
-
-			default :
-				return get_option( $option );
-			break;
-		}
-	}
 }
 
 function initialize_incom_admin_options() {
