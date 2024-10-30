@@ -359,13 +359,9 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
   var isNumeric = function isNumeric(value) {
     return typeof value === 'number' && isFinite(value) || !isNaN(Number(value));
   };
-
-  /*
-   * This event will be triggered when user hovers a text element or bubble
-   */
+  var hideBubbleTimer;
   var handleHover = function handleHover(element, theBubble) {
     if (!theBubble.hasClass(classBubbleStatic) && o.canComment) {
-      // Handle hover (for both, "elements" and $bubble)
       element.add(theBubble);
       element.on('mouseenter', function () {
         mouseEnterCallback(theBubble);
@@ -373,16 +369,21 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
       element.on('mouseleave', function () {
         mouseLeaveCallback(theBubble);
       });
+
+      // Also set mouseleave for the bubble itself
+      theBubble.on('mouseleave', function () {
+        mouseLeaveCallback(theBubble);
+      });
+      theBubble.on('mouseenter', function () {
+        mouseEnterCallback(theBubble);
+      });
     }
   };
-
-  /**
-   * mouseenter callback.
-   *
-   * @param {jQuery} theBubble The bubble that is being hovered.
-   */
   var mouseEnterCallback = function mouseEnterCallback(theBubble) {
-    // First hide all non-static bubbles
+    // Clear the hide timer if mouse re-enters within the debounce time
+    clearTimeout(hideBubbleTimer);
+
+    // Show the bubble
     $(classBubbleDot + ':not(' + classBubbleStaticDot + ')').hide();
     if (o.bubbleAnimationIn === 'fadein') {
       theBubble.stop(true, true).fadeIn();
@@ -393,19 +394,18 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
       theBubble.hide();
     }
   };
-
-  /**
-   * mouseleave callback.
-   *
-   * @param {jQuery} theBubble The bubble that is being hovered.
-   */
   var mouseLeaveCallback = function mouseLeaveCallback(theBubble) {
-    if (o.bubbleAnimationOut === 'fadeout') {
-      theBubble.stop(true, true).fadeOut();
-    } else {
-      // Delay hiding to make it possible to hover the bubble before it disappears
-      theBubble.stop(true, true).delay(700).hide(0);
-    }
+    // Set a debounce timer to hide the bubble after 2 seconds
+    hideBubbleTimer = setTimeout(function () {
+      if ($(idCommentsAndFormHash).is(':visible')) {
+        return;
+      }
+      if (o.bubbleAnimationOut === 'fadeout') {
+        theBubble.stop(true, true).fadeOut();
+      } else {
+        theBubble.stop(true, true).hide();
+      }
+    }, 2000);
   };
 
   /*
@@ -717,7 +717,9 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
       if (touchMoved) {
         return;
       }
-      if ($(e.target).parents(idWrapperHash).length === 0) {
+      var isClickInsideWrapper = $(e.target).closest(idWrapperHash).length > 0;
+      var isClickOnReference = $(e.target).closest('[' + attDataIncomRef + ']').length > 0;
+      if (!isClickInsideWrapper && !isClickOnReference) {
         removeCommentsWrapper(true);
       }
     });
@@ -1009,11 +1011,14 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
         removeExistingClasses(classScrolledTo);
         $target.addClass(classScrolledTo);
       }
+      var $bubble = $('.incom-bubble[data-incom-bubble="' + targetValue + '"]');
 
       // If this was a keyboard event, focus the bubble.
       if (e.detail === 0) {
-        var $bubble = $('.incom-bubble[data-incom-bubble="' + targetValue + '"]');
         focusOnElement($bubble[0]);
+      }
+      if (!$bubble.hasClass(classBubbleActive)) {
+        handleClickBubble($target, $bubble);
       }
     });
   };

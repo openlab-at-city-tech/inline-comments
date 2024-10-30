@@ -1,6 +1,6 @@
 <div id="tabs" class="ui-tabs">
-    <h2><?php esc_html_e( 'OpenLab Inline Comments', INCOM_TD ); ?> <span class="subtitle"><?php esc_html__( 'by', INCOM_TD ); ?> <a href="http://kevinw.de/ic" target="_blank" title="<?php esc_html_e( 'Website by Kevin Weber', INCOM_TD ); ?>">Kevin Weber</a> (<?php esc_html_e( 'Version', INCOM_TD ); ?> <?php echo esc_html(INCOM_VERSION); ?>)</span>
-        <br><span class="claim" style="font-size:15px;font-style:italic;position:relative;top:-7px;"><?php esc_html_e( '&hellip; revolutionise the way we comment online!', INCOM_TD ); ?></span>
+    <h2><?php esc_html_e( 'OpenLab Inline Comments', 'inline-comments' ); ?> <span class="subtitle"><?php echo esc_html( sprintf( __( '(Version %s)', 'inline-comments' ), INCOM_VERSION ) ); ?></span>
+        <br><span class="claim" style="font-size:15px;font-style:italic;position:relative;top:-7px;"><?php echo wp_kses_post( 'Based on Inline Comments by <a href="http://kevinw.de/ic" target="_blank">Kevin Weber</a>' ); ?></span>
     </h2>
 
     <ul class="ui-tabs-nav">
