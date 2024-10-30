@@ -410,57 +410,59 @@
 		return typeof value === 'number' && isFinite( value ) || !isNaN( Number( value ) );
 	}
 
-	/*
-	 * This event will be triggered when user hovers a text element or bubble
-	 */
-	const handleHover = function ( element, theBubble ) {
-		if ( ! theBubble.hasClass( classBubbleStatic ) && o.canComment ) {
-			// Handle hover (for both, "elements" and $bubble)
-			element.add( theBubble );
+	let hideBubbleTimer;
 
-			element.on( 'mouseenter', function() {
-				mouseEnterCallback( theBubble );
-			} );
+	const handleHover = function(element, theBubble) {
+		if (!theBubble.hasClass(classBubbleStatic) && o.canComment) {
+			element.add(theBubble);
 
-			element.on( 'mouseleave', function() {
-				mouseLeaveCallback( theBubble );
-			} );
+			element.on('mouseenter', function() {
+				mouseEnterCallback(theBubble);
+			});
+
+			element.on('mouseleave', function() {
+				mouseLeaveCallback(theBubble);
+			});
+
+			// Also set mouseleave for the bubble itself
+			theBubble.on('mouseleave', function() {
+				mouseLeaveCallback(theBubble);
+			});
+
+			theBubble.on('mouseenter', function() {
+				mouseEnterCallback(theBubble);
+			});
 		}
 	};
 
-	/**
-	 * mouseenter callback.
-	 *
-	 * @param {jQuery} theBubble The bubble that is being hovered.
-	 */
-	const mouseEnterCallback = function( theBubble ) {
-		// First hide all non-static bubbles
+	const mouseEnterCallback = function(theBubble) {
+		// Clear the hide timer if mouse re-enters within the debounce time
+		clearTimeout(hideBubbleTimer);
+
+		// Show the bubble
 		$(classBubbleDot + ':not(' + classBubbleStaticDot + ')').hide();
 
 		if (o.bubbleAnimationIn === 'fadein') {
-				theBubble.stop(true, true).fadeIn();
+			theBubble.stop(true, true).fadeIn();
 		} else {
-				theBubble.stop(true, true).show();
+			theBubble.stop(true, true).show();
 		}
 
 		if (!isInWindow(bubble)) {
-				theBubble.hide();
+			theBubble.hide();
 		}
-	}
+	};
 
-	/**
-	 * mouseleave callback.
-	 *
-	 * @param {jQuery} theBubble The bubble that is being hovered.
-	 */
-	const mouseLeaveCallback = function( theBubble ) {
-		if (o.bubbleAnimationOut === 'fadeout') {
-			theBubble.stop(true, true).fadeOut();
-		} else {
-			// Delay hiding to make it possible to hover the bubble before it disappears
-			theBubble.stop(true, true).delay(700).hide(0);
-		}
-	}
+	const mouseLeaveCallback = function(theBubble) {
+		// Set a debounce timer to hide the bubble after 2 seconds
+		hideBubbleTimer = setTimeout(function() {
+			if (o.bubbleAnimationOut === 'fadeout') {
+				theBubble.stop(true, true).fadeOut();
+			} else {
+				theBubble.stop(true, true).hide();
+			}
+		}, 2000);
+	};
 
 	/*
 	 * This event will be triggered when user clicks on bubble
