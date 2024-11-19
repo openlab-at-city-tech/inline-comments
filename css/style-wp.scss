@@ -10,6 +10,8 @@ $grey_light: #f3f3f3;
 $grey_lighter: #f6f6f6;
 $z-index-base: 2;
 
+$comment-vertical-spacing: 23px;
+
 $font-family: "Open Sans", sans-serif;
 
 $vcard-image-size: 16px;
@@ -191,6 +193,68 @@ $vcard-image-size: 16px;
 			border-radius: 8px;
 			margin-bottom: 15px;
 			padding: 20px;
+
+			&.incom-replies-collapsed {
+				& > .children {
+					display: none;
+				}
+			}
+
+			.incom-showhide-replies {
+				button {
+					display: none;
+
+					background: none;
+					color: $black;
+					font-family: $font-family;
+					font-size: 1em;
+					font-weight: normal;
+					line-height: 1;
+					padding: 0;
+					text-decoration: underline;
+
+					&:hover {
+						text-decoration: none;
+					}
+				}
+			}
+
+			&.incom-replies-expanded,
+			&.incom-replies-collapsed {
+				.incom-showhide-replies button {
+					display: block;
+				}
+			}
+		}
+	}
+
+	.incom-comment-actions {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	/* This class name comes from WP so we must override some core/theme styles. */
+	.comment-reply-link {
+		font-weight: 600;
+
+		&:before {
+			background: url( '../../images/reply.png' ) no-repeat;
+			content: "";
+			display: inline-block;
+			margin-right: 6px;
+			width: 14px;
+			height: 14px;
+			vertical-align: middle;
+		}
+
+		&:hover {
+			box-shadow: none; /* twentyseventeen */
+		}
+	}
+
+	.children {
+		.comment-reply-link:before {
+			content: none;
 		}
 	}
 
@@ -198,13 +262,36 @@ $vcard-image-size: 16px;
 		background: #fff;
 
 		.children {
-			margin-top: 0;
+			margin-top: $comment-vertical-spacing;
+			padding-left: 20px;
+			position: relative;
+
+			&:after {
+				background: url( '../../images/down-arrow.png' ) no-repeat;
+				content: '';
+				position: absolute;
+				top: 2px;
+				left: 0;
+				height: 12px;
+				width: 15px;
+			}
+
+			&:before {
+				--vertical-offset: 34px;
+				border-left: 2px dotted $black;
+				content: '';
+				position: absolute;
+				height: calc( 100% - var( --vertical-offset ) );
+				left: 5px;
+				top: var( --vertical-offset );
+				width: 2px;
+			}
 		}
 	}
 
 	/* Zeroing out theme styles */
 	li.comment {
-		margin: 0;
+		margin: 0 0 $comment-vertical-spacing 0;
 	}
 
 	.inline-comment-body {

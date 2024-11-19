@@ -53,7 +53,7 @@ class INCOM_WordPress extends INCOM_Frontend {
 		wp_enqueue_script(
 			'incom-js',
 			plugins_url( 'js/min/inline-comments.min.js' , plugin_dir_path( __FILE__ ) ),
-			array( 'jquery' ),
+			[ 'jquery', 'wp-i18n' ],
 			filemtime( INCOM_PATH . '/js/min/inline-comments.min.js' ),
 		);
 

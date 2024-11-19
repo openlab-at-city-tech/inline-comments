@@ -184,22 +184,30 @@ class INCOM_Comments extends INCOM_Frontend {
 		<?php comment_text(); ?>
 
 		<?php if ( get_option( 'incom_reply' ) == '1' ) { ?>
-			<div class="incom-reply">
-			<?php
-				comment_reply_link( array_merge(
-						$args,
-						array(
-							'add_below' => 'incom-div-comment',
-							// 'respond_id' => 'incom-commentform',
-							// TODO: 'reply_text' => 'insert icon here',
-							'depth' => $depth,
-							'max_depth' => $args['max_depth'],
-							'login_text' => '',
-							'reply_title_id' => 'incom-reply-title',
+			<div class="incom-comment-actions">
+				<?php if ( empty( $comment->comment_parent ) ) : ?>
+					<div class="incom-showhide-replies">
+						<button class="incom-show-replies"><?php esc_html_e( 'Show Replies', 'inline-comments' ); ?></button>
+					</div>
+				<?php endif; ?>
+
+				<div class="incom-reply">
+				<?php
+					comment_reply_link( array_merge(
+							$args,
+							array(
+								'add_below' => 'incom-div-comment',
+								// 'respond_id' => 'incom-commentform',
+								// TODO: 'reply_text' => 'insert icon here',
+								'depth' => $depth,
+								'max_depth' => $args['max_depth'],
+								'login_text' => '',
+								'reply_title_id' => 'incom-reply-title',
+							)
 						)
-					)
-				);
-			?>
+					);
+				?>
+				</div>
 			</div>
 		<?php } ?>
 

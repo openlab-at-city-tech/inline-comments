@@ -10,6 +10,8 @@
 
 	let o
 
+	const { sprintf, __ } = wp.i18n;
+
 	// IDs
 	const
 		idWrapper = 'incom_wrapper',
@@ -568,7 +570,75 @@
 		} )
 
 		$(classVisibleCommentDot + ' .children li').show();
+
+		collapseAllReplies();
 	};
+
+	/**
+	 * Collapse all replies for top-level comments.
+	 */
+	const collapseAllReplies = function() {
+		const $topLevelComments = $( idCommentsAndFormHash + ' > .comment' );
+
+		$topLevelComments.each( function() {
+			collapseCommentReplies( $( this ) );
+		} )
+	}
+
+	/**
+	 * Collapses the replies section for a top-level comment.
+	 *
+	 * @param {jQuery} $comment The top-level comment.
+	 */
+	const collapseCommentReplies = function( $comment ) {
+		const $repliesContainer = $comment.children( '.children' );
+
+		if ( ! $repliesContainer.length ) {
+			return;
+		}
+
+		// Count replies. No need to recurse since it's all in the DOM.
+		const replyCount = $repliesContainer.find( 'li' ).length;
+
+		$comment.data( 'incom-reply-count', replyCount );
+
+		toggleReplies( $comment, 'collapsed' );
+
+		$comment.find( '.incom-showhide-replies button' )
+			.on( 'click', function( event ) {
+				event.preventDefault();
+				toggleReplies( $comment );
+			} )
+	}
+
+	/**
+	 * Toggle replies for a top-level comment.
+	 *
+	 * @param {jQuery} $comment    The top-level comment.
+	 * @param {string} targetState The target state for the replies. If null, the state will be toggled.
+	 */
+	const toggleReplies = function( $comment, targetState = null ) {
+		if ( null === targetState ) {
+			targetState = $comment.hasClass( 'incom-replies-collapsed' ) ? 'expanded' : 'collapsed';
+		}
+
+		let linkTextFormat
+
+		if ( 'expanded' === targetState ) {
+			// translators: %s: number of replies
+			linkTextFormat = __( 'Hide Replies (%s)', 'inline-comments' );
+			$comment.removeClass( 'incom-replies-collapsed' ).addClass( 'incom-replies-expanded' );
+		} else {
+			// translators: %s: number of replies
+			linkTextFormat = __( 'Show Replies (%s)', 'inline-comments' );
+			$comment.removeClass( 'incom-replies-expanded' ).addClass( 'incom-replies-collapsed' );
+		}
+
+		const replyCount = $comment.data( 'incom-reply-count' );
+		const linkText = sprintf( linkTextFormat, replyCount );
+
+		$comment.find( '.incom-showhide-replies button' ).html( linkText );
+	}
 
 	/*
 	 * Get (current) value for AttDataIncom
