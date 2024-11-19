@@ -192,19 +192,23 @@ class INCOM_Comments extends INCOM_Frontend {
 
 				<div class="incom-reply">
 				<?php
-					comment_reply_link( array_merge(
-							$args,
-							array(
-								'add_below' => 'incom-div-comment',
-								// 'respond_id' => 'incom-commentform',
-								// TODO: 'reply_text' => 'insert icon here',
-								'depth' => $depth,
-								'max_depth' => $args['max_depth'],
-								'login_text' => '',
-								'reply_title_id' => 'incom-reply-title',
-							)
+				add_filter( 'comment_reply_link', array( $this, 'comment_reply_link' ), 10 );
+
+				comment_reply_link( array_merge(
+						$args,
+						array(
+							'add_below' => 'incom-div-comment',
+							// 'respond_id' => 'incom-commentform',
+							// TODO: 'reply_text' => 'insert icon here',
+							'depth' => $depth,
+							'max_depth' => $args['max_depth'],
+							'login_text' => '',
+							'reply_title_id' => 'incom-reply-title',
 						)
-					);
+					)
+				);
+
+				remove_filter( 'comment_reply_link', array( $this, 'comment_reply_link' ), 10 );
 				?>
 				</div>
 			</div>
@@ -239,8 +243,39 @@ class INCOM_Comments extends INCOM_Frontend {
 			esc_html__( 'Comment', 'inline-comments' )
 		);
 
+		$comment_field = sprintf(
+			'<p class="incom-form-comment">%s %s</p>',
+			sprintf(
+				'<label for="comment" class="screen-reader-text">%s</label>',
+				_x( 'Comment', 'noun', 'inline-comments' )
+			),
+			'<textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required></textarea>'
+		);
+
+		$commenter = wp_get_current_commenter();
+
+		$fields = [
+		  'author' =>
+		    '<p class="incom-form-author"><label for="author">' . esc_html__( 'Name', 'inline-comments' ) . '</label> ' .
+		    '<input id="author" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) .
+		    '" size="30" /></p>',
+
+		  'email' =>
+		    '<p class="incom-form-email"><label for="email">' . esc_html__( 'Email', 'inline-comments' ) . '</label> ' .
+		    '<input id="email" name="email" type="text" value="' . esc_attr(  $commenter['comment_author_email'] ) .
+		    '" size="30" /></p>',
+		];
+
+		if ( get_option( 'incom_field_url' ) !== '1' ) {
+			$fields['url'] = '<p class="incom-form-url"><label for="url">' . esc_html__( 'Website', 'inline-comments' ) . '</label>' .
+			    '<input id="url" name="url" type="text" value="' . esc_attr( $commenter['comment_author_url'] ) .
+			    '" size="30" /></p>';
+		}
+
 		$args = array(
 			'id_form' => 'incom-commentform',
+			'fields' => $fields,
+			'comment_field' => $comment_field,
 			'comment_form_before' => '',
 			'comment_notes_before' => $comment_notes_before,
 			'comment_notes_after' => '',
@@ -252,7 +287,28 @@ class INCOM_Comments extends INCOM_Frontend {
 			'submit_field' => '<div class="incom-form-submit">%1$s %2$s</div>',
 		);
 
+		// Buffer so that we can swap out the div ID, which is not filterable.
+		ob_start();
 		comment_form( apply_filters( 'incom_comment_form_args', $args ) );
+		$form = ob_get_clean();
+
+		// Replace the div ID with our own.
+		$form = str_replace( 'id="respond"', 'id="incom-respond"', $form );
+
+		echo $form;
+	}
+
+	/**
+	 * Filters the comment reply link.
+	 *
+	 * We do this to change the 'comment-reply-link' class to our own 'incom-reply-link'
+	 * class. This is necessary to prevent the default comment-reply-link JS from working.
+	 * We need our incom-reply-link to move our custom comment form, not the default WP one.
+	 *
+	 * @param string $link The comment reply link.
+	 */
+	public function comment_reply_link( $link ) {
+		return str_replace( "class='comment-reply-link'", "class='incom-reply-link'", $link );
 	}
 
 	/**
@@ -334,15 +390,6 @@ class INCOM_Comments extends INCOM_Frontend {
 				esc_attr( INCOM_URL . '/images/close.png' ),
 				esc_html__($this->loadCancelLinkText, INCOM_TD )
 			);
-		}
-	}
-
-	/**
-	 * Load cancel link (remove wrapper when user clicks on that link)
-	 */
-	private function loadCancelLink() {
-		if ( get_option( 'cancel_link' ) !== '1' ) {
-			return '<a class="incom-cancel incom-cancel-link" href title>' . esc_html__($this->loadCancelLinkText, INCOM_TD ) . '</a>';
 		}
 	}
 

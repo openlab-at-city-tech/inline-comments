@@ -571,8 +571,6 @@
 
 		$(classVisibleCommentDot + ' .children li').show();
 
-		$( idCommentsAndFormHash ).find( 'label[for="comment"]' ).addClass( 'screen-reader-text' );
-
 		collapseAllReplies();
 	};
 
@@ -1437,6 +1435,50 @@
 		$comment.addClass( 'incom-replying-to' );
 	}
 
+	/**
+	 * Move the comment form to the current comment being replied to.
+	 *
+	 * This mimics the comment-reply-link behavior in WP themes.
+	 *
+	 * @param {jQuery} $repliedToComment The comment that is being replied to.
+	 */
+	const moveCommentFormToComment = ( $repliedToComment ) => {
+		const $commentFormDiv = $( '#incom-respond' );
+
+		// Make sure the comment submit button says 'Post reply'.
+		$commentFormDiv.find( '.submit' ).val( __( 'Post reply', 'inline-comments' ) );
+
+		$commentFormDiv.appendTo( $repliedToComment );
+	}
+
+	/**
+	 * Adds the Cancel link to the reply form.
+	 *
+	 * This mimics the comment-reply-link behavior in WP themes. When replying to a comment,
+	 * Cancel moves the reply form back to the bottom of the comments. When the form is
+	 * in its original position, the link is hidden with CSS.
+	 */
+	const addCancelLinkToReplyForm = () => {
+		const $commentForm = $( '#incom-respond' );
+
+		if ( ! $commentForm.length ) {
+			return;
+		}
+
+		const $cancelLink = $( '<a class="incom-cancel-reply-link" href="#">' + __( 'Cancel', 'inline-comments' ) + '</a>' );
+
+		$cancelLink.on( 'click', function( event ) {
+			event.preventDefault();
+
+			// Make sure the comment submit button says 'Post comment'.
+			$commentForm.find( '.submit' ).val( __( 'Post comment', 'inline-comments' ) );
+
+			$commentForm.appendTo( idCommentsAndFormHash );
+		} );
+
+		$( '.incom-form-submit' ).append( $cancelLink );
+	}
+
 	/*
 	 * Public methods
 	 */
@@ -1450,11 +1492,19 @@
 		createPluginInfo();
 		references();
 
-		$(classReplyDot + " .comment-reply-link").on('click', function ( event ) {
+		addCancelLinkToReplyForm();
+
+		$(classReplyDot + " .incom-reply-link").on('click', function ( event ) {
+			event.preventDefault();
+
 			// This code is required to make Inline Comments work with Ajaxify
 			$(idCommentsAndFormHash + ' #commentform').attr("id", idCommentForm);
 
-			markCurrentCommentBeingRepliedTo( $( event.target.closest( '.comment' ) ) );
+			const $repliedToComment = $( event.target.closest( '.comment' ) );
+
+			markCurrentCommentBeingRepliedTo( $repliedToComment );
+
+			moveCommentFormToComment( $repliedToComment );
 		});
 
 		handleEvents.init();

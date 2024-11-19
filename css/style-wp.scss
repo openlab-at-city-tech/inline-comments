@@ -202,6 +202,13 @@ $vcard-image-size: 16px;
 	}
 
 	.comments-and-form {
+		& > .comment-respond {
+			.incom-cancel-reply-link {
+				display: none;
+				visibility: hidden;
+			}
+		}
+
 		& > .comment {
 			border: $sidebar-subsection-border;
 			border-radius: $sidebar-subsection-border-radius;
@@ -253,8 +260,7 @@ $vcard-image-size: 16px;
 		justify-content: space-between;
 	}
 
-	/* This class name comes from WP so we must override some core/theme styles. */
-	.comment-reply-link {
+	.incom-reply-link {
 		font-weight: 600;
 
 		&:before {
@@ -357,7 +363,7 @@ $vcard-image-size: 16px;
 
 	textarea, input,
 	input[type="email"], input[type="text"], input[type="url"],
-	#respond form input[type="email"], #respond form input[type="text"], #respond form input[type="url"] {
+	#incom-respond form input[type="email"], #incom-respond form input[type="text"], #incom-respond form input[type="url"] {
 		border-radius: 2px;
 		border: 1px solid $grey;
 
@@ -396,7 +402,7 @@ $vcard-image-size: 16px;
 		}
 	}
 
-	#respond.comment-respond {
+	#incom-respond.comment-respond {
 		background: #fff;
 		border: $sidebar-subsection-border;
 		border-radius: $sidebar-subsection-border-radius;
