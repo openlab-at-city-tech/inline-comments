@@ -7,9 +7,11 @@ $bubble-margin-left: 10px;
 
 $black: #000;
 $dark-grey: #2C2C2C;
+$grey: #D9D9D9;
 $grey_light: #f3f3f3;
 $grey_lighter: #f5f5f5;
 $blue: #366BAF;
+$light-blue: #59a7e7;
 $z-index-base: 2;
 
 $sidebar-subsection-border: 2px solid #00000026;
@@ -159,7 +161,7 @@ $vcard-image-size: 16px;
 	font-size: 13px;
 	position: absolute;
 	width: 100%;
-	max-width: 400px;
+	max-width: 450px;
 	padding: 31px 25px 33px 25px;
 	margin: 0 10px 0 -16px;
 	z-index: $z-index-base + 3;
@@ -220,7 +222,7 @@ $vcard-image-size: 16px;
 					color: $black;
 					font-family: $font-family;
 					font-size: 1em;
-					font-weight: normal;
+					font-weight: 600;
 					line-height: 1;
 					padding: 0;
 					text-decoration: underline;
@@ -350,8 +352,26 @@ $vcard-image-size: 16px;
 	textarea, input,
 	input[type="email"], input[type="text"], input[type="url"],
 	#respond form input[type="email"], #respond form input[type="text"], #respond form input[type="url"] {
-		width: 100%;
+		border-radius: 2px;
+		border: 1px solid $grey;
+
+		&:focus {
+			border-color: $light-blue;
+			box-shadow: 0 0 0 1px $light-blue;
+		}
+	}
+
+	label {
+		font-weight: 600;
+	}
+
+	input, input[type="email"], input[type="text"], input[type="url"] {
+		width: 300px;
+	}
+
+	textarea {
 		max-width: 100%;
+		width: 100%;
 	}
 
 	/* Override themes, including block themes */
@@ -381,9 +401,14 @@ $vcard-image-size: 16px;
 			margin-top: 0;
 		}
 
-		.comment-reply-title, .comment-notes {
+		.comment-reply-title {
 			display: none;
 		}
+	}
+
+	.comment-notes {
+		font-weight: 700;
+		margin-bottom: 16px;
 	}
 
 	.incom-comment-newest {

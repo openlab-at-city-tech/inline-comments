@@ -232,10 +232,15 @@ class INCOM_Comments extends INCOM_Frontend {
 			esc_html( bp_core_get_user_displayname( get_current_user_id() ) )
 		);
 
+		$comment_notes_before = sprintf(
+			'<div class="comment-notes">%s</div>',
+			esc_html__( 'Comment', 'inline-comments' )
+		);
+
 		$args = array(
 			'id_form' => 'incom-commentform',
 			'comment_form_before' => '',
-			'comment_notes_before' => '',
+			'comment_notes_before' => $comment_notes_before,
 			'comment_notes_after' => '',
 			'title_reply' => '',
 			'title_reply_to' => '',
@@ -259,12 +264,12 @@ class INCOM_Comments extends INCOM_Frontend {
 
 		$fields =  array(
 		  'author' =>
-		    '<p class="comment-form-author"><label for="author">' . esc_html__( 'Name', INCOM_TD ) . ( $req ? ' <span class="required">*</span>' : '' ) . '</label> ' .
+		    '<p class="incom-form-author"><label for="author">' . esc_html__( 'Name', 'inline-comments' ) . '</label> ' .
 		    '<input id="author" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) .
 		    '" size="30"' . $aria_req . ' /></p>',
 
 		  'email' =>
-		    '<p class="comment-form-email"><label for="email">' . esc_html__( 'Email', INCOM_TD ) . ( $req ? ' <span class="required">*</span>' : '' ) . '</label> ' .
+		    '<p class="incom-form-email"><label for="email">' . esc_html__( 'Email', 'inline-comments' ) . '</label> ' .
 		    '<input id="email" name="email" type="text" value="' . esc_attr(  $commenter['comment_author_email'] ) .
 		    '" size="30"' . $aria_req . ' /></p>',
 		);
@@ -272,7 +277,7 @@ class INCOM_Comments extends INCOM_Frontend {
 		if ( get_option( 'incom_field_url' ) !== '1' ) {
 			$fields_url = array(
 			  'url' =>
-			    '<p class="comment-form-url"><label for="url">' . esc_html__( 'Website', INCOM_TD ) . '</label>' .
+			    '<p class="incom-form-url"><label for="url">' . esc_html__( 'Website', 'inline-comments' ) . '</label>' .
 			    '<input id="url" name="url" type="text" value="' . esc_attr( $commenter['comment_author_url'] ) .
 			    '" size="30" /></p>',
 			);
