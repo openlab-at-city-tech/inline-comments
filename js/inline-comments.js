@@ -1425,6 +1425,18 @@
 		return scrollbarWidth;
 	}
 
+	/**
+	 * Mark the comment that is currently being replied to.
+	 *
+	 * @param {jQuery} $comment The comment that is being replied to.
+	 */
+	const markCurrentCommentBeingRepliedTo = ( $comment ) => {
+		// Remove existing markers.
+		$( '.comment' ).removeClass( 'incom-replying-to' );
+
+		$comment.addClass( 'incom-replying-to' );
+	}
+
 	/*
 	 * Public methods
 	 */
@@ -1438,9 +1450,11 @@
 		createPluginInfo();
 		references();
 
-		// This code is required to make Inline Comments work with Ajaxify
-		$(classReplyDot + " .comment-reply-link").on('click', function () {
+		$(classReplyDot + " .comment-reply-link").on('click', function ( event ) {
+			// This code is required to make Inline Comments work with Ajaxify
 			$(idCommentsAndFormHash + ' #commentform').attr("id", idCommentForm);
+
+			markCurrentCommentBeingRepliedTo( $( event.target.closest( '.comment' ) ) );
 		});
 
 		handleEvents.init();

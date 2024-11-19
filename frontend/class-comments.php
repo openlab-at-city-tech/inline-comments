@@ -178,7 +178,9 @@ class INCOM_Comments extends INCOM_Frontend {
 			<br />
 		<?php endif; ?>
 
-		<?php comment_text(); ?>
+		<div class="incom-comment-text">
+			<?php comment_text(); ?>
+		</div>
 
 		<?php if ( get_option( 'incom_reply' ) == '1' ) { ?>
 			<div class="incom-comment-actions">

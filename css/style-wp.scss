@@ -242,6 +242,12 @@ $vcard-image-size: 16px;
 		}
 	}
 
+	.incom-replying-to {
+		& > .inline-comment-body > .incom-comment-text {
+			background: #366BAF14;
+		}
+	}
+
 	.incom-comment-actions {
 		display: flex;
 		justify-content: space-between;
