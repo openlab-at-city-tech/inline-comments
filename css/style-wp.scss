@@ -54,14 +54,9 @@ $vcard-image-size: 16px;
 	margin-left: $bubble-margin-left;
 	position: absolute;
 	display: none;
-	opacity: 0.7;
 	text-align: center;
 	font-size: 14px;
 	z-index: $z-index-base + 1;
-
-	&:hover {
-		opacity: 1;
-	}
 
 	a {
 		display: inline-block;
@@ -76,12 +71,12 @@ $vcard-image-size: 16px;
 	}
 
 	&.incom-bubble-active {
-		background: #366baf;
+		background: $blue;
 		border-radius: 4px 8px 8px 4px;
 		z-index: $z-index-base + 4;
 
 		&.incom-bubble-style:after {
-			border-color: transparent #366baf;
+			border-color: transparent $blue;
 		}
 
 		a {
@@ -93,6 +88,16 @@ $vcard-image-size: 16px;
 			a {
 				border-radius: 0;
 				padding-right: 10px;
+			}
+		}
+	}
+
+	&:hover {
+		&.incom-bubble-active {
+			background: $dark-grey;
+
+			&.incom-bubble-style:after {
+				border-color: transparent $dark-grey;
 			}
 		}
 	}
