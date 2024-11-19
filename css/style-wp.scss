@@ -10,6 +10,8 @@ $grey_light: #f3f3f3;
 $grey_lighter: #f6f6f6;
 $z-index-base: 2;
 
+$font-family: "Open Sans", sans-serif;
+
 $vcard-image-size: 16px;
 
 /*
@@ -21,6 +23,20 @@ $vcard-image-size: 16px;
 	-ms-#{$property}: #{$value};
 	-o-#{$property}: #{$value};
 	#{$property}: #{$value};
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 100 900;
+  src: url('../../fonts/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 100 900;
+  src: url('../../fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf') format('truetype');
 }
 
 /* ======================== */
@@ -97,7 +113,6 @@ $vcard-image-size: 16px;
 
 	a {
 		color: #fff;
-		font-family: arial, sans-serif;
 		font-weight: normal;
 		font-size: 13px;
 		line-height: 13px;
@@ -126,9 +141,11 @@ $vcard-image-size: 16px;
 
 	background: #f2f2f2;
 	box-shadow: 0px 0px 12px 4px #00000038;
+	font-family: $font-family;
+	font-size: 13px;
 	position: absolute;
 	width: 100%;
-	max-width: 300px;
+	max-width: 400px;
 	padding: 31px 25px 33px 25px;
 	margin: 0 10px 0 -16px;
 	z-index: $z-index-base + 3;
@@ -156,9 +173,8 @@ $vcard-image-size: 16px;
 	}
 
 	cite {
-		font-size: .9em;
 		font-style: normal;
-		font-weight: bold;
+		font-weight: 700;
 
 		a {
 			color: $black;
@@ -191,7 +207,7 @@ $vcard-image-size: 16px;
 		margin: 0;
 	}
 
-	.comment-body {
+	.inline-comment-body {
 		padding: 0;
 	}
 
@@ -229,10 +245,7 @@ $vcard-image-size: 16px;
 		align-items: center;
 		display: flex;
 		gap: 10px;
-		padding: 0 0 0.3em;
-
-		.avatar {
-		}
+		margin-bottom: 16px;
 	}
 
 	textarea, input,

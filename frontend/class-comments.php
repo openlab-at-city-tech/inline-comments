@@ -162,7 +162,7 @@ class INCOM_Comments extends INCOM_Frontend {
 		<<?php echo $tag; /* XSS ok */ ?> <?php comment_class( empty( $args['has_children'] ) ? '' : 'parent' ) ?> id="comment-<?php comment_ID() ?>" data-incom-comment="<?php echo esc_attr( $data_incom ); ?>" style="display:none">
 		<?php if ( 'div' != $args['style'] ) : ?>
 
-		<div id="incom-div-comment-<?php comment_ID() ?>" class="incom-div-comment comment-body">
+		<div id="incom-div-comment-<?php comment_ID() ?>" class="incom-div-comment inline-comment-body">
 
 		<?php
 			endif;

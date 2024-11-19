@@ -75,7 +75,6 @@ class INCOM_WordPress extends INCOM_Frontend {
 		wp_enqueue_style( 'incom-style' );
 	}
 
-
 	/**
 	 * Add Custom CSS
 	 */
