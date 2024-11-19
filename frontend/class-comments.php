@@ -8,7 +8,6 @@ class INCOM_Comments extends INCOM_Frontend {
 
 	function __construct() {
 		add_filter( 'get_comment_text' , array( $this, 'comment_text' ), 10, 2 );
-		add_filter( 'comment_form_default_fields', array( $this, 'comment_form_fields' ) );
 		add_action( 'comment_post', array( $this, 'add_comment_meta_data_incom' ) );
 		add_action( 'preprocess_comment' , array( $this, 'preprocess_comment_handler' ) );
 		add_action( 'wp_footer', array( $this, 'generateCommentsAndForm' ) );
@@ -192,7 +191,7 @@ class INCOM_Comments extends INCOM_Frontend {
 
 				<div class="incom-reply">
 				<?php
-				add_filter( 'comment_reply_link', array( $this, 'comment_reply_link' ), 10 );
+				add_filter( 'comment_reply_link', array( $this, 'replace_id_in_comment_reply_link' ), 10 );
 
 				comment_reply_link( array_merge(
 						$args,
@@ -208,7 +207,8 @@ class INCOM_Comments extends INCOM_Frontend {
 					)
 				);
 
-				remove_filter( 'comment_reply_link', array( $this, 'comment_reply_link' ), 10 );
+				remove_filter( 'comment_reply_link', array( $this, 'replace_id_in_comment_reply_link' ), 10 );
+				remove_filter( 'comment_id_fields', array( $this, 'replace_id_in_comment_id_fields' ), 10 );
 				?>
 				</div>
 			</div>
@@ -249,26 +249,26 @@ class INCOM_Comments extends INCOM_Frontend {
 				'<label for="comment" class="screen-reader-text">%s</label>',
 				_x( 'Comment', 'noun', 'inline-comments' )
 			),
-			'<textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" required></textarea>'
+			'<textarea id="incom-comment" name="comment" cols="45" rows="8" maxlength="65525" required></textarea>'
 		);
 
 		$commenter = wp_get_current_commenter();
 
 		$fields = [
 		  'author' =>
-		    '<p class="incom-form-author"><label for="author">' . esc_html__( 'Name', 'inline-comments' ) . '</label> ' .
-		    '<input id="author" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) .
+		    '<p class="incom-form-author"><label for="incom-author">' . esc_html__( 'Name', 'inline-comments' ) . '</label> ' .
+		    '<input id="incom-author" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) .
 		    '" size="30" /></p>',
 
 		  'email' =>
-		    '<p class="incom-form-email"><label for="email">' . esc_html__( 'Email', 'inline-comments' ) . '</label> ' .
-		    '<input id="email" name="email" type="text" value="' . esc_attr(  $commenter['comment_author_email'] ) .
+		    '<p class="incom-form-email"><label for="incom-email">' . esc_html__( 'Email', 'inline-comments' ) . '</label> ' .
+		    '<input id="incom-email" name="email" type="text" value="' . esc_attr(  $commenter['comment_author_email'] ) .
 		    '" size="30" /></p>',
 		];
 
 		if ( get_option( 'incom_field_url' ) !== '1' ) {
-			$fields['url'] = '<p class="incom-form-url"><label for="url">' . esc_html__( 'Website', 'inline-comments' ) . '</label>' .
-			    '<input id="url" name="url" type="text" value="' . esc_attr( $commenter['comment_author_url'] ) .
+			$fields['url'] = '<p class="incom-form-url"><label for="incom-url">' . esc_html__( 'Website', 'inline-comments' ) . '</label>' .
+			    '<input id="incom-url" name="url" type="text" value="' . esc_attr( $commenter['comment_author_url'] ) .
 			    '" size="30" /></p>';
 		}
 
@@ -292,8 +292,12 @@ class INCOM_Comments extends INCOM_Frontend {
 		comment_form( apply_filters( 'incom_comment_form_args', $args ) );
 		$form = ob_get_clean();
 
-		// Replace the div ID with our own.
-		$form = str_replace( 'id="respond"', 'id="incom-respond"', $form );
+		// Replace IDs with our own.
+		$form = str_replace(
+			[ 'id="respond"', "id='comment_parent'", "id='comment_post_ID'", 'id="submit"' ],
+			[ 'id="incom-respond"', "id='incom-comment_parent'", "id='incom-comment_post_ID'", 'id="incom-submit"'],
+			$form
+		);
 
 		echo $form;
 	}
@@ -307,42 +311,8 @@ class INCOM_Comments extends INCOM_Frontend {
 	 *
 	 * @param string $link The comment reply link.
 	 */
-	public function comment_reply_link( $link ) {
+	public function replace_id_in_comment_reply_link( $link ) {
 		return str_replace( "class='comment-reply-link'", "class='incom-reply-link'", $link );
-	}
-
-	/**
-	 * Template for comment form fields
-	 * @since 1.3
-	 */
-	function comment_form_fields() {
-		$commenter = wp_get_current_commenter();
-		$req = get_option( 'require_name_email' );
-		$aria_req = ( $req ? " aria-required='true'" : '' );
-
-		$fields =  array(
-		  'author' =>
-		    '<p class="incom-form-author"><label for="author">' . esc_html__( 'Name', 'inline-comments' ) . '</label> ' .
-		    '<input id="author" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) .
-		    '" size="30"' . $aria_req . ' /></p>',
-
-		  'email' =>
-		    '<p class="incom-form-email"><label for="email">' . esc_html__( 'Email', 'inline-comments' ) . '</label> ' .
-		    '<input id="email" name="email" type="text" value="' . esc_attr(  $commenter['comment_author_email'] ) .
-		    '" size="30"' . $aria_req . ' /></p>',
-		);
-
-		if ( get_option( 'incom_field_url' ) !== '1' ) {
-			$fields_url = array(
-			  'url' =>
-			    '<p class="incom-form-url"><label for="url">' . esc_html__( 'Website', 'inline-comments' ) . '</label>' .
-			    '<input id="url" name="url" type="text" value="' . esc_attr( $commenter['comment_author_url'] ) .
-			    '" size="30" /></p>',
-			);
-			$fields = array_merge( $fields, $fields_url );
-		}
-
-		return $fields;
 	}
 
 	/**
