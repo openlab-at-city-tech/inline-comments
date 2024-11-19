@@ -152,6 +152,9 @@ class INCOM_Comments extends INCOM_Frontend {
 			$add_below = 'div-comment';
 		}
 
+		// Temp?
+		$args['avatar_size'] = 16;
+
 		$data_incom = get_comment_meta( $comment->comment_ID, $this->DataIncomKey, true );
 
 		?>
@@ -169,7 +172,7 @@ class INCOM_Comments extends INCOM_Frontend {
 			}
 		?>
 
-		<div class="comment-author vcard">
+		<div class="inline-comment-author vcard">
 			<?php if ( $args['avatar_size'] != 0 ) echo get_avatar( $comment, $args['avatar_size'] ); ?>
 			<?php printf( __( '<cite class="fn">%s</cite>' ), get_comment_author_link() ); ?>
 		</div>
@@ -306,7 +309,7 @@ class INCOM_Comments extends INCOM_Frontend {
 	private function loadCancelX() {
 		if ( get_option( 'cancel_x' ) !== '1' ) {
 			return sprintf(
-				'<a class="incom-cancel incom-cancel-x" href title="%s"><img src="%s" alt="%s" height="24" width="24" /></a>',
+				'<a class="incom-cancel incom-cancel-x" href title="%s"><img src="%s" alt="%s" height="15" width="15" /></a>',
 				esc_attr__( 'Close', INCOM_TD ),
 				esc_attr( INCOM_URL . '/images/close.png' ),
 				esc_html__($this->loadCancelLinkText, INCOM_TD )

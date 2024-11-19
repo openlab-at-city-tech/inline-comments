@@ -503,7 +503,6 @@
 				{ 'class': classCommentsWrapper }
 			)
 				.appendTo(idWrapperHash)
-				.css('background-color', 'rgba(' + convertHexToRgb(o.background) + ',' + o.backgroundOpacity + ')');
 		} else {
 			$commentsWrapper = $(classCommentsWrapperDot);
 		}
