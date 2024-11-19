@@ -96,10 +96,6 @@ class INCOM_Comments extends INCOM_Frontend {
 
 		if (parent::can_comment()) {
 			$this->loadCommentForm();
-
-			do_action( 'incom_cancel_link_before' );
-			echo wp_kses_post(apply_filters( 'incom_cancel_link', $this->loadCancelLink() ));
-			do_action( 'incom_cancel_link_after' );
 		}
 
 		echo '</div>';
@@ -176,6 +172,7 @@ class INCOM_Comments extends INCOM_Frontend {
 			<?php if ( $args['avatar_size'] != 0 ) echo get_avatar( $comment, $args['avatar_size'] ); ?>
 			<?php printf( __( '<cite class="fn">%s</cite>' ), get_comment_author_link() ); ?>
 		</div>
+
 		<?php if ( $comment->comment_approved == '0' ) : ?>
 			<em class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.' ); ?></em>
 			<br />
@@ -224,6 +221,17 @@ class INCOM_Comments extends INCOM_Frontend {
 		$user = wp_get_current_user();
 		$user_identity = $user->exists() ? $user->display_name : '';
 
+		$avatar_size = 16;
+
+		$logged_in_as = sprintf(
+			'<div class="logged-in-as inline-comment-author vcard">
+				%s
+				<cite class="fn">%s</cite>
+			</div>',
+			get_avatar( get_current_user_id(), $avatar_size ),
+			esc_html( bp_core_get_user_displayname( get_current_user_id() ) )
+		);
+
 		$args = array(
 			'id_form' => 'incom-commentform',
 			'comment_form_before' => '',
@@ -231,13 +239,10 @@ class INCOM_Comments extends INCOM_Frontend {
 			'comment_notes_after' => '',
 			'title_reply' => '',
 			'title_reply_to' => '',
-			'logged_in_as' => '<p class="logged-in-as">' .
-			    sprintf(
-			    __( 'Logged in as <a href="%1$s">%2$s</a>.' ),
-			      admin_url( 'profile.php' ),
-			      $user_identity
-			    ) . '</p>',
+			'label_submit' => __( 'Post comment', 'inline-comments' ),
+			'logged_in_as' => $logged_in_as,
 			'user_identity' => $user_identity,
+			'submit_field' => '<div class="incom-form-submit">%1$s %2$s</div>',
 		);
 
 		comment_form( apply_filters( 'incom_comment_form_args', $args ) );

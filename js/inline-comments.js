@@ -571,6 +571,8 @@
 
 		$(classVisibleCommentDot + ' .children li').show();
 
+		$( idCommentsAndFormHash ).find( 'label[for="comment"]' ).addClass( 'screen-reader-text' );
+
 		collapseAllReplies();
 	};
 
