@@ -12,6 +12,9 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
   'use strict';
 
   var o;
+  var _wp$i18n = wp.i18n,
+    sprintf = _wp$i18n.sprintf,
+    __ = _wp$i18n.__;
 
   // IDs
   var idWrapper = 'incom_wrapper',
@@ -438,7 +441,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     if ($(classCommentsWrapperDot).length === 0) {
       $commentsWrapper = $('<div/>', {
         'class': classCommentsWrapper
-      }).appendTo(idWrapperHash).css('background-color', 'rgba(' + convertHexToRgb(o.background) + ',' + o.backgroundOpacity + ')');
+      }).appendTo(idWrapperHash);
     } else {
       $commentsWrapper = $(classCommentsWrapperDot);
     }
@@ -498,6 +501,64 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
       }
     });
     $(classVisibleCommentDot + ' .children li').show();
+    collapseAllReplies();
+  };
+
+  /**
+   * Collapse all replies for top-level comments.
+   */
+  var collapseAllReplies = function collapseAllReplies() {
+    var $topLevelComments = $(idCommentsAndFormHash + ' > .comment');
+    $topLevelComments.each(function () {
+      collapseCommentReplies($(this));
+    });
+  };
+
+  /**
+   * Collapses the replies section for a top-level comment.
+   *
+   * @param {jQuery} $comment The top-level comment.
+   */
+  var collapseCommentReplies = function collapseCommentReplies($comment) {
+    var $repliesContainer = $comment.children('.children');
+    if (!$repliesContainer.length) {
+      return;
+    }
+
+    // Count replies. No need to recurse since it's all in the DOM.
+    var replyCount = $repliesContainer.find('li').length;
+    $comment.data('incom-reply-count', replyCount);
+    toggleReplies($comment, 'collapsed');
+    $comment.find('.incom-showhide-replies button').on('click', function (event) {
+      event.preventDefault();
+      toggleReplies($comment);
+    });
+  };
+
+  /**
+   * Toggle replies for a top-level comment.
+   *
+   * @param {jQuery} $comment    The top-level comment.
+   * @param {string} targetState The target state for the replies. If null, the state will be toggled.
+   */
+  var toggleReplies = function toggleReplies($comment) {
+    var targetState = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    if (null === targetState) {
+      targetState = $comment.hasClass('incom-replies-collapsed') ? 'expanded' : 'collapsed';
+    }
+    var linkTextFormat;
+    if ('expanded' === targetState) {
+      // translators: %s: number of replies
+      linkTextFormat = __('Hide Replies (%s)', 'inline-comments');
+      $comment.removeClass('incom-replies-collapsed').addClass('incom-replies-expanded');
+    } else {
+      // translators: %s: number of replies
+      linkTextFormat = __('Show Replies (%s)', 'inline-comments');
+      $comment.removeClass('incom-replies-expanded').addClass('incom-replies-collapsed');
+    }
+    var replyCount = $comment.data('incom-reply-count');
+    var linkText = sprintf(linkTextFormat, replyCount);
+    $comment.find('.incom-showhide-replies button').html(linkText);
   };
 
   /*
@@ -1221,6 +1282,55 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     return scrollbarWidth;
   };
 
+  /**
+   * Mark the comment that is currently being replied to.
+   *
+   * @param {jQuery} $comment The comment that is being replied to.
+   */
+  var markCurrentCommentBeingRepliedTo = function markCurrentCommentBeingRepliedTo($comment) {
+    // Remove existing markers.
+    $('.comment').removeClass('incom-replying-to');
+    $comment.addClass('incom-replying-to');
+  };
+
+  /**
+   * Move the comment form to the current comment being replied to.
+   *
+   * This mimics the comment-reply-link behavior in WP themes.
+   *
+   * @param {jQuery} $repliedToComment The comment that is being replied to.
+   */
+  var moveCommentFormToComment = function moveCommentFormToComment($repliedToComment) {
+    var $commentFormDiv = $('#incom-respond');
+
+    // Make sure the comment submit button says 'Post reply'.
+    $commentFormDiv.find('.submit').val(__('Post reply', 'inline-comments'));
+    $commentFormDiv.appendTo($repliedToComment);
+  };
+
+  /**
+   * Adds the Cancel link to the reply form.
+   *
+   * This mimics the comment-reply-link behavior in WP themes. When replying to a comment,
+   * Cancel moves the reply form back to the bottom of the comments. When the form is
+   * in its original position, the link is hidden with CSS.
+   */
+  var addCancelLinkToReplyForm = function addCancelLinkToReplyForm() {
+    var $commentForm = $('#incom-respond');
+    if (!$commentForm.length) {
+      return;
+    }
+    var $cancelLink = $('<a class="incom-cancel-reply-link" href="#">' + __('Cancel', 'inline-comments') + '</a>');
+    $cancelLink.on('click', function (event) {
+      event.preventDefault();
+
+      // Make sure the comment submit button says 'Post comment'.
+      $commentForm.find('.submit').val(__('Post comment', 'inline-comments'));
+      $commentForm.appendTo(idCommentsAndFormHash);
+    });
+    $('.incom-form-submit').append($cancelLink);
+  };
+
   /*
    * Public methods
    */
@@ -1230,10 +1340,15 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     initIncomWrapper();
     createPluginInfo();
     references();
+    addCancelLinkToReplyForm();
+    $(classReplyDot + " .incom-reply-link").on('click', function (event) {
+      event.preventDefault();
 
-    // This code is required to make Inline Comments work with Ajaxify
-    $(classReplyDot + " .comment-reply-link").on('click', function () {
+      // This code is required to make Inline Comments work with Ajaxify
       $(idCommentsAndFormHash + ' #commentform').attr("id", idCommentForm);
+      var $repliedToComment = $(event.target.closest('.comment'));
+      markCurrentCommentBeingRepliedTo($repliedToComment);
+      moveCommentFormToComment($repliedToComment);
     });
     handleEvents.init();
 
