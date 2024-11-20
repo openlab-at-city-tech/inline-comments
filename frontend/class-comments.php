@@ -150,7 +150,15 @@ class INCOM_Comments extends INCOM_Frontend {
 			]
 		);
 
+		// We have to modify the HTML to ensure unique IDs, so we buffer the output.
+		ob_start();
 		wp_list_comments( apply_filters( 'incom_comments_list_args', $args ), $comments );
+		$comments_list = ob_get_clean();
+
+		// Replace id attributes of the form 'comment-123' with 'incom-comment-123'.
+		$comments_list = preg_replace( '/id="comment-(\d+)"/', 'id="incom-comment-$1"', $comments_list );
+
+		echo $comments_list;
 	}
 
 	/**
