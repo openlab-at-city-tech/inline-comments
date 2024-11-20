@@ -69,6 +69,27 @@ class INCOM_Comments extends INCOM_Frontend {
 	}
 
 	/**
+	 * Get the 'data_incom' value for a comment, which is the label for associated element in the post content.
+	 *
+	 * If none is found stored on the comment, we traverse the parents until we find one.
+	 *
+	 * @param int $comment_id The comment ID.
+	 * @return string|null
+	 */
+	private function get_data_incom_value( $comment_id ) {
+		$data_incom = get_comment_meta( $comment_id, $this->DataIncomKey, true );
+
+		if ( ! $data_incom ) {
+			$comment = get_comment( $comment_id );
+			if ( $comment->comment_parent ) {
+				$data_incom = $this->get_data_incom_value( $comment->comment_parent );
+			}
+		}
+
+		return $data_incom;
+	}
+
+	/**
 	 * Get $DataIncomValue
 	 */
 	private function getValueDataIncom() {
@@ -150,7 +171,7 @@ class INCOM_Comments extends INCOM_Frontend {
 		// Temp?
 		$args['avatar_size'] = 16;
 
-		$data_incom = get_comment_meta( $comment->comment_ID, $this->DataIncomKey, true );
+		$data_incom = $this->get_data_incom_value( $comment->comment_ID );
 
 		?>
 
