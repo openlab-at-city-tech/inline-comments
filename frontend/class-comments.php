@@ -313,7 +313,9 @@ class INCOM_Comments extends INCOM_Frontend {
 	 * @param string $link The comment reply link.
 	 */
 	public function replace_id_in_comment_reply_link( $link ) {
-		return str_replace( "class='comment-reply-link'", "class='incom-reply-link'", $link );
+		$class_regex = '/class=([\'"])([^\'"]*)comment-reply-link([^\'"]*)([\'"])/';
+		$link = preg_replace( $class_regex, 'class=$1$2incom-reply-link$3$4', $link );
+		return $link;
 	}
 
 	/**

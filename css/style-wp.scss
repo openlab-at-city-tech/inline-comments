@@ -171,6 +171,7 @@ $vcard-image-size: 16px;
 	}
 
 	a {
+		color: $black;
 		text-decoration: underline;
 
 		&:hover {
@@ -189,6 +190,7 @@ $vcard-image-size: 16px;
 	}
 
 	cite {
+		color: $black;
 		font-style: normal;
 		font-weight: 700;
 
@@ -279,7 +281,7 @@ $vcard-image-size: 16px;
 	}
 
 	.children {
-		.comment-reply-link:before {
+		.incom-reply-link:before {
 			content: none;
 		}
 	}
@@ -373,7 +375,14 @@ $vcard-image-size: 16px;
 		}
 	}
 
+	/* Some themes force uppercase on buttons */
+	button,
+	input[type="submit"] {
+		text-transform: none;
+	}
+
 	label {
+		font-size: 1em;
 		font-weight: 600;
 	}
 
