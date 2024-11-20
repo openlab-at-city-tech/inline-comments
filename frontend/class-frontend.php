@@ -39,16 +39,7 @@ class INCOM_Frontend {
 	 * Handle avatar size
 	 */
 	protected function get_avatar_size() {
-		if ( get_option( 'incom_avatars_display' ) != 1 )
-			return '0';
-
-		$input = get_option( 'incom_avatars_size' );
-		if ( (int) $input > 0 ) {
-			return $input;
-		}
-		else {
-			return '15';
-		}
+		return '16';
 	}
 
 	/**

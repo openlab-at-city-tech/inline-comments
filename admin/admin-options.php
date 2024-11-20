@@ -87,13 +87,6 @@
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Display Avatars', INCOM_TD ); ?><br><span class="description thin"><?php esc_html_e( 'next to each comment', INCOM_TD ); ?></span></th>
-                        <td>
-                            <input name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_avatars_display" type="checkbox" value="1" <?php checked( '1', get_option( INCOM_OPTION_KEY.'_avatars_display' ) ); ?> /><span><?php esc_html_e( 'If checked, avatars will be displayed next to each comment.', INCOM_TD ); ?></span><br><br>
-                            <input type="number" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_avatars_size" placeholder="15" value="<?php echo sanitize_text_field(get_option( INCOM_OPTION_KEY.'_avatars_size' )); ?>" /><span><?php esc_html_e( 'Define avatar size (in px). Insert an integer higher than 0.', INCOM_TD ); ?></span>
-                        </td>
-                    </tr>
-                    <tr valign="top">
                         <th scope="row"><?php esc_html_e( 'Bubble Style', INCOM_TD ); ?> <span class="description thin"><br><?php esc_html_e( 'for sections with no comments yet', INCOM_TD ); ?></span></th>
                         <td>
                             <select class="select" typle="select" name="select_bubble_style">

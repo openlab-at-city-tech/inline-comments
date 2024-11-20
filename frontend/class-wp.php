@@ -12,7 +12,6 @@ class INCOM_WordPress extends INCOM_Frontend {
 		add_action( 'wp_enqueue_scripts', array( $this, 'incom_enqueue_scripts' ) );
 		add_action( 'wp_footer', array( $this, 'load_incom'), 444, 'functions' );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_incom_style') );
-		add_action( 'wp_head', array( $this, 'load_custom_css') );
 	}
 
 	/**
@@ -80,14 +79,6 @@ class INCOM_WordPress extends INCOM_Frontend {
 	 */
 	function load_custom_css(){
 		echo '<style type="text/css">';
-
-		// Set avatar size
-		if ( get_option( 'incom_avatars_display' ) == 1 ) { ?>
-			.incom-comments-wrapper .vcard img {
-			    width: <?php echo esc_attr(parent::get_avatar_size()); ?>px;
-			    height: <?php echo esc_attr(parent::get_avatar_size()); ?>px;
-			}
-		<?php }
 
 		// User's custom CSS input
 		if (stripslashes(get_option('custom_css')) != '') {
