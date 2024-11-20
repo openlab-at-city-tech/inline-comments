@@ -381,6 +381,10 @@ $vcard-image-size: 16px;
 	/* Some themes force uppercase on buttons */
 	button,
 	input[type="submit"] {
+		font-family: $font-family;
+		height: auto;
+		line-height: 1em;
+		min-width: 0;
 		text-transform: none;
 	}
 
