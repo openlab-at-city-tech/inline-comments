@@ -275,6 +275,7 @@ class INCOM_Comments extends INCOM_Frontend {
 		$args = array(
 			'id_form' => 'incom-commentform',
 			'fields' => $fields,
+			'class_container' => 'incom-comment-respond',
 			'class_form' => 'incom-form',
 			'comment_field' => $comment_field,
 			'comment_form_before' => '',

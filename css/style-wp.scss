@@ -61,6 +61,7 @@ $vcard-image-size: 16px;
 	z-index: $z-index-base + 1;
 
 	a {
+		color: #fff;
 		display: inline-block;
 		text-decoration: none;
 		font-weight: 700;
@@ -68,6 +69,7 @@ $vcard-image-size: 16px;
 		@include vendor-prefix( border-radius, $bubble-radius );
 
 		&:hover {
+			color: #fff;
 			background: inherit;
 		}
 	}
@@ -191,6 +193,7 @@ $vcard-image-size: 16px;
 
 	cite {
 		color: $black;
+		font-size: 1em;
 		font-style: normal;
 		font-weight: 700;
 
@@ -204,7 +207,7 @@ $vcard-image-size: 16px;
 	}
 
 	.comments-and-form {
-		& > .comment-respond {
+		& > .incom-comment-respond {
 			.incom-cancel-reply-link {
 				display: none;
 				visibility: hidden;
@@ -399,7 +402,7 @@ $vcard-image-size: 16px;
 	}
 
 	input[type="email"], input[type="text"], input[type="url"] {
-		padding: 12px 18px;
+		padding: 10px 14px;
 		width: 300px;
 	}
 
@@ -424,7 +427,7 @@ $vcard-image-size: 16px;
 		}
 	}
 
-	#incom-respond.comment-respond {
+	#incom-respond.incom-comment-respond {
 		background: #fff;
 		border: $sidebar-subsection-border;
 		border-radius: $sidebar-subsection-border-radius;
@@ -453,6 +456,7 @@ $vcard-image-size: 16px;
 	.vcard img {
 		@include vendor-prefix( border-radius, 50% );
 		opacity: 1;
+		margin: 0;
 		width: $vcard-image-size;
 		height: $vcard-image-size;
 	}
