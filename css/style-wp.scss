@@ -320,6 +320,16 @@ $vcard-image-size: 16px;
 				top: var( --vertical-offset );
 				width: 2px;
 			}
+
+			&.incom-replying-to-children {
+				&:before {
+					border-color: $blue;
+				}
+
+				&:after {
+					background-image: url( '../../images/down-arrow-blue.png' );
+				}
+			}
 		}
 	}
 

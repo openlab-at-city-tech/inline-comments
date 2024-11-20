@@ -1431,8 +1431,11 @@
 	const markCurrentCommentBeingRepliedTo = ( $comment ) => {
 		// Remove existing markers.
 		$( '.comment' ).removeClass( 'incom-replying-to' );
+		$( '.children' ).removeClass( 'incom-replying-to-children' );
+		console.log($comment.closest( '.children' ));
 
 		$comment.addClass( 'incom-replying-to' );
+		$comment.closest( '.children' ).addClass( 'incom-replying-to-children' );
 	}
 
 	/**
