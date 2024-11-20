@@ -227,6 +227,7 @@ $vcard-image-size: 16px;
 				button {
 					display: none;
 
+					border: none;
 					background: none;
 					color: $black;
 					font-family: $font-family;
@@ -382,11 +383,17 @@ $vcard-image-size: 16px;
 	}
 
 	label {
+		display: block;
 		font-size: 1em;
 		font-weight: 600;
 	}
 
-	input, input[type="email"], input[type="text"], input[type="url"] {
+	input[type="checkbox"] + label {
+		display: inline;
+	}
+
+	input[type="email"], input[type="text"], input[type="url"] {
+		padding: 12px 18px;
 		width: 300px;
 	}
 
