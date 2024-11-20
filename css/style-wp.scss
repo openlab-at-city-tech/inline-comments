@@ -449,8 +449,9 @@ $vcard-image-size: 16px;
 	}
 
 	.comment-form-cookies-consent {
-		input {
-			width: auto;
+		margin-top: $sidebar-subsection-vertical-spacing;
+		label {
+			font-size: 1em;
 		}
 	}
 }
