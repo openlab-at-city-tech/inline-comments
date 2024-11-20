@@ -1290,7 +1290,9 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
   var markCurrentCommentBeingRepliedTo = function markCurrentCommentBeingRepliedTo($comment) {
     // Remove existing markers.
     $('.comment').removeClass('incom-replying-to');
+    $('.children').removeClass('incom-replying-to-children');
     $comment.addClass('incom-replying-to');
+    $comment.closest('.children').addClass('incom-replying-to-children');
   };
 
   /**
