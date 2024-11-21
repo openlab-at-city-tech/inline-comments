@@ -124,43 +124,6 @@
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Use Ajaxify (no page reload)', INCOM_TD ); ?><br>
-                            <span class="description thin">
-                                <?php printf( esc_html__( 'Requires %1$san extra plugin%2$s.', INCOM_TD ),
-                                    '<a href="http://wordpress.org/extend/plugins/wp-ajaxify-comments/" title="WP-Ajaxify-Comments" target="_blank">',
-                                    '</a>'
-                                ); ?>
-                            </span>
-                        </th>
-                        <td>
-                            <input name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_support_for_ajaxify_comments" type="checkbox" value="1" <?php checked( '1', get_option( INCOM_OPTION_KEY.'_support_for_ajaxify_comments' ) ); ?> />
-
-                            <span><?php
-                            printf( esc_html__( 'Empower %1$sWP-Ajaxify-Comments%2$s (version 0.24.0 or higher) to add Ajax functionality to OpenLab Inline Comments and improve the user experience: Your page will not reload after a comment is submitted.', INCOM_TD ),
-                                '<a href="http://wordpress.org/extend/plugins/wp-ajaxify-comments/" title="WP-Ajaxify-Comments" target="_blank">',
-                                '</a>'
-                            ); ?> <b><?php esc_html_e( 'Recommended.', INCOM_TD ); ?></b></span>
-                        </td>
-                    </tr>
-                    <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Bubble Fade In', INCOM_TD ); ?></th>
-                        <td>
-                            <select class="select" typle="select" name="select_bubble_fadein">
-                                <option value="default"<?php if (get_option('select_bubble_fadein') === 'default') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'No animation', INCOM_TD ); ?></option>
-                                <option value="fadein"<?php if (get_option('select_bubble_fadein') === 'fadein') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Basic animation', INCOM_TD ); ?></option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Bubble Fade Out', INCOM_TD ); ?></th>
-                        <td>
-                            <select class="select" typle="select" name="select_bubble_fadeout">
-                                <option value="default"<?php if (get_option('select_bubble_fadeout') === 'default') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'No animation', INCOM_TD ); ?></option>
-                                <option value="fadeout"<?php if (get_option('select_bubble_fadeout') === 'fadeout') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Basic animation', INCOM_TD ); ?></option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr valign="top">
                         <th scope="row"><?php esc_html_e( 'Remove Closing "x"', INCOM_TD ); ?></th>
                         <td>
                             <input name="cancel_x" type="checkbox" value="1" <?php checked( '1', get_option( 'cancel_x' ) ); ?> /><span><?php esc_html_e( 'If checked, the "x" at the right top of the comments wrapper will not be displayed.', INCOM_TD ); ?></span>
