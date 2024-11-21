@@ -70,13 +70,28 @@ $vcard-image-size: 16px;
 
 		&:hover {
 			color: #fff;
-			background: inherit;
+			text-decoration: none;
+		}
+	}
+
+	&:hover {
+		&.incom-bubble-active {
+			background: $dark-grey;
+
+			&.incom-bubble-style:after {
+				border-color: transparent $dark-grey;
+			}
+		}
+
+		a {
+			background: $blue;
 		}
 	}
 
 	&.incom-bubble-active {
 		background: $blue;
-		border-radius: 4px 8px 8px 4px;
+		border-radius: 0px $bubble-radius $bubble-radius 0px;
+		border-color: $blue;
 		z-index: $z-index-base + 4;
 
 		&.incom-bubble-style:after {
@@ -94,14 +109,16 @@ $vcard-image-size: 16px;
 				padding-right: 10px;
 			}
 		}
-	}
 
-	&:hover {
-		&.incom-bubble-active {
+		&:hover {
 			background: $dark-grey;
 
 			&.incom-bubble-style:after {
 				border-color: transparent $dark-grey;
+			}
+
+			a {
+				background: $dark-grey;
 			}
 		}
 	}
@@ -127,6 +144,10 @@ $vcard-image-size: 16px;
 		margin-top: -5px;
 		left: -$bubble-tri-pos;
 		top: 50%;
+	}
+
+	&:hover:after {
+		border-color: transparent $blue;
 	}
 
 	a {
