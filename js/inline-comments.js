@@ -1443,8 +1443,15 @@
 		$comment.addClass( 'incom-replying-to' );
 		$comment.closest( '.children' ).addClass( 'incom-replying-to-children' );
 
+		// Change value of the hidden input that dictates the parent comment of newly posted items.
 		const commentId = $comment.attr( 'id' ).replace( 'incom-comment-', '' );
 		$( '#incom-comment_parent' ).val( commentId );
+
+		// Find the top-level comment corresponding to this comment, and expand its replies.
+		const $topLevelComment = $comment.closest( '.comments-and-form > .comment' );
+		if ( $topLevelComment.length ) {
+			toggleReplies( $topLevelComment, 'expanded' );
+		}
 	}
 
 	/**
