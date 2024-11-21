@@ -1538,5 +1538,7 @@
 			const $comment = $( this ).closest( '.comment' );
 			toggleReplies( $comment );
 		} )
+
+		$( '#incom-comment' ).attr( 'placeholder', __( 'Enter comment', 'inline-comments' ) );
 	};
 }(window.incom = window.incom || {}, jQuery));
