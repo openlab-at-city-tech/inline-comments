@@ -1218,8 +1218,11 @@
 			const $topLevelComment = $commentEl.closest( '.comments-and-form > .comment' );
 
 			if ( $topLevelComment.length ) {
-				// Expand the replies for this top-level comment.
-				toggleReplies( $topLevelComment, 'expanded' );
+				const $topLevelCommentChildren = $topLevelComment.children( '.children' );
+				if ( $topLevelCommentChildren.length ) {
+					// Expand the replies for this top-level comment.
+					toggleReplies( $topLevelComment, 'expanded' );
+				}
 			}
 		});
 	};
