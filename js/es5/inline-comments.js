@@ -483,8 +483,8 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
    * Add a hidden input field dynamically
    */
   var loadHiddenInputField = function loadHiddenInputField() {
-    var input = $('<input>').attr('type', 'hidden').attr('name', dataIncomKey).val(getAttDataIncomValue);
-    $(idCommentsAndFormHash + ' .form-submit').append($(input));
+    var input = $('<input>').attr('type', 'hidden').attr('name', dataIncomKey).val(getAttDataIncomValue());
+    $(idCommentsAndFormHash + ' .incom-form-submit').append($(input));
   };
 
   /*
