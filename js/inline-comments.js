@@ -1211,6 +1211,16 @@
 			if ( ! $bubble.hasClass( classBubbleActive ) ) {
 				handleClickBubble( $target, $bubble );
 			}
+
+			// Find the comment element. If it's in a collapsed 'children' el, expand it.
+			const commentId = e.target.dataset.incomCommentId;
+			const $commentEl = $( '#incom-comment-' + commentId );
+			const $topLevelComment = $commentEl.closest( '.comments-and-form > .comment' );
+
+			if ( $topLevelComment.length ) {
+				// Expand the replies for this top-level comment.
+				toggleReplies( $topLevelComment, 'expanded' );
+			}
 		});
 	};
 

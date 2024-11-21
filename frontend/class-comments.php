@@ -36,9 +36,10 @@ class INCOM_Comments extends INCOM_Frontend {
 				$jump_to_text = esc_html__( 'See this comment in context.', 'inline-comments' );
 
 				$jump_to = sprintf(
-					'<a href="%s" class="incom-jump-to" data-incom-ref="%s">%s</a>',
+					'<a href="%s" class="incom-jump-to" data-incom-ref="%s" data-incom-comment-id="%s">%s</a>',
 					esc_attr( '#incom-elemente-' . $data_incom ),
 					esc_attr( $data_incom ),
+					esc_attr( $comment->comment_ID ),
 					esc_html__( 'See this comment in context.', 'inline-comments' )
 				);
 
