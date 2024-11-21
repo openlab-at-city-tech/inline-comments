@@ -1435,6 +1435,9 @@
 
 		$comment.addClass( 'incom-replying-to' );
 		$comment.closest( '.children' ).addClass( 'incom-replying-to-children' );
+
+		const commentId = $comment.attr( 'id' ).replace( 'incom-comment-', '' );
+		$( '#incom-comment_parent' ).val( commentId );
 	}
 
 	/**
