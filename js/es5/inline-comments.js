@@ -529,10 +529,6 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     var replyCount = $repliesContainer.find('li').length;
     $comment.data('incom-reply-count', replyCount);
     toggleReplies($comment, 'collapsed');
-    $comment.find('.incom-showhide-replies button').on('click', function (event) {
-      event.preventDefault();
-      toggleReplies($comment);
-    });
   };
 
   /**
@@ -1081,6 +1077,18 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
       if (!$bubble.hasClass(classBubbleActive)) {
         handleClickBubble($target, $bubble);
       }
+
+      // Find the comment element. If it's in a collapsed 'children' el, expand it.
+      var commentId = e.target.dataset.incomCommentId;
+      var $commentEl = $('#incom-comment-' + commentId);
+      var $topLevelComment = $commentEl.closest('.comments-and-form > .comment');
+      if ($topLevelComment.length) {
+        var $topLevelCommentChildren = $topLevelComment.children('.children');
+        if ($topLevelCommentChildren.length) {
+          // Expand the replies for this top-level comment.
+          toggleReplies($topLevelComment, 'expanded');
+        }
+      }
     });
   };
 
@@ -1293,6 +1301,16 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     $('.children').removeClass('incom-replying-to-children');
     $comment.addClass('incom-replying-to');
     $comment.closest('.children').addClass('incom-replying-to-children');
+
+    // Change value of the hidden input that dictates the parent comment of newly posted items.
+    var commentId = $comment.attr('id').replace('incom-comment-', '');
+    $('#incom-comment_parent').val(commentId);
+
+    // Find the top-level comment corresponding to this comment, and expand its replies.
+    var $topLevelComment = $comment.closest('.comments-and-form > .comment');
+    if ($topLevelComment.length) {
+      toggleReplies($topLevelComment, 'expanded');
+    }
   };
 
   /**
@@ -1358,5 +1376,11 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     if ('ontouchstart' in window) {
       forceShowBubbles();
     }
+    $(idCommentsAndFormHash).on('click', '.incom-showhide-replies button', function (event) {
+      event.preventDefault();
+      var $comment = $(this).closest('.comment');
+      toggleReplies($comment);
+    });
+    $('#incom-comment').attr('placeholder', __('Enter comment', 'inline-comments'));
   };
 })(window.incom = window.incom || {}, jQuery);
