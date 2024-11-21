@@ -17,7 +17,10 @@ class INCOM_WordPress extends INCOM_Frontend {
 	/**
 	 * Add Scripts into Footer
 	 */
-	function load_incom() { ?>
+	function load_incom() {
+		$default_selectors = 'p,figure,blockquote,ul,ol,embed,iframe,h1,h2,h3,h4,h5,h6';
+
+		?>
 		<script>
 		(function ( $ ) {
 			var icTimer;
@@ -25,7 +28,7 @@ class INCOM_WordPress extends INCOM_Frontend {
 			$(window).on( "load", function() {
 				incom.init({
 					canComment: <?php echo parent::can_comment() == "" ? "false" : "true"; ?>,
-					selectors: '<?php echo get_option("multiselector") == "" ? "p" : get_option("multiselector"); ?>',
+					selectors: '<?php echo get_option("multiselector") == "" ? $default_selectors : get_option("multiselector"); ?>',
 					moveSiteSelector: '<?php echo get_option("moveselector") == "" ? "body" : esc_js(get_option("moveselector")); ?>',
 			    countStatic: <?php echo get_option("incom_bubble_static") == "1" ? "false" : "true"; ?>,
 			    alwaysStatic: <?php echo get_option("incom_bubble_static_always") == "1" ? "true" : "false"; ?>,

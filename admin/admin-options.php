@@ -40,13 +40,6 @@
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Selectors', INCOM_TD ); ?></th>
-                        <td>
-                            <textarea rows="3" cols="70" type="text" name="multiselector" placeholder="selector1, selector2, selectorN"><?php echo sanitize_text_field(get_option('multiselector')); ?></textarea><br>
-                            <span><?php esc_html_e( 'Insert selectors in order to control beside which sections the comment bubbles should be displayed.', INCOM_TD ); ?><br><br><?php esc_html_e( 'You can insert selectors like that:', INCOM_TD ); ?> <i><?php esc_html_e( 'selector1, selector2, selectorN', INCOM_TD ); ?></i><br><?php esc_html_e( 'Example:', INCOM_TD ); ?> <i><?php esc_html_e( 'h1, .entry-content p, span, blockquote', INCOM_TD ); ?></i></span>
-                        </td>
-                    </tr>
-                    <tr valign="top">
                         <th scope="row"><?php esc_html_e( 'Enable Inline Replies', INCOM_TD ); ?></span></th>
                         <td>
                             <input name="incom_reply" type="checkbox" value="1" <?php checked( '1', get_option( 'incom_reply' ) ); ?> /><span><?php esc_html_e( 'If checked, a reply link will be added below each inline comment and users can reply directly.', INCOM_TD ); ?></span>
