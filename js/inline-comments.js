@@ -603,12 +603,6 @@
 		$comment.data( 'incom-reply-count', replyCount );
 
 		toggleReplies( $comment, 'collapsed' );
-
-		$comment.find( '.incom-showhide-replies button' )
-			.on( 'click', function( event ) {
-				event.preventDefault();
-				toggleReplies( $comment );
-			} )
 	}
 
 	/**
@@ -1531,5 +1525,11 @@
 		if ( 'ontouchstart' in window ) {
 			forceShowBubbles();
 		}
+
+		$( idCommentsAndFormHash ).on( 'click', '.incom-showhide-replies button', function( event ) {
+			event.preventDefault();
+			const $comment = $( this ).closest( '.comment' );
+			toggleReplies( $comment );
+		} )
 	};
 }(window.incom = window.incom || {}, jQuery));
