@@ -366,14 +366,14 @@ $vcard-image-size: 16px;
 	.comment-meta {
 		display: inline;
 		float: right;
-		margin-top: -4px;
-		padding-right: 9px;
+		margin-top: -2px;
+		padding-right: 0;
 
 		img {
-			opacity: 0.3;
+			opacity: 1;
 
 			&:hover {
-				opacity: 1;
+				opacity: 0.5;
 			}
 		}
 	}
@@ -389,8 +389,8 @@ $vcard-image-size: 16px;
 	}
 
 	.incom-permalink-img {
-		width: 16px;
-		height: 16px;
+		width: 18px;
+		height: 12px;
 	}
 
 	.inline-comment-author {

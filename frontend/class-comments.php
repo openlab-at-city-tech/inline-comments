@@ -374,7 +374,7 @@ class INCOM_Comments extends INCOM_Frontend {
 	 */
 	private function loadCommentPermalink( $comment_ID ) {
 		$permalink_url = htmlspecialchars( get_comment_link( $comment_ID ) );
-		$permalink_img_url = plugins_url( 'images/permalink-icon.png' , INCOM_FILE );
+		$permalink_img_url = plugins_url( 'images/link.png' , INCOM_FILE );
 		$permalink_html = '<div class="comment-meta commentmetadata">
 			<a class="incom-permalink" href="' . $permalink_url . '" title="Permalink to this comment">
 				<img class="incom-permalink-img" src="' . $permalink_img_url . '" alt="">
