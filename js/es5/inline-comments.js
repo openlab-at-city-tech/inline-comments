@@ -484,7 +484,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
    */
   var loadHiddenInputField = function loadHiddenInputField() {
     var input = $('<input>').attr('type', 'hidden').attr('name', dataIncomKey).val(getAttDataIncomValue);
-    $(idCommentsAndFormHash + ' .form-submit').append($(input));
+    $(idCommentsAndFormHash + ' .incom-form-submit').append($(input));
   };
 
   /*
@@ -539,6 +539,10 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
    */
   var toggleReplies = function toggleReplies($comment) {
     var targetState = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    var $commentChildren = $comment.find('.children');
+    if (!$commentChildren.length) {
+      return;
+    }
     if (null === targetState) {
       targetState = $comment.hasClass('incom-replies-collapsed') ? 'expanded' : 'collapsed';
     }
