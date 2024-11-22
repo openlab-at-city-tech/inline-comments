@@ -612,6 +612,11 @@
 	 * @param {string} targetState The target state for the replies. If null, the state will be toggled.
 	 */
 	const toggleReplies = function( $comment, targetState = null ) {
+		const $commentChildren = $comment.find( '.children' );
+		if ( ! $commentChildren.length ) {
+			return
+		}
+
 		if ( null === targetState ) {
 			targetState = $comment.hasClass( 'incom-replies-collapsed' ) ? 'expanded' : 'collapsed';
 		}
