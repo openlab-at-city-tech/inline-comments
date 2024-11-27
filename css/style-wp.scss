@@ -406,6 +406,8 @@ $vcard-image-size: 16px;
 	#incom-respond form input[type="email"], #incom-respond form input[type="text"], #incom-respond form input[type="url"] {
 		border-radius: 2px;
 		border: 1px solid $grey;
+		font-family: $font-family;
+		font-size: 1em;
 
 		&:focus {
 			border-color: $light-blue;
