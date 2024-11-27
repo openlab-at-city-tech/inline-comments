@@ -273,6 +273,10 @@ $vcard-image-size: 16px;
 					&:hover {
 						text-decoration: none;
 					}
+
+					&:focus {
+						outline: 0;
+					}
 				}
 			}
 
