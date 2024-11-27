@@ -52,9 +52,6 @@ function incom_load_textdomain() {
 add_action( 'plugins_loaded', INCOM_OPTION_KEY.'_load_textdomain' );
 
 
-define( 'INCOM_NEWS_TEXT', 'To suggest and vote for new features: Let the developer come into contact with you.' );
-define( 'INCOM_NEWS_BUTTON', 'Get contacted' );
-
 require_once( INCOM_PATH . 'inc/class-register.php' );
 
 function incom_admin_init() {
