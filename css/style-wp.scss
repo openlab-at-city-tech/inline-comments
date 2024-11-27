@@ -73,6 +73,10 @@ $vcard-image-size: 16px;
 			color: #fff;
 			text-decoration: none;
 		}
+
+		&:focus {
+			outline: 0;
+		}
 	}
 
 	&:hover {
