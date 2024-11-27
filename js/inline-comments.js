@@ -671,7 +671,7 @@
 				const bubbleLeftOffset = $offset.left;
 
 				// Ensure that the element doesn't overlap the bubble.
-				element.width( element.width() - 20 );
+				element.width( element.width() - 50 );
 
 				return bubbleLeftOffset - element.outerWidth();
 			}
@@ -681,7 +681,7 @@
 
 		const leftOffset = calculateLeftOffset();
 
-		const verticalOffsetFromBubble = -16;
+		const verticalOffsetFromBubble = -48;
 
 		element.css({
 			'top': $offset.top + verticalOffsetFromBubble,
