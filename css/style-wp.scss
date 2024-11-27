@@ -366,6 +366,11 @@ $vcard-image-size: 16px;
 		padding: 0;
 	}
 
+	/* Koji */
+	.by-post-author-wrapper {
+		display: none;
+	}
+
 	.comment-meta {
 		display: inline;
 		float: right;
