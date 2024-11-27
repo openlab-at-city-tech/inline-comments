@@ -2,7 +2,7 @@
 /*
 Plugin Name: OpenLab Inline Comments
 Plugin URI: http://kevinw.de/inline-comments/
-Description: OpenLab Inline Comments adds your comment system to the side of paragraphs and other sections (like headlines and images) of your post. It performs native with WordPress comments.
+Description: OpenLab Inline Comments allows site users to annotate posts and pages by adding commenting capabilities alongside individual paragraphs and media.
 Author: Kevin Weber
 Version: 2.3
 Author URI: http://kevinw.de/
