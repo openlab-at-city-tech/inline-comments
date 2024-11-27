@@ -159,6 +159,12 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     if ($main.length && 1 === $main.length) {
       return $main;
     }
+
+    // Lingonberry
+    var $lingonberryContent = $('.content.section-inner .post-content');
+    if ($lingonberryContent.length) {
+      return $lingonberryContent;
+    }
     return $('body');
   };
 
@@ -591,13 +597,13 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
         var bubbleLeftOffset = $offset.left;
 
         // Ensure that the element doesn't overlap the bubble.
-        element.width(element.width() - 20);
+        element.width(element.width() - 50);
         return bubbleLeftOffset - element.outerWidth();
       }
       return naiveLeftOffset;
     };
     var leftOffset = calculateLeftOffset();
-    var verticalOffsetFromBubble = -16;
+    var verticalOffsetFromBubble = -48;
     element.css({
       'top': $offset.top + verticalOffsetFromBubble,
       'left': testIfPositionRight() ? leftOffset : $offset.left - element.outerWidth()
@@ -610,6 +616,17 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
         element.removeClass('incom-has-right-bubble');
         source.removeClass('incom-is-right-bubble');
       }
+    }
+
+    // If #incom-comments-wrapper spills off the left-hand side of screen, shrink it.
+    var commentWrapperOffset = element.offset();
+    if (commentWrapperOffset.left < 0) {
+      // Shrink the element.
+      element.width(element.width() + commentWrapperOffset.left);
+
+      // Shift back to the right.
+      element.css('left', 0);
+      //			element.width( element.width() + commentWrapperOffset.left );
     }
   };
 
