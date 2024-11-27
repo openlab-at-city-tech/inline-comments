@@ -703,6 +703,17 @@
 				source.removeClass( 'incom-is-right-bubble' );
 			}
 		}
+
+		// If #incom-comments-wrapper spills off the left-hand side of screen, shrink it.
+		const commentWrapperOffset = element.offset();
+		if ( commentWrapperOffset.left < 0 ) {
+			// Shrink the element.
+			element.width( element.width() + commentWrapperOffset.left );
+
+			// Shift back to the right.
+			element.css( 'left', 0 );
+//			element.width( element.width() + commentWrapperOffset.left );
+		}
 	}
 
 	/*
