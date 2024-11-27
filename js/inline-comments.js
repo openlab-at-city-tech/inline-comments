@@ -170,6 +170,12 @@
 			return $main;
 		}
 
+		// Lingonberry
+		const $lingonberryContent = $( '.content.section-inner .post-content' );
+		if ( $lingonberryContent.length ) {
+			return $lingonberryContent;
+		}
+
 		return $( 'body' );
 	}
 
