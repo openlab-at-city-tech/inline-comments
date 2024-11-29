@@ -1535,18 +1535,20 @@
 
 		addCancelLinkToReplyForm();
 
-		$(classReplyDot + " .incom-reply-link").on('click', function ( event ) {
-			event.preventDefault();
+		$(classReplyDot + " .incom-reply-link")
+			.off( 'click' ) // Necessary because of themes that have their own click event
+			.on( 'click', function ( event ) {
+				event.preventDefault();
 
-			// This code is required to make Inline Comments work with Ajaxify
-			$(idCommentsAndFormHash + ' #commentform').attr("id", idCommentForm);
+				// This code is required to make Inline Comments work with Ajaxify
+				$(idCommentsAndFormHash + ' #commentform').attr("id", idCommentForm);
 
-			const $repliedToComment = $( event.target.closest( '.comment' ) );
+				const $repliedToComment = $( event.target.closest( '.comment' ) );
 
-			markCurrentCommentBeingRepliedTo( $repliedToComment );
+				markCurrentCommentBeingRepliedTo( $repliedToComment );
 
-			moveCommentFormToComment( $repliedToComment );
-		});
+				moveCommentFormToComment( $repliedToComment );
+			} );
 
 		handleEvents.init();
 
