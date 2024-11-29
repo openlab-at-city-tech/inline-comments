@@ -2,9 +2,9 @@
 /*
 Plugin Name: OpenLab Inline Comments
 Description: OpenLab Inline Comments allows site users to annotate posts and pages by adding commenting capabilities alongside individual paragraphs and media.
-Author: Kevin Weber
-Version: 2.3
-Author URI: http://kevinw.de/
+Author: OpenLab
+Version: 1.0.0
+Author URI: https://openlab.citytech.cuny.edu/
 License: GPL v3
 Text Domain: inline-comments
 Domain Path: /languages/
