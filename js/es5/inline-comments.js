@@ -1382,7 +1382,8 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     createPluginInfo();
     references();
     addCancelLinkToReplyForm();
-    $(classReplyDot + " .incom-reply-link").on('click', function (event) {
+    $(classReplyDot + " .incom-reply-link").off('click') // Necessary because of themes that have their own click event
+    .on('click', function (event) {
       event.preventDefault();
 
       // This code is required to make Inline Comments work with Ajaxify
