@@ -399,7 +399,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     } else {
       theBubble.stop(true, true).show();
     }
-    if (!isInWindow(bubble)) {
+    if (!isInWindow(theBubble)) {
       theBubble.hide();
     }
   };
