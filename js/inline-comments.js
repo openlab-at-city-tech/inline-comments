@@ -456,7 +456,7 @@
 			theBubble.stop(true, true).show();
 		}
 
-		if (!isInWindow(bubble)) {
+		if ( ! isInWindow( theBubble ) ) {
 			theBubble.hide();
 		}
 	};
