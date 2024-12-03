@@ -95,7 +95,7 @@ $vcard-image-size: 16px;
 
 	&.incom-bubble-active {
 		background: $blue;
-		border-radius: 0px $bubble-radius $bubble-radius 0px;
+		border-radius: $bubble-radius;
 		border-color: $blue;
 		font-weight: 700;
 		z-index: $z-index-base + 4;
@@ -111,7 +111,6 @@ $vcard-image-size: 16px;
 
 		&.incom-is-right-bubble {
 			a {
-				border-radius: 0;
 				padding-right: 10px;
 			}
 		}
