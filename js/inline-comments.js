@@ -953,6 +953,12 @@
 			}
 			moveSite('out');
 		}
+
+		// Restore incom-respond to #comments-and-form
+		$( '#incom-respond' ).appendTo( idCommentsAndFormHash ).css( {
+			'width': '',
+			'margin-left': '',
+		} );
 	};
 
 	/**
