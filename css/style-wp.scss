@@ -334,7 +334,7 @@ $vcard-image-size: 16px;
 		font-weight: 600;
 
 		&:before {
-			background: url( '../../images/reply.png' ) no-repeat;
+			background: url( '../../images/reply.svg' ) no-repeat;
 			content: "";
 			display: inline-block;
 			margin-right: 6px;
@@ -355,7 +355,7 @@ $vcard-image-size: 16px;
 	}
 
 	.incom-replying-to-arrow {
-		background: url( '../../images/down-arrow-blue.png' ) no-repeat;
+		background: url( '../../images/down-arrow-blue.svg' ) no-repeat;
 		display: inline-block;
 		height: 12px;
 		margin-right: 6px;
@@ -374,7 +374,7 @@ $vcard-image-size: 16px;
 			position: relative;
 
 			&:after {
-				background: url( '../../images/down-arrow.png' ) no-repeat;
+				background: url( '../../images/down-arrow.svg' ) no-repeat;
 				content: '';
 				position: absolute;
 				top: 2px;
@@ -400,7 +400,7 @@ $vcard-image-size: 16px;
 				}
 
 				&:after {
-					background-image: url( '../../images/down-arrow-blue.png' );
+					background-image: url( '../../images/down-arrow-blue.svg' );
 				}
 			}
 		}
