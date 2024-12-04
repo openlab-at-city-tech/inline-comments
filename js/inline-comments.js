@@ -1517,6 +1517,10 @@
 		// Add the additional arrow element.
 		$( '.incom-replying-to-arrow' ).remove();
 
+		if ( $topLevelComment.children( '.children' ).length === 0) {
+			return;
+		}
+
 		const $replyingTo = $commentFormDiv.closest( '.incom-replying-to' );
 
 		const replyingToTopLevelComment = $topLevelComment.attr( 'id' ) === $replyingTo.attr( 'id' );
