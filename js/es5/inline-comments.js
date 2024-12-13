@@ -1353,46 +1353,6 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     // Make sure the comment submit button says 'Post reply'.
     $commentFormDiv.find('.submit').val(__('Post reply', 'inline-comments'));
     $commentFormDiv.appendTo($repliedToComment);
-
-    // Identify the top-level comment.
-    var $topLevelComment = $repliedToComment.closest('#comments-and-form > .comment');
-
-    // Calculate width considering padding.
-    var topLevelCommentWidth = $topLevelComment.innerWidth();
-    var topLevelCommentPadding = parseInt($topLevelComment.css('padding-left')) + parseInt($topLevelComment.css('padding-right'));
-    var newWidth = topLevelCommentWidth - topLevelCommentPadding;
-    $commentFormDiv.css('width', "".concat(newWidth, "px"));
-
-    // Reset margin-left.
-    $commentFormDiv.css('margin-left', '');
-
-    // Use getBoundingClientRect for offset calculations.
-    var topLevelCommentRect = $topLevelComment[0].getBoundingClientRect();
-    var commentFormDivRect = $commentFormDiv[0].getBoundingClientRect();
-    var topLevelCommentPaddingLeft = parseInt($topLevelComment.css('padding-left'));
-    var newMarginLeft = topLevelCommentRect.left - commentFormDivRect.left + topLevelCommentPaddingLeft;
-
-    // Set margin-left to align the form.
-    $commentFormDiv.css('margin-left', "".concat(newMarginLeft, "px"));
-
-    // Add the additional arrow element.
-    $('.incom-replying-to-arrow').remove();
-    if ($topLevelComment.children('.children').length === 0) {
-      return;
-    }
-    var $replyingTo = $commentFormDiv.closest('.incom-replying-to');
-    var replyingToTopLevelComment = $topLevelComment.attr('id') === $replyingTo.attr('id');
-    var getArrowLeft = function getArrowLeft() {
-      if (replyingToTopLevelComment) {
-        return 0;
-      }
-      var replyingToRect = $replyingTo[0].getBoundingClientRect();
-      var newCommentFormDivRect = $commentFormDiv[0].getBoundingClientRect();
-      return replyingToRect.left - newCommentFormDivRect.left - 22;
-    };
-    var arrowElement = $('<div class="incom-replying-to-arrow"></div>');
-    arrowElement.css('left', "".concat(getArrowLeft(), "px"));
-    $commentFormDiv.append(arrowElement);
   };
 
   /**

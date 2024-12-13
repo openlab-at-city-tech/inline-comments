@@ -1496,6 +1496,56 @@
 		$commentFormDiv.find( '.submit' ).val( __( 'Post reply', 'inline-comments' ) );
 
 		$commentFormDiv.appendTo( $repliedToComment );
+
+		// Identify the top-level comment.
+		const $topLevelComment = $repliedToComment.closest('#comments-and-form > .comment');
+
+		// Calculate width considering padding.
+		const topLevelCommentWidth = $topLevelComment.innerWidth();
+		const topLevelCommentPadding = parseInt( $topLevelComment.css( 'padding-left' ) ) + parseInt( $topLevelComment.css( 'padding-right' ) );
+		const newWidth = topLevelCommentWidth - topLevelCommentPadding;
+		$commentFormDiv.css('width', `${newWidth}px`);
+
+		// Reset margin-left.
+		$commentFormDiv.css( 'margin-left', '' );
+
+		// Use getBoundingClientRect for offset calculations.
+		const topLevelCommentRect = $topLevelComment[0].getBoundingClientRect();
+		const commentFormDivRect = $commentFormDiv[0].getBoundingClientRect();
+
+		const topLevelCommentPaddingLeft = parseInt( $topLevelComment.css( 'padding-left' ) )
+
+		const newMarginLeft = topLevelCommentRect.left - commentFormDivRect.left + topLevelCommentPaddingLeft;
+
+		// Set margin-left to align the form.
+		$commentFormDiv.css( 'margin-left', `${newMarginLeft}px` );
+
+		// Add the additional arrow element.
+		$( '.incom-replying-to-arrow' ).remove();
+
+		if ( $topLevelComment.children( '.children' ).length === 0) {
+			return;
+		}
+
+		const $replyingTo = $commentFormDiv.closest( '.incom-replying-to' );
+
+		const replyingToTopLevelComment = $topLevelComment.attr( 'id' ) === $replyingTo.attr( 'id' );
+
+		const getArrowLeft = () => {
+			if ( replyingToTopLevelComment ) {
+				return 0;
+			}
+
+			const replyingToRect = $replyingTo[0].getBoundingClientRect();
+			const newCommentFormDivRect = $commentFormDiv[0].getBoundingClientRect();
+
+			return replyingToRect.left - newCommentFormDivRect.left - 22;
+		};
+
+
+		const arrowElement = $( '<div class="incom-replying-to-arrow"></div>' );
+		arrowElement.css( 'left', `${getArrowLeft()}px` );
+		$commentFormDiv.append( arrowElement );
 	}
 
 	/**
