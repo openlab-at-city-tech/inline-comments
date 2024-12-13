@@ -101,6 +101,14 @@ class INCOM_Comments extends INCOM_Frontend {
 	 * Generate comments form
 	 */
 	function generateCommentsAndForm() {
+		$dco_enabled = false;
+		if ( isset( $GLOBALS['dco_ca'] ) && is_object( $GLOBALS['dco_ca'] ) && method_exists( $GLOBALS['dco_ca'], 'add_attachment_field' ) ) {
+			$dco_enabled = true;
+			remove_action( 'comment_form_submit_field', [ $GLOBALS['dco_ca'], 'add_attachment_field' ] );
+		}
+
+		add_filter( 'dco_ca_disable_attachment_field', '__return_true' );
+
 		echo '<div id="comments-and-form" class="comments-and-form" style="display:none">';
 
 		$this->loadPluginInfoInvisible();
@@ -120,6 +128,10 @@ class INCOM_Comments extends INCOM_Frontend {
 		}
 
 		echo '</div>';
+
+		if ( $dco_enabled ) {
+			add_action( 'comment_form_submit_field', [ $GLOBALS['dco_ca'], 'add_attachment_field' ] );
+		}
 	}
 
 	/**
