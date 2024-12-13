@@ -192,6 +192,8 @@ class INCOM_Comments extends INCOM_Frontend {
 		// Temp?
 		$args['avatar_size'] = 16;
 
+		$args['max_depth'] = 3;
+
 		$data_incom = $this->get_data_incom_value( $comment->comment_ID );
 
 		?>
