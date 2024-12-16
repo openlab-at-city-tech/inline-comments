@@ -373,6 +373,10 @@ $vcard-image-size: 16px;
 	/* Zeroing out theme styles */
 	li.comment {
 		margin: 0 0 $comment-vertical-spacing 0;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
 	}
 
 	.inline-comment-body {
