@@ -1499,6 +1499,22 @@
 	}
 
 	/**
+	 * Reset the placeholder text for the comment form.
+	 *
+	 * When leaving a top-level comment, the placeholder text should be 'Enter comment'. When
+	 * replying to a comment, it should read 'Enter reply'.
+	 */
+	const resetPlaceholderText = () => {
+		const $commentForm = $( '#incom-comment' );
+
+		if ( $commentForm.closest( 'li.comment' ).length ) {
+			$commentForm.attr( 'placeholder', __( 'Enter reply', 'inline-comments' ) );
+		} else {
+			$commentForm.attr( 'placeholder', __( 'Enter comment', 'inline-comments' ) );
+		}
+	}
+
+	/**
 	 * Adds the Cancel link to the reply form.
 	 *
 	 * This mimics the comment-reply-link behavior in WP themes. When replying to a comment,
@@ -1521,6 +1537,8 @@
 			$commentForm.find( '.submit' ).val( __( 'Post comment', 'inline-comments' ) );
 
 			$commentForm.appendTo( idCommentsAndFormHash );
+
+			resetPlaceholderText();
 		} );
 
 		$( '.incom-form-submit' ).append( $cancelLink );
@@ -1554,6 +1572,8 @@
 				markCurrentCommentBeingRepliedTo( $repliedToComment );
 
 				moveCommentFormToComment( $repliedToComment );
+
+				resetPlaceholderText()
 			} );
 
 		handleEvents.init();
