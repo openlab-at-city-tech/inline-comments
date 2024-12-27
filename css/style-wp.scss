@@ -359,11 +359,13 @@ $vcard-image-size: 16px;
 			}
 
 			&.incom-replying-to-children {
-				&:before {
+				&:before,
+				.children:before {
 					border-color: $blue;
 				}
 
-				&:after {
+				&:after,
+				.children:after {
 					background-image: url( '../../images/down-arrow-blue.svg' );
 				}
 			}
