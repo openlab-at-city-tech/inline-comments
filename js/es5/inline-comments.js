@@ -1356,6 +1356,35 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
   };
 
   /**
+   * Reset the text for the comment form.
+   *
+   * When leaving a top-level comment, the placeholder text should be 'Enter comment'. When
+   * replying to a comment, it should read 'Enter reply'.
+   */
+  var resetCommentFormText = function resetCommentFormText() {
+    var $commentField = $('#incom-comment');
+    var isReply = $commentField.closest('li.comment').length;
+
+    // Placeholder for the comment content field.
+    if (isReply) {
+      $commentField.attr('placeholder', __('Enter reply', 'inline-comments'));
+    } else {
+      $commentField.attr('placeholder', __('Enter comment', 'inline-comments'));
+    }
+    var $commentForm = $commentField.closest('form');
+    if ($commentForm.length) {
+      var $commentFormNotes = $commentForm.find('.incom-comment-notes');
+      if ($commentFormNotes.length) {
+        if (isReply) {
+          $commentFormNotes.html(__('Reply', 'inline-comments'));
+        } else {
+          $commentFormNotes.html(__('Comment', 'inline-comments'));
+        }
+      }
+    }
+  };
+
+  /**
    * Adds the Cancel link to the reply form.
    *
    * This mimics the comment-reply-link behavior in WP themes. When replying to a comment,
@@ -1374,6 +1403,9 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
       // Make sure the comment submit button says 'Post comment'.
       $commentForm.find('.submit').val(__('Post comment', 'inline-comments'));
       $commentForm.appendTo(idCommentsAndFormHash);
+      $('.comment').removeClass('incom-replying-to');
+      $('.children').removeClass('incom-replying-to-children');
+      resetCommentFormText();
     });
     $('.incom-form-submit').append($cancelLink);
   };
@@ -1397,6 +1429,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
       var $repliedToComment = $(event.target.closest('.comment'));
       markCurrentCommentBeingRepliedTo($repliedToComment);
       moveCommentFormToComment($repliedToComment);
+      resetCommentFormText();
     });
     handleEvents.init();
 
