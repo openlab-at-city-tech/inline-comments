@@ -1553,7 +1553,10 @@
 
 			$commentForm.appendTo( idCommentsAndFormHash );
 
-			resetPlaceholderText();
+			$( '.comment' ).removeClass( 'incom-replying-to' );
+			$( '.children' ).removeClass( 'incom-replying-to-children' );
+
+			resetCommentFormText();
 		} );
 
 		$( '.incom-form-submit' ).append( $cancelLink );
@@ -1588,7 +1591,7 @@
 
 				moveCommentFormToComment( $repliedToComment );
 
-				resetPlaceholderText()
+				resetCommentFormText()
 			} );
 
 		handleEvents.init();
