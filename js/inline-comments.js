@@ -1499,18 +1499,33 @@
 	}
 
 	/**
-	 * Reset the placeholder text for the comment form.
+	 * Reset the text for the comment form.
 	 *
 	 * When leaving a top-level comment, the placeholder text should be 'Enter comment'. When
 	 * replying to a comment, it should read 'Enter reply'.
 	 */
-	const resetPlaceholderText = () => {
-		const $commentForm = $( '#incom-comment' );
+	const resetCommentFormText = () => {
+		const $commentField = $( '#incom-comment' );
 
-		if ( $commentForm.closest( 'li.comment' ).length ) {
-			$commentForm.attr( 'placeholder', __( 'Enter reply', 'inline-comments' ) );
+		const isReply = $commentField.closest( 'li.comment' ).length;
+
+		// Placeholder for the comment content field.
+		if ( isReply ) {
+			$commentField.attr( 'placeholder', __( 'Enter reply', 'inline-comments' ) );
 		} else {
-			$commentForm.attr( 'placeholder', __( 'Enter comment', 'inline-comments' ) );
+			$commentField.attr( 'placeholder', __( 'Enter comment', 'inline-comments' ) );
+		}
+
+		const $commentForm = $commentField.closest( 'form' );
+		if ( $commentForm.length ) {
+			const $commentFormNotes = $commentForm.find( '.incom-comment-notes' );
+			if ( $commentFormNotes.length ) {
+				if ( isReply ) {
+					$commentFormNotes.html( __( 'Reply', 'inline-comments' ) );
+				} else {
+					$commentFormNotes.html( __( 'Comment', 'inline-comments' ) );
+				}
+			}
 		}
 	}
 
