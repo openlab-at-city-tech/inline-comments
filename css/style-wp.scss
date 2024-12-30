@@ -288,29 +288,6 @@ $vcard-image-size: 16px;
 					display: block;
 				}
 			}
-
-			& > .children > li.comment {
-				margin-bottom: 0;
-
-				&:after {
-					background: white;
-					content: ' ';
-					display: block;
-					height: 20px;
-					margin-left: -20px;
-					position: relative;
-					width: 100%;
-					z-index: 9999;
-				}
-
-				&:last-child {
-					margin-bottom: 23px;
-
-					&:after {
-						display: none;
-					}
-				}
-			}
 		}
 	}
 
@@ -357,28 +334,31 @@ $vcard-image-size: 16px;
 
 		.children {
 			margin-top: $comment-vertical-spacing;
-			padding-left: 20px;
-			position: relative;
 
-			&:after {
-				background: url( '../../images/down-arrow.svg' ) no-repeat;
-				content: '';
-				position: absolute;
-				top: 2px;
-				left: 0;
-				height: 12px;
-				width: 15px;
-			}
+			li.comment {
+				position: relative;
+				padding-left: 20px;
 
-			&:before {
-				--vertical-offset: 34px;
-				border-left: 2px dotted $black;
-				content: '';
-				position: absolute;
-				height: calc( 100% - var( --vertical-offset ) );
-				left: 5px;
-				top: var( --vertical-offset );
-				width: 2px;
+				&:before {
+					background: url( '../../images/down-arrow.svg' ) no-repeat;
+					content: '';
+					position: absolute;
+					top: 2px;
+					left: 0;
+					height: 12px;
+					width: 15px;
+				}
+
+				&:after {
+					--vertical-offset: 34px;
+					border-left: 2px dotted $black;
+					content: '';
+					position: absolute;
+					height: calc( 100% - var( --vertical-offset ) );
+					left: 5px;
+					top: var( --vertical-offset );
+					width: 2px;
+				}
 			}
 		}
 	}
@@ -432,7 +412,7 @@ $vcard-image-size: 16px;
 	}
 
 	.inline-comment-author {
-		align-items: center;
+		align-items: flex-start;
 		display: flex;
 		gap: 10px;
 		margin-bottom: 16px;
