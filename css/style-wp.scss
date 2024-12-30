@@ -357,18 +357,6 @@ $vcard-image-size: 16px;
 				top: var( --vertical-offset );
 				width: 2px;
 			}
-
-			&.incom-replying-to-children {
-				&:before,
-				.children:before {
-					border-color: $blue;
-				}
-
-				&:after,
-				.children:after {
-					background-image: url( '../../images/down-arrow-blue.svg' );
-				}
-			}
 		}
 	}
 
