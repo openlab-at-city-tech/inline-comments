@@ -288,6 +288,29 @@ $vcard-image-size: 16px;
 					display: block;
 				}
 			}
+
+			& > .children > li.comment {
+				margin-bottom: 0;
+
+				&:after {
+					background: white;
+					content: ' ';
+					display: block;
+					height: 20px;
+					margin-left: -20px;
+					position: relative;
+					width: 100%;
+					z-index: 9999;
+				}
+
+				&:last-child {
+					margin-bottom: 23px;
+
+					&:after {
+						display: none;
+					}
+				}
+			}
 		}
 	}
 
