@@ -236,6 +236,14 @@ $vcard-image-size: 16px;
 		margin-left: 25px;
 	}
 
+	.incom-comment-text {
+		p {
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
 	.comments-and-form {
 		& > .incom-comment-respond {
 			.incom-cancel-reply-link {
@@ -301,7 +309,7 @@ $vcard-image-size: 16px;
 		align-items: flex-end;
 		display: flex;
 		justify-content: space-between;
-		margin-top: 8px;
+		margin-top: 16px;
 	}
 
 	.incom-reply-link {
