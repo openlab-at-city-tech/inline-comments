@@ -225,38 +225,47 @@ class INCOM_Comments extends INCOM_Frontend {
 			<?php comment_text(); ?>
 		</div>
 
-		<?php if ( get_option( 'incom_reply' ) == '1' ) { ?>
+		<?php
+		$show_reply_link = empty( $comment->comment_parent );
+
+		add_filter( 'comment_reply_link', array( $this, 'replace_id_in_comment_reply_link' ), 10 );
+
+		$comment_reply_link = get_comment_reply_link(
+			array_merge(
+				$args,
+				array(
+					'add_below' => 'incom-div-comment',
+					// 'respond_id' => 'incom-commentform',
+					// TODO: 'reply_text' => 'insert icon here',
+					'depth' => $depth,
+					'max_depth' => $args['max_depth'],
+					'login_text' => '',
+					'reply_title_id' => 'incom-reply-title',
+				)
+			)
+		);
+
+		remove_filter( 'comment_reply_link', array( $this, 'replace_id_in_comment_reply_link' ), 10 );
+
+		$show_comment_actions_div = '1' == get_option( 'incom_reply' ) && ( $show_reply_link || $comment_reply_link );
+
+		?>
+
+		<?php if ( $show_comment_actions_div ) : ?>
 			<div class="incom-comment-actions">
-				<?php if ( empty( $comment->comment_parent ) ) : ?>
+				<?php if ( $show_reply_link ) : ?>
 					<div class="incom-showhide-replies">
 						<button class="incom-show-replies"><?php esc_html_e( 'Show Replies', 'inline-comments' ); ?></button>
 					</div>
 				<?php endif; ?>
 
-				<div class="incom-reply">
-				<?php
-				add_filter( 'comment_reply_link', array( $this, 'replace_id_in_comment_reply_link' ), 10 );
-
-				comment_reply_link( array_merge(
-						$args,
-						array(
-							'add_below' => 'incom-div-comment',
-							// 'respond_id' => 'incom-commentform',
-							// TODO: 'reply_text' => 'insert icon here',
-							'depth' => $depth,
-							'max_depth' => $args['max_depth'],
-							'login_text' => '',
-							'reply_title_id' => 'incom-reply-title',
-						)
-					)
-				);
-
-				remove_filter( 'comment_reply_link', array( $this, 'replace_id_in_comment_reply_link' ), 10 );
-				remove_filter( 'comment_id_fields', array( $this, 'replace_id_in_comment_id_fields' ), 10 );
-				?>
-				</div>
+				<?php if ( $comment_reply_link ) : ?>
+					<div class="incom-reply">
+						<?php echo $comment_reply_link; ?>
+					</div>
+				<?php endif; ?>
 			</div>
-		<?php } ?>
+		<?php endif; ?>
 
 		<?php if ( 'div' != $args['style'] ) : ?>
 		</div>
