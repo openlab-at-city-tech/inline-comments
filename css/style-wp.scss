@@ -491,6 +491,12 @@ $vcard-image-size: 16px;
 		}
 	}
 
+	#incom-respond {
+		form {
+			margin-bottom: 0;
+		}
+	}
+
 	#incom-respond.incom-comment-respond {
 		background: #fff;
 		border: $sidebar-subsection-border;
