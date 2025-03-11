@@ -18,19 +18,41 @@
 
             <h3><?php esc_html_e( 'Basic Settings', INCOM_TD ); ?></h3>
 
+			<?php
+			$status_default = get_option( INCOM_OPTION_KEY.'_status_default', 'on_posts_pages' );
+			?>
+
             <table class="form-table">
                 <tbody>
                     <tr valign="top">
                         <th scope="row"><?php esc_html_e( 'Default Status', INCOM_TD ); ?></th>
                         <td>
-                            <select class="select" typle="select" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_status_default">
-                                <option value="on_posts_pages"<?php if (get_option(INCOM_OPTION_KEY.'_status_default') === 'on_posts_pages') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Load on posts and pages', INCOM_TD ); ?></option>
-                                <option value="on_posts_pages"<?php if (get_option(INCOM_OPTION_KEY.'_status_default') === 'on_posts_pages_custom') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Load on posts, pages and custom post types', INCOM_TD ); ?></option>
-                                <option value="on_posts"<?php if (get_option(INCOM_OPTION_KEY.'_status_default') === 'on_posts') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Load on posts', INCOM_TD ); ?></option>
-                                <option value="on_pages"<?php if (get_option(INCOM_OPTION_KEY.'_status_default') === 'on_pages') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Load on pages', INCOM_TD ); ?></option>
-                                <option value="on"<?php if (get_option(INCOM_OPTION_KEY.'_status_default') === 'on') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Load always (not recommended)', INCOM_TD ); ?></option>
-                                <option value="off"<?php if (get_option(INCOM_OPTION_KEY.'_status_default') === 'off') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Don&#39;t load', INCOM_TD ); ?></option>
-                            </select>
+							<select class="select" type="select" name="<?php echo esc_attr( INCOM_OPTION_KEY ); ?>_status_default">
+								<option value="on_posts_pages" <?php selected( $status_default, 'on_posts_pages' ); ?>>
+									<?php esc_html_e( 'Load on posts and pages', INCOM_TD ); ?>
+								</option>
+
+								<option value="on_posts_pages_custom" <?php selected( $status_default, 'on_posts_pages_custom' ); ?>>
+									<?php esc_html_e( 'Load on posts, pages and custom post types', INCOM_TD ); ?>
+								</option>
+
+								<option value="on_posts" <?php selected( $status_default, 'on_posts' ); ?>>
+									<?php esc_html_e( 'Load on posts', INCOM_TD ); ?>
+								</option>
+
+								<option value="on_pages" <?php selected( $status_default, 'on_pages' ); ?>>
+									<?php esc_html_e( 'Load on pages', INCOM_TD ); ?>
+								</option>
+
+								<option value="on" <?php selected( $status_default, 'on' ); ?>>
+									<?php esc_html_e( 'Load always (not recommended)', INCOM_TD ); ?>
+								</option>
+
+								<option value="off" <?php selected( $status_default, 'off' ); ?>>
+									<?php esc_html_e( 'Don&#39;t load', INCOM_TD ); ?>
+								</option>
+							</select>
+
                             <p>
                                 <?php printf( esc_html__( 'Define if OpenLab Inline Comments should be loaded on posts and/or pages by default. You can override the default setting on every post and page individually. See also: %1$sFAQ%2$s.', INCOM_TD ),
                                     '<a href="https://wordpress.org/plugins/inline-comments/faq/" title="Page with frequently asked questions" target="_blank">',

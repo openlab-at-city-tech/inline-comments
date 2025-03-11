@@ -56,30 +56,35 @@ class INCOM_Frontend {
  	 */
  	function are_inline_comments_disabled() {
 		global $post;
+
 		$result = true;
 
-    if (!isset($post->ID)) {
+		if ( ! isset( $post->ID ) ) {
 			$post_id = null;
-		}
-		else {
+		} else {
 			$post_id = $post->ID;
 		}
 
-		// When the individual status for a page/post is 'off', all the other setting don't matter. Therefore, this has to be tested next.
-		if (get_post_meta( $post_id, INCOM_OPTION_KEY.'_status', true ) &&
-    						get_post_meta( $post_id, INCOM_OPTION_KEY.'_status', true ) === 'off') {
+		$status_default = get_option( INCOM_OPTION_KEY . '_status_default', 'on_posts_pages' );
+		$post_status    = get_post_meta( $post_id, INCOM_OPTION_KEY . '_status', true );
+
+		// When the individual status for a page/post is 'off', override all other settings.
+		if ( $post_status === 'off' ) {
 			$result = true;
-		// If only logged in users can comment but the user isn't logged in...
-		} else if ((get_option(INCOM_OPTION_KEY.'_status_default') === 'logged_in') && !is_user_logged_in()) {
+		} elseif ( $status_default === 'logged_in' && ! is_user_logged_in() ) {
+			// If only logged-in users can comment but the user isn’t logged in.
 			$result = true;
-		} else if (!get_option(INCOM_OPTION_KEY.'_status_default') ||   // Load when no option is defined yet
-                get_post_meta( $post_id, INCOM_OPTION_KEY.'_status', true ) === 'on' && is_singular() ||
-                get_option(INCOM_OPTION_KEY.'_status_default') === 'on' ||
-                get_option(INCOM_OPTION_KEY.'_status_default') === 'on_posts' && is_single() ||
-                get_option(INCOM_OPTION_KEY.'_status_default') === 'on_pages' && is_page() ||
-                get_option(INCOM_OPTION_KEY.'_status_default') === 'on_posts_pages' && (is_single()||is_page()) ||
-                get_option(INCOM_OPTION_KEY.'_status_default') === 'on_posts_pages_custom' &&
-                        (is_single()||is_page()||get_post_types(array( 'public' => true, '_builtin' => false )))) {
+		} elseif (
+			! $status_default || // Load when no option is defined yet.
+			$post_status === 'on' && is_singular() ||
+			$status_default === 'on' ||
+			( $status_default === 'on_posts' && is_single() ) ||
+			( $status_default === 'on_pages' && is_page() ) ||
+			( $status_default === 'on_posts_pages' && ( is_single() || is_page() ) ) ||
+			( $status_default === 'on_posts_pages_custom' &&
+				( is_single() || is_page() || get_post_types( [ 'public' => true, '_builtin' => false ] ) )
+			)
+		) {
 			$result = false;
 		}
 
