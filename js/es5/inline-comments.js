@@ -1025,6 +1025,12 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
           animateScrolling($target);
           var href = $(this).attr("href");
           changeUrl(href);
+
+          // Set focus to first focusable element in the comment, to ensure that keyboard users are taken to the comment content.
+          var $focusableElements = $target.find('a, button, input, textarea, select').filter(':visible');
+          if ($focusableElements.length) {
+            $focusableElements.first().focus();
+          }
           return false;
         }
       });
