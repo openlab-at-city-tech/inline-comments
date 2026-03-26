@@ -1151,6 +1151,12 @@
 					const href = $(this).attr("href");
 					changeUrl(href);
 
+					// Set focus to first focusable element in the comment, to ensure that keyboard users are taken to the comment content.
+					const $focusableElements = $target.find( 'a, button, input, textarea, select' ).filter( ':visible' );
+					if ( $focusableElements.length ) {
+						$focusableElements.first().focus();
+					}
+
 					return false;
 				}
 			});
