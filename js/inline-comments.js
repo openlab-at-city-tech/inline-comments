@@ -528,6 +528,11 @@
 		setCommentsWrapperPosition(source, $commentsWrapper);
 		loadComments();
 		testIfMoveSiteIsNecessary($commentsWrapper);
+		// set focus to first focusable element in $commentsWrapper
+		const $focusableElements = $commentsWrapper.find( 'a, button, input, textarea, select' ).filter( ':visible' );
+		if ( $focusableElements.length ) {
+			$focusableElements.first().focus();
+		}
 		handleClickElsewhere();
 		ajaxStop();
 	};

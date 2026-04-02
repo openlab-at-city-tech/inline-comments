@@ -463,6 +463,11 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
     setCommentsWrapperPosition(source, $commentsWrapper);
     loadComments();
     testIfMoveSiteIsNecessary($commentsWrapper);
+    // set focus to first focusable element in $commentsWrapper
+    var $focusableElements = $commentsWrapper.find('a, button, input, textarea, select').filter(':visible');
+    if ($focusableElements.length) {
+      $focusableElements.first().focus();
+    }
     handleClickElsewhere();
     ajaxStop();
   };
