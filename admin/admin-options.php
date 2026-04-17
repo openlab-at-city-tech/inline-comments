@@ -98,9 +98,9 @@ $tabs = array(
             <table class="form-table">
                 <tbody>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Custom CSS', INCOM_TD ); ?> <span class="description thin"><br><?php esc_html_e( 'Add additional CSS. This should override any other stylesheets.', INCOM_TD ); ?></span></th>
+                        <th scope="row"><label for="custom-css"><?php esc_html_e( 'Custom CSS', INCOM_TD ); ?></label> <span class="description thin"><br><?php esc_html_e( 'Add additional CSS. This should override any other stylesheets.', INCOM_TD ); ?></span></th>
                         <td>
-                            <textarea rows="14" cols="70" type="text" name="custom_css" placeholder="selector { property: value; }"><?php echo esc_html(get_option('custom_css')); ?></textarea>
+                            <textarea id="custom-css" rows="14" cols="70" type="text" name="custom_css" placeholder="selector { property: value; }"><?php echo esc_html(get_option('custom_css')); ?></textarea>
                             <span>
                                 <?php esc_html_e( 'For example:', INCOM_TD ); ?><br>
                                 <i>.incom-bubble-dynamic a.incom-bubble-link { color: red; }</i><br>
@@ -116,35 +116,38 @@ $tabs = array(
                     <tr valign="top">
                         <th scope="row"><?php esc_html_e( 'Position', INCOM_TD ); ?></th>
                         <td>
-                            <input id="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_select_align_left" class="radio" type="radio" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_select_align" value="left"<?php if (get_option( INCOM_OPTION_KEY.'_select_align') === 'left') { echo ' checked'; } ?> /><label class="label-radio" for="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_select_align_left"><?php esc_html_e( 'Left', INCOM_TD ); ?></label>
-                            <input id="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_select_align_right" class="radio" type="radio" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_select_align" value="right"<?php if (get_option( INCOM_OPTION_KEY.'_select_align') !== 'left') { echo ' checked'; } ?> /><label class="label-radio" for="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_select_align_right"><?php esc_html_e( 'Right', INCOM_TD ); ?></label>
+                            <fieldset>
+                                <legend class="screen-reader-text"><?php esc_html_e( 'Position', INCOM_TD ); ?></legend>
+                                <input id="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_select_align_left" class="radio" type="radio" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_select_align" value="left"<?php if (get_option( INCOM_OPTION_KEY.'_select_align') === 'left') { echo ' checked'; } ?> /><label class="label-radio" for="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_select_align_left"><?php esc_html_e( 'Left', INCOM_TD ); ?></label>
+                                <input id="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_select_align_right" class="radio" type="radio" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_select_align" value="right"<?php if (get_option( INCOM_OPTION_KEY.'_select_align') !== 'left') { echo ' checked'; } ?> /><label class="label-radio" for="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_select_align_right"><?php esc_html_e( 'Right', INCOM_TD ); ?></label>
+                            </fieldset>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Bubble Style', INCOM_TD ); ?> <span class="description thin"><br><?php esc_html_e( 'for sections with no comments yet', INCOM_TD ); ?></span></th>
+                        <th scope="row"><label for="bubble-style"><?php esc_html_e( 'Bubble Style', INCOM_TD ); ?></label> <span class="description thin"><br><?php esc_html_e( 'for sections with no comments yet', INCOM_TD ); ?></span></th>
                         <td>
-                            <select class="select" typle="select" name="select_bubble_style">
+                            <select id="bubble-style" class="select" name="select_bubble_style">
                                 <option value="bubble"<?php if (get_option('select_bubble_style') === 'bubble') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Bubble', INCOM_TD ); ?></option>
                                 <option value="plain"<?php if (get_option('select_bubble_style') === 'plain') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Plain +', INCOM_TD ); ?></option>
                             </select>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Background Colour', INCOM_TD ); ?> <span class="description thin"><br><?php esc_html_e( 'for comment threads', INCOM_TD ); ?></span></th>
+                        <th scope="row"><label for="incom_picker_input_bgcolor"><?php esc_html_e( 'Background Colour', INCOM_TD ); ?></label> <span class="description thin"><br><?php esc_html_e( 'for comment threads', INCOM_TD ); ?></span></th>
                         <td>
                             <input id="incom_picker_input_bgcolor" class="incom_picker_bgcolor picker-input" type="text" name="set_bgcolour" data-default-color="#ffffff" value="<?php if (get_option("set_bgcolour") == "") { echo "#ffffff"; } else { echo esc_attr(get_option("set_bgcolour")); } ?>" />
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Background Opacity', INCOM_TD ); ?><span class="description thin"><br><?php esc_html_e( 'for comment threads', INCOM_TD ); ?></span></th>
+                        <th scope="row"><label for="bg-opacity"><?php esc_html_e( 'Background Opacity', INCOM_TD ); ?></label><span class="description thin"><br><?php esc_html_e( 'for comment threads', INCOM_TD ); ?></span></th>
                         <td>
-                            <input type="text" name="incom_set_bgopacity" placeholder="1" value="<?php echo sanitize_text_field(get_option('incom_set_bgopacity')); ?>" /><br><span><?php esc_html_e( 'Insert a value from 0 to 1 where "1" means maximum covering power. Insert 0.7 to make the opacity 70%.', INCOM_TD ); ?></span>
+                            <input id="bg-opacity" type="text" name="incom_set_bgopacity" placeholder="1" value="<?php echo sanitize_text_field(get_option('incom_set_bgopacity')); ?>" /><br><span><?php esc_html_e( 'Insert a value from 0 to 1 where "1" means maximum covering power. Insert 0.7 to make the opacity 70%.', INCOM_TD ); ?></span>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Hide Static Bubbles', INCOM_TD ); ?></th>
+                        <th scope="row"><label for="hide-static-bubbles"><?php esc_html_e( 'Hide Static Bubbles', INCOM_TD ); ?></label></th>
                         <td>
-                            <input name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_bubble_static" type="checkbox" value="1" <?php checked( '1', get_option( INCOM_OPTION_KEY.'_bubble_static' ) ); ?> /><span><?php esc_html_e( 'This checkbox only affects bubbles that indicate a paragraph/element with at least one comment. If checked, the comment count bubbles will only be visible when the user hovers the specific paragraph. (By default, bubbles that indicate at least one comment are always visible.)', INCOM_TD ); ?></span>
+                            <input id="hide-static-bubbles" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_bubble_static" type="checkbox" value="1" <?php checked( '1', get_option( INCOM_OPTION_KEY.'_bubble_static' ) ); ?> /><span><?php esc_html_e( 'This checkbox only affects bubbles that indicate a paragraph/element with at least one comment. If checked, the comment count bubbles will only be visible when the user hovers the specific paragraph. (By default, bubbles that indicate at least one comment are always visible.)', INCOM_TD ); ?></span>
                         </td>
                     </tr>
                 </tbody>
@@ -159,39 +162,39 @@ $tabs = array(
             <table class="form-table">
                 <tbody>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Content Before', INCOM_TD ); ?><br><span class="description thin"><?php esc_html_e( 'Insert HTML above the list of comments', INCOM_TD ); ?></span></th>
+                        <th scope="row"><label for="content-before"><?php esc_html_e( 'Content Before', INCOM_TD ); ?></label><br><span class="description thin"><?php esc_html_e( 'Insert HTML above the list of comments', INCOM_TD ); ?></span></th>
                         <td>
-                            <textarea rows="5" cols="70" type="text" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_content_comments_before" placeholder=""><?php echo wp_kses_post(get_option(INCOM_OPTION_KEY.'_content_comments_before')); ?></textarea>
+                            <textarea id="content-before" rows="5" cols="70" type="text" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_content_comments_before" placeholder=""><?php echo wp_kses_post(get_option(INCOM_OPTION_KEY.'_content_comments_before')); ?></textarea>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Remove Closing "x"', INCOM_TD ); ?></th>
+                        <th scope="row"><label for="cancel-x"><?php esc_html_e( 'Remove Closing "x"', INCOM_TD ); ?></label></th>
                         <td>
-                            <input name="cancel_x" type="checkbox" value="1" <?php checked( '1', get_option( 'cancel_x' ) ); ?> /><span><?php esc_html_e( 'If checked, the "x" at the right top of the comments wrapper will not be displayed.', INCOM_TD ); ?></span>
+                            <input id="cancel-x" name="cancel_x" type="checkbox" value="1" <?php checked( '1', get_option( 'cancel_x' ) ); ?> /><span><?php esc_html_e( 'If checked, the "x" at the right top of the comments wrapper will not be displayed.', INCOM_TD ); ?></span>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Remove Field "Website"', INCOM_TD ); ?></th>
+                        <th scope="row"><label for="field-url"><?php esc_html_e( 'Remove Field "Website"', INCOM_TD ); ?></label></th>
                         <td>
-                            <input name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_field_url" type="checkbox" value="1" <?php checked( '1', get_option( INCOM_OPTION_KEY.'_field_url' ) ); ?> /><span><?php esc_html_e( 'If checked, users cannot submit an URL/Website when they comment inline.', INCOM_TD ); ?></span>
+                            <input id="field-url" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_field_url" type="checkbox" value="1" <?php checked( '1', get_option( INCOM_OPTION_KEY.'_field_url' ) ); ?> /><span><?php esc_html_e( 'If checked, users cannot submit an URL/Website when they comment inline.', INCOM_TD ); ?></span>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Remove Link "Cancel"', INCOM_TD ); ?></th>
+                        <th scope="row"><label for="cancel-link"><?php esc_html_e( 'Remove Link "Cancel"', INCOM_TD ); ?></label></th>
                         <td>
-                            <input name="cancel_link" type="checkbox" value="1" <?php checked( '1', get_option( 'cancel_link' ) ); ?> /><span><?php esc_html_e( 'If checked, the "cancel" link at the left bottom of the comments wrapper will not be displayed.', INCOM_TD ); ?></span>
+                            <input id="cancel-link" name="cancel_link" type="checkbox" value="1" <?php checked( '1', get_option( 'cancel_link' ) ); ?> /><span><?php esc_html_e( 'If checked, the "cancel" link at the left bottom of the comments wrapper will not be displayed.', INCOM_TD ); ?></span>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Display Permalinks', INCOM_TD ); ?></th>
+                        <th scope="row"><label for="comment-permalink"><?php esc_html_e( 'Display Permalinks', INCOM_TD ); ?></label></th>
                         <td>
-                            <input name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_comment_permalink" type="checkbox" value="1" <?php checked( '1', get_option( INCOM_OPTION_KEY.'_comment_permalink' ) ); ?> /><span><?php esc_html_e( 'If checked, a permalink icon will be displayed next to each comment.', INCOM_TD ); ?></span>
+                            <input id="comment-permalink" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_comment_permalink" type="checkbox" value="1" <?php checked( '1', get_option( INCOM_OPTION_KEY.'_comment_permalink' ) ); ?> /><span><?php esc_html_e( 'If checked, a permalink icon will be displayed next to each comment.', INCOM_TD ); ?></span>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Display References', INCOM_TD ); ?></th>
+                        <th scope="row"><label for="references"><?php esc_html_e( 'Display References', INCOM_TD ); ?></label></th>
                         <td>
-                            <select class="select" typle="select" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_references">
+                            <select id="references" class="select" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_references">
                                 <option value="below_text"<?php if (get_option( INCOM_OPTION_KEY.'_references') === 'below_text') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Below comment text', INCOM_TD ); ?></option>
                                 <option value="nowhere"<?php if (get_option( INCOM_OPTION_KEY.'_references') === 'nowhere') { echo ' selected="selected"'; } ?>><?php esc_html_e( 'Nowhere', INCOM_TD ); ?></option>
                             </select>
@@ -201,9 +204,9 @@ $tabs = array(
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Always Display Bubbles', INCOM_TD ); ?></th>
+                        <th scope="row"><label for="bubble-static-always"><?php esc_html_e( 'Always Display Bubbles', INCOM_TD ); ?></label></th>
                         <td>
-                            <input name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_bubble_static_always" type="checkbox" value="1" <?php checked( '1', get_option( INCOM_OPTION_KEY.'_bubble_static_always' ) ); ?> /><span><?php esc_html_e( 'If checked, the comment count bubbles will always be visible (and not only on hover). Bubbles will not fade.', INCOM_TD ); ?></span>
+                            <input id="bubble-static-always" name="<?php echo esc_attr(INCOM_OPTION_KEY); ?>_bubble_static_always" type="checkbox" value="1" <?php checked( '1', get_option( INCOM_OPTION_KEY.'_bubble_static_always' ) ); ?> /><span><?php esc_html_e( 'If checked, the comment count bubbles will always be visible (and not only on hover). Bubbles will not fade.', INCOM_TD ); ?></span>
                         </td>
                     </tr>
                 </tbody>
