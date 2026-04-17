@@ -25,9 +25,9 @@
             <table class="form-table">
                 <tbody>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Default Status', INCOM_TD ); ?></th>
+                        <th scope="row"><label for="default-status"><?php esc_html_e( 'Default Status', INCOM_TD ); ?></label></th>
                         <td>
-							<select class="select" type="select" name="<?php echo esc_attr( INCOM_OPTION_KEY ); ?>_status_default">
+							<select id="default-status" class="select" type="select" name="<?php echo esc_attr( INCOM_OPTION_KEY ); ?>_status_default">
 								<option value="on_posts_pages" <?php selected( $status_default, 'on_posts_pages' ); ?>>
 									<?php esc_html_e( 'Load on posts and pages', INCOM_TD ); ?>
 								</option>
@@ -62,9 +62,9 @@
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><?php esc_html_e( 'Enable Inline Replies', INCOM_TD ); ?></span></th>
+                        <th scope="row"><label for="incom-reply"><?php esc_html_e( 'Enable Inline Replies', INCOM_TD ); ?></label></th>
                         <td>
-                            <input name="incom_reply" type="checkbox" value="1" <?php checked( '1', get_option( 'incom_reply' ) ); ?> /><span><?php esc_html_e( 'If checked, a reply link will be added below each inline comment and users can reply directly.', INCOM_TD ); ?></span>
+                            <input id="incom-reply" name="incom_reply" type="checkbox" value="1" <?php checked( '1', get_option( 'incom_reply' ) ); ?> /><span><?php esc_html_e( 'If checked, a reply link will be added below each inline comment and users can reply directly.', INCOM_TD ); ?></span>
                         </td>
                     </tr>
                 </tbody>

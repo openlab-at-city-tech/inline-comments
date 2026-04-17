@@ -91,15 +91,6 @@ form {
 	float: left;
 }
 
-th label {
-	font-size: 12px;
-	font-weight: 700;
-}
-
-td label {
-	color:#666;
-}
-
 span.thin {
 	font-weight:400;
 }
@@ -107,7 +98,7 @@ span.thin {
 textarea {
 	width:100%;
 }
-	
+
 input {
 	margin-right: 8px;
 	&.regular-text {
@@ -155,13 +146,13 @@ div#informations div#text img.profilpic {
 	float:right;
 	width:38px;
 	height:50px;
-} 
+}
 div#informations div#text li {
 	text-align:left;
 	border-bottom:1px solid #ddd;
 	margin-bottom:4px;
 	padding-bottom:2px;
-} 
+}
 
 div#informations div#text li.center {
 	text-align:center;
