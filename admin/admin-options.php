@@ -1,20 +1,39 @@
-<div id="tabs" class="ui-tabs">
+<?php
+$current_tab = isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : 'basics';
+$tabs = array(
+	'basics'   => __( 'Basics', INCOM_TD ),
+	'styling'  => __( 'Styling', INCOM_TD ),
+	'advanced' => __( 'Advanced', INCOM_TD ),
+);
+?>
+<div id="tabs" class="incom-tabs">
     <h2><?php esc_html_e( 'OpenLab Inline Comments', 'inline-comments' ); ?> <span class="subtitle"><?php echo esc_html( sprintf( __( '(Version %s)', 'inline-comments' ), INCOM_VERSION ) ); ?></span>
         <br><span class="claim" style="font-size:15px;font-style:italic;position:relative;top:-7px;"><?php echo wp_kses_post( 'Based on Inline Comments by <a href="http://kevinw.de/ic" target="_blank">Kevin Weber</a>' ); ?></span>
     </h2>
 
-    <ul class="ui-tabs-nav">
-        <li><a href="#basics"><?php esc_html_e( 'Basics', INCOM_TD ); ?> <span class="newred_dot">&bull;</span></a></li>
-        <li><a href="#styling"><?php esc_html_e( 'Styling', INCOM_TD ); ?></a></li>
-        <li><a href="#advanced"><?php esc_html_e( 'Advanced', INCOM_TD ); ?></a></li>
+    <nav class="incom-tabs-nav" aria-label="<?php esc_attr_e( 'Settings tabs', INCOM_TD ); ?>">
+        <?php foreach ( $tabs as $tab_id => $tab_label ) : ?>
+            <?php
+            $is_active = ( $current_tab === $tab_id );
+            $tab_url   = add_query_arg( 'tab', $tab_id, admin_url( 'options-general.php?page=incom.php' ) );
+            ?>
+            <a href="<?php echo esc_url( $tab_url ); ?>"
+               class="incom-tab-link <?php echo $is_active ? 'is-active' : ''; ?>"
+               <?php echo $is_active ? 'aria-current="page"' : ''; ?>>
+                <?php echo esc_html( $tab_label ); ?>
+                <?php if ( 'basics' === $tab_id ) : ?>
+                    <span class="newred_dot">&bull;</span>
+                <?php endif; ?>
+            </a>
+        <?php endforeach; ?>
         <?php do_action( 'incom_settings_page_tabs_link_after' ); ?>
-    </ul>
+    </nav>
 
     <form method="post" action="options.php">
         <?php settings_fields( 'incom-settings-group' ); ?>
         <?php do_settings_sections( 'incom-settings-group' ); ?>
 
-        <div id="basics">
+        <div id="basics" class="incom-tab-panel" <?php echo 'basics' !== $current_tab ? 'hidden' : ''; ?>>
 
             <h3><?php esc_html_e( 'Basic Settings', INCOM_TD ); ?></h3>
 
@@ -72,7 +91,7 @@
 
         </div>
 
-        <div id="styling">
+        <div id="styling" class="incom-tab-panel" <?php echo 'styling' !== $current_tab ? 'hidden' : ''; ?>>
 
             <h3><?php esc_html_e( 'Styling', INCOM_TD ); ?></h3>
 
@@ -133,7 +152,7 @@
 
         </div>
 
-        <div id="advanced">
+        <div id="advanced" class="incom-tab-panel" <?php echo 'advanced' !== $current_tab ? 'hidden' : ''; ?>>
 
             <h3><?php esc_html_e( 'Advanced Settings', INCOM_TD ); ?></h3>
 

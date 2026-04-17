@@ -85,9 +85,9 @@ class INCOM_Admin_Options {
 
 	function incom_admin_js() {
 		if ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) {
-			wp_enqueue_script( 'lazyload_admin_js', INCOM_URL . 'js/admin.js', array('jquery', 'jquery-ui-tabs', 'wp-color-picker' ), INCOM_VERSION );
+			wp_enqueue_script( 'lazyload_admin_js', INCOM_URL . 'js/admin.js', array('jquery', 'wp-color-picker' ), INCOM_VERSION );
 		} else {
-			wp_enqueue_script( 'lazyload_admin_js', INCOM_URL . 'js/min/admin.min.js', array('jquery', 'jquery-ui-tabs', 'wp-color-picker' ), INCOM_VERSION );
+			wp_enqueue_script( 'lazyload_admin_js', INCOM_URL . 'js/min/admin.min.js', array('jquery', 'wp-color-picker' ), INCOM_VERSION );
 		}
 	}
 
