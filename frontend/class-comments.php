@@ -349,8 +349,8 @@ class INCOM_Comments extends INCOM_Frontend {
 
 		// Replace IDs with our own.
 		$form = str_replace(
-			[ 'id="respond"', "id='comment_parent'", "id='comment_post_ID'", 'id="submit"' ],
-			[ 'id="incom-respond"', "id='incom-comment_parent'", "id='incom-comment_post_ID'", 'id="incom-submit"'],
+			[ 'id="respond"', "id='comment_parent'", "id='comment_post_ID'", 'id="submit"', 'id="wp-comment-cookies-consent"', 'for="wp-comment-cookies-consent"' ],
+			[ 'id="incom-respond"', "id='incom-comment_parent'", "id='incom-comment_post_ID'", 'id="incom-submit"', 'id="incom-comment-cookies-consent"', 'for="incom-comment-cookies-consent"' ],
 			$form
 		);
 
