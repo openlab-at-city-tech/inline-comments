@@ -299,7 +299,7 @@ class INCOM_Comments extends INCOM_Frontend {
 		$comment_field = sprintf(
 			'<p class="incom-form-comment">%s %s</p>',
 			sprintf(
-				'<label for="comment" class="screen-reader-text">%s</label>',
+				'<label for="incom-comment" class="screen-reader-text">%s</label>',
 				_x( 'Comment', 'noun', 'inline-comments' )
 			),
 			'<textarea id="incom-comment" name="comment" cols="45" rows="8" maxlength="65525" required></textarea>'
